@@ -34,6 +34,7 @@ public class StreamPage {
     public void expandTags() {
         tagsHeader.click();
         newTag.shouldBe(visible); //without its check next checks works not always
+        tags.shouldBe(textsLoaded());
         expectedTagNames = new ArrayList<String>(Arrays.asList(tags.getTexts()));
     }
 
@@ -69,7 +70,7 @@ public class StreamPage {
     }
 
     public void assertTags(String... tagNames) {
-        tags.shouldHave(exactTextsInAnyOrder(tagNames));
+        tags.shouldBe(textsLoaded()).shouldHave(exactTextsInAnyOrder(tagNames));
     }
 
     public void assertTags() {
