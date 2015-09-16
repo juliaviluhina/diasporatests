@@ -70,6 +70,7 @@ public class DiasporaTest extends AtDiasporaWithReportedScreenshotsTest {
 
         //actual result - tag order is different
         streamPage.assertTagsInOrder(expectedTagNames);
+
     }
 
 }
