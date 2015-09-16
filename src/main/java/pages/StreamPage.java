@@ -10,7 +10,7 @@ import java.util.List;
 
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.CollectionCondition.empty;
-import static core.CustomCollectionConditions.*;
+import static core.conditions.CustomCollectionConditions.*;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.*;
@@ -34,7 +34,7 @@ public class StreamPage {
     public void expandTags() {
         tagsHeader.click();
         newTag.shouldBe(visible); //without its check next checks works not always
-        tags.shouldBe(textsLoaded());
+        tags.shouldBe(textsLoaded);
         expectedTagNames = new ArrayList<String>(Arrays.asList(tags.getTexts()));
     }
 
@@ -70,7 +70,8 @@ public class StreamPage {
     }
 
     public void assertTags(String... tagNames) {
-        tags.shouldBe(textsLoaded()).shouldHave(exactTextsInAnyOrder(tagNames));
+        tags.shouldBe(textsLoaded);
+        tags.shouldHave(exactTextsInAnyOrder(tagNames));
     }
 
     public void assertTags() {
