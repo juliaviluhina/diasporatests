@@ -1,8 +1,8 @@
-package ua.net.itlabs.pages;
+package pages;
 
+import datastructures.PodUser;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
-import ua.net.itlabs.DiasporaAccountInformation;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Selenide.open;
 public class SignInPage {
 
     @Step
-    public void signIn(DiasporaAccountInformation user){
+    public void signIn(PodUser user){
         open(user.podLink+"/users/sign_in");
         $("#user_username").setValue(user.userName);
         $("#user_password").setValue(user.password);

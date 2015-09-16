@@ -1,4 +1,4 @@
-package ua.net.itlabs.pages;
+package pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -21,11 +21,10 @@ public class StreamPage {
     public SelenideElement newTag = $("#tags");
     public SelenideElement userMenu = $("#user_menu");
 
+    public ElementsCollection tags = $$("#tags_list .selectable");
+
     private List<String> expectedTagNames;
 
-    public ElementsCollection tags() {
-        return $$("#tags_list .selectable");
-    }
 
     public String[] expectedTagNames() {
         return expectedTagNames.toArray(new String[expectedTagNames.size()]);
@@ -35,7 +34,7 @@ public class StreamPage {
     public void expandTags() {
         tagsHeader.click();
         newTag.shouldBe(visible); //without its check next checks works not always
-        expectedTagNames = new ArrayList<String>(Arrays.asList(tags().getTexts()));
+        expectedTagNames = new ArrayList<String>(Arrays.asList(tags.getTexts()));
     }
 
     @Step
@@ -48,11 +47,11 @@ public class StreamPage {
 
     @Step
     public void deleteTag(String tagName) {
-        tags().find(exactText(tagName)).hover();
+        tags.find(exactText(tagName)).hover();
         $("#unfollow_" + tagName.substring(1)).click();
         confirm(null);
         expectedTagNames.remove(tagName);
-        tags().filter(exactText(tagName)).shouldBe(empty); //without its check next checks works not always
+        tags.filter(exactText(tagName)).shouldBe(empty); //without its check next checks works not always
     }
 
     @Step
@@ -66,11 +65,11 @@ public class StreamPage {
     }
 
     public void assertTagsInOrder(String... tagNames) {
-        tags().shouldHave(exactTexts(tagNames));
+        tags.shouldHave(exactTexts(tagNames));
     }
 
     public void assertTags(String... tagNames) {
-        tags().shouldHave(exactTextsInAnyOrder(tagNames));
+        tags.shouldHave(exactTextsInAnyOrder(tagNames));
     }
 
     public void assertTags() {
