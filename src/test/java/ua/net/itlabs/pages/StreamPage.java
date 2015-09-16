@@ -1,4 +1,4 @@
-package pages;
+package ua.net.itlabs.pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;

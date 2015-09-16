@@ -1,11 +1,7 @@
 package ua.net.itlabs;
 
 
-import core.AtDiasporaWithReportedScreenshotsTest;
 import org.junit.Test;
-import pages.StreamPage;
-import pages.SignInPage;
-
 
 
 public class DiasporaTest extends AtDiasporaWithReportedScreenshotsTest {

@@ -1,4 +1,4 @@
-package core;
+package ua.net.itlabs;
 
 
 public class DiasporaAccountInformation {

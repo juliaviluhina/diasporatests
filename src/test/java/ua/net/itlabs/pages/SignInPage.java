@@ -1,8 +1,8 @@
-package pages;
+package ua.net.itlabs.pages;
 
-import core.DiasporaAccountInformation;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
+import ua.net.itlabs.DiasporaAccountInformation;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;

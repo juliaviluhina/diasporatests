@@ -1,12 +1,12 @@
-package core;
+package ua.net.itlabs;
 
 
 import com.codeborne.selenide.Screenshots;
 import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.BeforeClass;
-import pages.SignInPage;
-import pages.StreamPage;
+import ua.net.itlabs.pages.SignInPage;
+import ua.net.itlabs.pages.StreamPage;
 import ru.yandex.qatools.allure.annotations.Attachment;
 
 import java.io.File;
