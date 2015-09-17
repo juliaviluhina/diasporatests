@@ -11,7 +11,6 @@ import core.ex.CollectionNotLoaded;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
@@ -47,7 +46,7 @@ public class TextsLoaded extends CollectionCondition {
                     actualTexts.add(element.getText());
                 }
             }
-        } while (!result); //it is commented through thus check diaspora tags couldn't be loaded ((startTime + Configuration.timeout) < currentTimeMillis()) &&
+        } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
 
         return result;
     }
