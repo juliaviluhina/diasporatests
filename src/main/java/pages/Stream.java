@@ -9,12 +9,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
-import static com.codeborne.selenide.CollectionCondition.empty;
 import static core.conditions.CustomCollectionConditions.*;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.*;
-import static core.helpers.Helpers.*;
 import static core.helpers.Helpers.listToArray;
 
 public class Stream {
@@ -26,13 +24,24 @@ public class Stream {
     public static ElementsCollection tags = $$("#tags_list .selectable");
 
     private static List<String> expectedTagNames;
+    private static List<String> tagsForCleaning;
 
     public static String[] expectedTagNames() { return listToArray(expectedTagNames); }
+
+    public static void addTagsForCleaning(String ... tagNames) {
+        tagsForCleaning = new ArrayList<String>(Arrays.asList(tagNames));
+    }
+
+    public static void cleanAddedData(){
+        for (String tagName:tagsForCleaning){
+            deleteTag(tagName);
+        }
+        tagsForCleaning.clear();
+    }
 
     @Step
     public static void expandTags() {
         tagsHeader.click();
-        newTag.shouldBe(visible); //without its check next checks works not always
         tags.shouldBe(textsLoaded);
         expectedTagNames = new ArrayList<String>(Arrays.asList(tags.getTexts()));
     }
@@ -40,7 +49,7 @@ public class Stream {
     @Step
     public static void addTag(String tagName) {
         newTag.setValue(tagName);
-        $$("#as-results-tags li").shouldHave(exactTexts(tagName));//without its check next checks works not always
+        $$("#as-results-tags li").shouldHave(exactTexts(tagName));
         newTag.pressEnter();
         expectedTagNames.add(0, tagName);
     }
@@ -51,7 +60,7 @@ public class Stream {
         $("#unfollow_" + tagName.substring(1)).click();
         confirm(null);
         expectedTagNames.remove(tagName);
-        tags.filter(exactText(tagName)).shouldBe(empty); //without its check next checks works not always
+        tags.shouldBe(textsLoaded);
     }
 
     @Step
@@ -66,10 +75,6 @@ public class Stream {
 
     public static void assertTagsInOrder(String... tagNames) {
         tags.shouldHave(exactTexts(tagNames));
-    }
-
-    public static void assertTagsInOrder() {
-        assertTagsInOrder(listToArray(expectedTagNames));
     }
 
     public static void assertTags(String... tagNames) {

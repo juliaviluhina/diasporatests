@@ -13,6 +13,7 @@ public class DiasporaTest {
 
     @After
     public void postScreensAfterTest() throws IOException {
+        Stream.cleanAddedData();
         Stream.logOut();
     }
 
@@ -50,8 +51,9 @@ public class DiasporaTest {
     }
 
     //for test case #2
+    //Failed
     @Test
-    public void testTagsOrder(){
+      public void testTagsOrder(){
         //step 1,2 - add tag Y and Z
         Diaspora.signInAs(Users.ANA);
         Stream.expandTags();
@@ -66,6 +68,9 @@ public class DiasporaTest {
         Stream.logOut();
         Diaspora.signInAs(Users.ANA);
         Stream.expandTags();
+
+        //Save tags in list for cleaning after test
+        Stream.addTagsForCleaning(Stream.expectedTagNames());
 
         //actual result - tag order is different
         Stream.assertTagsInOrder(expectedTagNames);
