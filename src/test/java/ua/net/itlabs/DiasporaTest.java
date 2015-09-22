@@ -8,19 +8,20 @@ import ua.net.itlabs.categories.Buggy;
 
 import java.io.IOException;
 
+import static com.codeborne.selenide.Condition.visible;
 import static core.helpers.UniqueDataHelper.the;
 
 public class DiasporaTest {
 
     @After
-    public void postScreensAfterTest() throws IOException {
+    public void tearDown() throws IOException {
         Stream.cleanAddedData();
         Stream.logOut();
     }
 
     @Test
     public void testAllOperationsWithTags(){
-        //must to be done - new public post linked with tag1 in user account userBob
+        //todo - new public post linked with tag1 in user account userBob
 
         Diaspora.signInAs(Users.ANA);
         Stream.expandTags();
@@ -28,9 +29,9 @@ public class DiasporaTest {
         Stream.addTag(the("#tag1"));
         Stream.assertTags();
 
-        //to do - select tag1 and check existing public post from userBob
+        //todo - select tag1 and check existing public post from userBob
 
-        //to do - add new unique tag2, select tag1 and check there are not any posts according tag2
+        //todo - add new unique tag2, select tag1 and check there are not any posts according tag2
 
         Stream.deleteTag(the("#tag1"));
         Stream.assertTags();
@@ -40,7 +41,7 @@ public class DiasporaTest {
     @Test
     public void testSignInForAccountWithPosts(){
         Diaspora.signInAs(Users.BOB);
-        Stream.assertTagsHeaderIsVisible();
+        Stream.tagsHeader.shouldBe(visible);;
     }
 
     //for test case #1 - Actual result
@@ -48,7 +49,7 @@ public class DiasporaTest {
     @Buggy
     public void testSignInForAccountWithoutPosts(){
         Diaspora.signInAs(Users.DAVE);
-        Stream.assertTagsHeaderIsVisible();
+        Stream.tagsHeader.shouldBe(visible);;
     }
 
     //for test case #2

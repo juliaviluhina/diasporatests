@@ -17,7 +17,7 @@ import static core.helpers.Helpers.listToArray;
 
 public class Stream {
 
-    public static SelenideElement tagsHeader = $("[href=\"/followed_tags\"]");
+    public static SelenideElement tagsHeader = $("[href='/followed_tags']");
     public static SelenideElement newTag = $("#tags");
     public static SelenideElement userMenu = $("#user_menu");
 
@@ -26,14 +26,16 @@ public class Stream {
     private static List<String> expectedTagNames;
     private static List<String> tagsForCleaning;
 
-    public static String[] expectedTagNames() { return listToArray(expectedTagNames); }
+    public static String[] expectedTagNames() {
+        return listToArray(expectedTagNames);
+    }
 
-    public static void addTagsForCleaning(String ... tagNames) {
+    public static void addTagsForCleaning(String... tagNames) {
         tagsForCleaning = new ArrayList<String>(Arrays.asList(tagNames));
     }
 
-    public static void cleanAddedData(){
-        for (String tagName:tagsForCleaning){
+    public static void cleanAddedData() {
+        for (String tagName : tagsForCleaning) {
             deleteTag(tagName);
         }
         tagsForCleaning.clear();
@@ -66,11 +68,7 @@ public class Stream {
     @Step
     public static void logOut() {
         $(".user-menu-more-indicator").click();
-        userMenu.find("[data-method=\"delete\"]").click();
-    }
-
-    public static void assertTagsHeaderIsVisible() {
-        tagsHeader.shouldBe(visible);
+        userMenu.find("[data-method='delete']").click();
     }
 
     public static void assertTagsInOrder(String... tagNames) {
