@@ -19,6 +19,4 @@ public class CustomCollectionConditions {
         return new ExactTextsInAnyOrder(expectedTexts);
     }
 
-    public static CollectionCondition textsLoaded = new TextsLoaded();
-
 }

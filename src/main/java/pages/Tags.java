@@ -1,17 +1,22 @@
 package pages;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import core.CustomElementsCollection;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
-import static core.conditions.CustomCollectionConditions.*;
+
 import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.confirm;
+
+import static core.conditions.CustomCollectionConditions.exactTextsInAnyOrder;
+import static core.CustomElementsCollection.$$;
 import static core.helpers.Helpers.listToArray;
 
 public class Tags {
@@ -19,7 +24,7 @@ public class Tags {
     public static SelenideElement tagsHeader = $("[href='/followed_tags']");
     public static SelenideElement newTag = $("#tags");
 
-    public static ElementsCollection tags = $$("#tags_list .selectable");
+    public static CustomElementsCollection tags = $$("#tags_list .selectable");
 
     private static List<String> expectedTagNames;
 
@@ -29,18 +34,17 @@ public class Tags {
 
     @Step
     public static void deleteTags() {
-        tags.shouldBe(textsLoaded);
-        String[] tagNames = tags.getTexts();
+        expandTags();
+        String[] tagNames = expectedTagNames();
         for (String tagName : tagNames) {
             deleteTag(tagName);
         }
-        expectedTagNames.clear();
     }
 
     @Step
     public static void expandTags() {
         tagsHeader.click();
-        tags.shouldBe(textsLoaded);
+        $("#aspect_stream_header").shouldHave(exactText(tagsHeader.getText()));
         expectedTagNames = new ArrayList<String>(Arrays.asList(tags.getTexts()));
     }
 
@@ -58,7 +62,7 @@ public class Tags {
         $("#unfollow_" + tagName.substring(1)).click();
         confirm(null);
         expectedTagNames.remove(tagName);
-        tags.shouldBe(textsLoaded);
+        tags.filter(exactText(tagName)).shouldBe(empty);
     }
 
     public static void assertTagsInOrder(String... tagNames) {
@@ -66,7 +70,6 @@ public class Tags {
     }
 
     public static void assertTags(String... tagNames) {
-        tags.shouldBe(textsLoaded);
         tags.shouldHave(exactTextsInAnyOrder(tagNames));
     }
 
