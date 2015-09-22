@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Test;
 import pages.Diaspora;
 import pages.Stream;
+import ua.net.itlabs.categories.Buggy;
 
 import java.io.IOException;
 
@@ -43,16 +44,16 @@ public class DiasporaTest {
     }
 
     //for test case #1 - Actual result
-    //Failed
     @Test
+    @Buggy
     public void testSignInForAccountWithoutPosts(){
         Diaspora.signInAs(Users.DAVE);
         Stream.assertTagsHeaderIsVisible();
     }
 
     //for test case #2
-    //Failed
     @Test
+    @Buggy
       public void testTagsOrder(){
         //step 1,2 - add tag Y and Z
         Diaspora.signInAs(Users.ANA);
