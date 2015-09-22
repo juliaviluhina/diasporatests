@@ -10,35 +10,31 @@ import java.util.List;
 
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static core.conditions.CustomCollectionConditions.*;
-import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.*;
 import static core.helpers.Helpers.listToArray;
 
-public class Stream {
+public class Tags {
 
     public static SelenideElement tagsHeader = $("[href='/followed_tags']");
     public static SelenideElement newTag = $("#tags");
-    public static SelenideElement userMenu = $("#user_menu");
 
     public static ElementsCollection tags = $$("#tags_list .selectable");
 
     private static List<String> expectedTagNames;
-    private static List<String> tagsForCleaning;
 
     public static String[] expectedTagNames() {
         return listToArray(expectedTagNames);
     }
 
-    public static void addTagsForCleaning(String... tagNames) {
-        tagsForCleaning = new ArrayList<String>(Arrays.asList(tagNames));
-    }
-
-    public static void cleanAddedData() {
-        for (String tagName : tagsForCleaning) {
+    @Step
+    public static void deleteTags() {
+        tags.shouldBe(textsLoaded);
+        String[] tagNames = tags.getTexts();
+        for (String tagName : tagNames) {
             deleteTag(tagName);
         }
-        tagsForCleaning.clear();
+        expectedTagNames.clear();
     }
 
     @Step
@@ -63,12 +59,6 @@ public class Stream {
         confirm(null);
         expectedTagNames.remove(tagName);
         tags.shouldBe(textsLoaded);
-    }
-
-    @Step
-    public static void logOut() {
-        $(".user-menu-more-indicator").click();
-        userMenu.find("[data-method='delete']").click();
     }
 
     public static void assertTagsInOrder(String... tagNames) {
