@@ -1,13 +1,12 @@
 package ua.net.itlabs;
 
-import com.codeborne.selenide.Configuration;
 import datastructures.PodUser;
 import org.junit.After;
 import org.junit.BeforeClass;
 import pages.Diaspora;
 import pages.Menu;
+import pages.NavBar;
 import pages.Tags;
-import ru.yandex.qatools.allure.annotations.Step;
 
 import java.io.IOException;
 
@@ -28,7 +27,8 @@ public class BaseTest {
 
     public static void clearUserData(PodUser user) {
         Diaspora.signInAs(user);
-        Tags.deleteTags();
+        NavBar.expandTags();
+        Tags.deleteAll();
         Menu.logOut();
     }
 
