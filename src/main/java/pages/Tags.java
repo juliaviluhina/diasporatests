@@ -18,19 +18,6 @@ public class Tags {
     public static ElementsCollection tags = $$("#tags_list .selectable");
 
     @Step
-    public static void deleteAll() {
-        add(the("#tagForCleaning"));
-        assertExist(the("#tagForCleaning"));
-        try {
-            while (tags.size() > 0) {
-                String tagName = tags.get(0).getText();
-                delete(tagName);
-                assertNotExist(tagName);
-            }
-        } catch (IndexOutOfBoundsException e) {}
-    }
-
-    @Step
     public static void add(String tagName) {
         newTag.setValue(tagName);
         $$("#as-results-tags li").shouldHave(exactTexts(tagName));
@@ -44,6 +31,11 @@ public class Tags {
         confirm(null);
     }
 
+    @Step
+    public static void filter(String tagName) {
+        tags.find(exactText(tagName)).click();
+    }
+
     public static void assertNotExist(String tagName) {
         tags.filter(exactText(tagName)).shouldBe(empty);
     }
@@ -54,6 +46,18 @@ public class Tags {
 
     public static void assertNthIs(int nth, String tagName) {
         tags.get(nth).shouldHave(exactText(tagName));
+    }
+
+    public static void deleteAll() {
+        add(the("#servicetjvi"));
+        assertExist(the("#servicetjvi"));
+        try {
+            while (tags.size() > 0) {
+                String tagName = tags.get(0).getText();
+                delete(tagName);
+                assertNotExist(tagName);
+            }
+        } catch (IndexOutOfBoundsException e) {}
     }
 
 }
