@@ -21,7 +21,7 @@ public class People {
     @Step
     public static void clickAspect(DiasporaAspect diasporaAspect) {
         aspects.get(diasporaAspect.number).hover();
-        statusOfAspect(aspects.get(diasporaAspect.number)).click();
+        aspects.get(diasporaAspect.number).click();
     }
 
     public static void assertAspectIsUsed(DiasporaAspect diasporaAspect) {
@@ -30,10 +30,6 @@ public class People {
 
     public static void assertPerson(String fullName) {
         $("#diaspora_handle").shouldHave(Condition.exactText(fullName));
-    }
-
-    protected static SelenideElement statusOfAspect(SelenideElement aspect) {
-        return aspect.find(".status_indicator");
     }
 
     protected static Boolean aspectIsUsed(SelenideElement aspect) {
@@ -50,10 +46,10 @@ public class People {
             if (!aspectIsUsed(aspect)) {
                 continue;
             }
-            statusOfAspect(aspect).click();
+            aspect.click();
         }
-        manageContact.click();
         aspects.filter(cssClass("selected")).shouldBe(empty);
+        $("#profile_photo").click();
     }
 
 }

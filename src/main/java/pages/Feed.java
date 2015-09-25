@@ -56,8 +56,8 @@ public class Feed {
             return;
         }
         aspect.find(".btn").click();
-        aspect.findAll(".status_indicator").get(0).click();
-        aspect.shouldHave(Condition.text("Public"));
+        aspect.find(".public").click();
+        aspect.find(".btn").shouldHave(Condition.text("Public"));
     }
 
     public static void deleteAllPosts(PodUser from) {
