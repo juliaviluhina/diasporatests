@@ -6,6 +6,7 @@ import datastructures.PodUser;
 import org.junit.After;
 import org.junit.BeforeClass;
 import pages.*;
+import ru.yandex.qatools.allure.annotations.Step;
 import ua.net.itlabs.testDatas.DiasporaAspects;
 import ua.net.itlabs.testDatas.Users;
 
@@ -36,6 +37,33 @@ public class BaseTest {
         NavBar.openMyActivity();
         Feed.deleteAllPosts(user);
 
+        Menu.logOut();
+    }
+
+    @Step
+    public void setupLinksFor(PodUser user, PodUser linkedUser, DiasporaAspect diasporaAspect, String followedTag, PodUser unlinkedUser1, PodUser unlinkedUser2){
+        //user relation setup
+        Diaspora.signInAs(user);
+        Menu.assertLoggedUser(user);
+        //user have diasporaAspect relation with linkedUser
+        Menu.search(linkedUser.fullName);
+        People.assertPerson(linkedUser.fullName);
+        People.ensureAspectForContact(diasporaAspect);
+        //user have not any relation with unlinkedUser1
+        Menu.search(unlinkedUser1.fullName);
+        People.assertPerson(unlinkedUser1.fullName);
+        People.ensureNoAspectsForContact();
+        People.assertAspectsAreNotUsed();
+        //user have not any relation with unlinkedUser1
+        Menu.search(unlinkedUser2.fullName);
+        People.assertPerson(unlinkedUser2.fullName);
+        People.ensureNoAspectsForContact();
+        People.assertAspectsAreNotUsed();
+        //Addition followed tag
+        Menu.openStream();
+        NavBar.openTags();
+        Tags.add(followedTag);
+        Tags.assertExist(followedTag);
         Menu.logOut();
     }
 

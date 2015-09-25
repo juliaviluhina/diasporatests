@@ -42,7 +42,7 @@ public class People {
         return aspect.getAttribute("class").contains("selected");
     }
 
-    public static void ensureAddContact() {
+    public static void ensureNoAspectsForContact() {
         if (manageContact.getText().equals("Add contact")) {
             return;
         }
@@ -54,8 +54,20 @@ public class People {
             }
             aspect.click();
         }
-        aspects.filter(cssClass("selected")).shouldBe(empty);
-        $("#profile_photo").click();
+//        aspects.filter(cssClass("selected")).shouldBe(empty);
+        $("#diaspora_handle").click();
+    }
+
+    public static void ensureAspectForContact(DiasporaAspect diasporaAspect) {
+        if (manageContact.getText().equals(diasporaAspect.name)) {
+            return;
+        }
+        manageContact.click();
+        SelenideElement aspect = aspects.get(diasporaAspect.number);
+        if (!aspectIsUsed(aspect)) {
+            aspect.click();
+        }
+        $("#diaspora_handle").click();
     }
 
 }
