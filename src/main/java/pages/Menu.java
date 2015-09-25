@@ -5,6 +5,8 @@ import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import java.util.NoSuchElementException;
+
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.exactText;
@@ -30,12 +32,19 @@ public class Menu {
     }
 
     @Step
-    public static void openStream(){
+    public static void openStream() {
         $(".header-nav [href='/stream']").click();
     }
 
-    public static void assertLoggedUser(PodUser user){
+    public static void assertLoggedUser(PodUser user) {
         userMenu.find(".user-name").shouldHave(exactText(user.fullName));
+    }
+
+    public static void ensureNewSignIn() {
+        if ($("header").findAll(".dark-header").size() == 0) {
+            return;
+        }
+        logOut();
     }
 
 }

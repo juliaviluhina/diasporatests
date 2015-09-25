@@ -19,13 +19,19 @@ public class People {
     public static ElementsCollection aspects = $$(".aspect_selector");
 
     @Step
-    public static void clickAspect(DiasporaAspect diasporaAspect) {
-        aspects.get(diasporaAspect.number).hover();
-        aspects.get(diasporaAspect.number).click();
+    public static String toggleAspect(DiasporaAspect diasporaAspect) {
+        //aspects.get(diasporaAspect.number).hover();
+        SelenideElement togglingAspect = aspects.get(diasporaAspect.number);
+        togglingAspect.click();
+        return togglingAspect.getText();
     }
 
-    public static void assertAspectIsUsed(DiasporaAspect diasporaAspect) {
-        aspects.filter(cssClass("selected")).shouldHave(texts(diasporaAspect.name));
+    public static void assertAspectIsUsed(String text) {
+        manageContact.shouldHave(text(text));
+    }
+
+    public static void assertAspectsAreNotUsed() {
+        assertAspectIsUsed("Add contact");
     }
 
     public static void assertPerson(String fullName) {

@@ -1,10 +1,12 @@
 package ua.net.itlabs;
 
 import com.codeborne.selenide.Configuration;
+import datastructures.DiasporaAspect;
 import datastructures.PodUser;
 import org.junit.After;
 import org.junit.BeforeClass;
 import pages.*;
+import ua.net.itlabs.testDatas.DiasporaAspects;
 import ua.net.itlabs.testDatas.Users;
 
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class BaseTest {
 
     @After
     public void tearDown() throws IOException {
-        Menu.logOut();
+        Menu.ensureNewSignIn();
     }
 
     public static void clearUserData(PodUser user) {
@@ -36,7 +38,5 @@ public class BaseTest {
 
         Menu.logOut();
     }
-
-
 
 }

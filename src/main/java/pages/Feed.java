@@ -3,6 +3,7 @@ package pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import datastructures.DiasporaAspect;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
@@ -17,18 +18,29 @@ import static core.helpers.UniqueDataHelper.the;
 public class Feed {
 
     protected static SelenideElement aspect = $(".aspect_dropdown");
+    public static SelenideElement newPostText = $("#status_message_fake_text");
+    public static SelenideElement setAspect = $(".aspect_dropdown .btn");
+    public static SelenideElement share = $("#submit");
 
     public static ElementsCollection posts = $$(".stream_element");
-    public static SelenideElement share = $("#submit");
 
     @Step
     public static void addPublicPost(String text) {
-        $("#status_message_fake_text").click();
-        $("#status_message_fake_text").setValue(text);
+        newPostText.click();
+        newPostText.setValue(text);
 
         ensurePublicPostingMode();
         share.click();
 
+    }
+
+    @Step
+    public static void addAspectPost(DiasporaAspect diasporaAspect, String text) {
+        newPostText.click();
+        newPostText.setValue(text);
+
+        ensureAspectPostingMode(diasporaAspect);
+        share.click();
     }
 
     @Step
@@ -55,9 +67,21 @@ public class Feed {
         if (aspect.getText().contains("Public")) {
             return;
         }
-        aspect.find(".btn").click();
+        setAspect.click();
         aspect.find(".public").click();
-        aspect.find(".btn").shouldHave(Condition.text("Public"));
+        setAspect.shouldHave(Condition.text("Public"));
+    }
+
+    public static void ensureAspectPostingMode(DiasporaAspect diasporaAspect) {
+        if (!aspect.getText().contains("All aspects")) {
+            setAspect.click();
+            aspect.find(".all_aspects").click();
+        }
+        setAspect.click();
+        SelenideElement selectingAspect = aspect.findAll(".aspect_selector").get(diasporaAspect.number);
+        selectingAspect.click();
+        setAspect.shouldHave(Condition.text(selectingAspect.getText()));
+        setAspect.click();
     }
 
     public static void deleteAllPosts(PodUser from) {
