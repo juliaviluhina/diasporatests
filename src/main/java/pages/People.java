@@ -54,7 +54,6 @@ public class People {
             }
             aspect.click();
         }
-//        aspects.filter(cssClass("selected")).shouldBe(empty);
         $("#diaspora_handle").click();
     }
 
@@ -63,9 +62,17 @@ public class People {
             return;
         }
         manageContact.click();
-        SelenideElement aspect = aspects.get(diasporaAspect.number);
-        if (!aspectIsUsed(aspect)) {
-            aspect.click();
+        for (int i = 0; i < aspects.size(); i++) {
+            SelenideElement aspect = aspects.get(i);
+            if (i == diasporaAspect.number) {
+                if (!aspectIsUsed(aspect)) {
+                    aspect.click();
+                }
+            } else {
+                if (aspectIsUsed(aspect)) {
+                    aspect.click();
+                }
+            }
         }
         $("#diaspora_handle").click();
     }

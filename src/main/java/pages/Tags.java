@@ -10,6 +10,7 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.*;
+import static core.conditions.CustomCondition.textBegin;
 import static core.helpers.UniqueDataHelper.the;
 
 public class Tags {
@@ -26,8 +27,17 @@ public class Tags {
 
     @Step
     public static void delete(String tagName) {
-        tags.find(exactText(tagName)).hover();
-        $("#unfollow_" + tagName.substring(1)).click();
+//        tags.find(exactText(tagName)).hover();
+//        //System.out.println("#unfollow_" + tagName.substring(1));
+//        $("#unfollow_" + tagName.substring(1)).click();
+//        confirm(null);
+        delete(tags.find(exactText(tagName)));
+    }
+
+    public static void delete(SelenideElement tag) {
+        tag.hover();
+        $("#unfollow_" + tag.getText().substring(1)).click();
+        //tag.find(".delete_tag_following").click();
         confirm(null);
     }
 
@@ -49,15 +59,21 @@ public class Tags {
     }
 
     public static void deleteAll() {
-        add(the("#servicetjvi"));
-        assertExist(the("#servicetjvi"));
-        try {
-            while (tags.size() > 0) {
-                String tagName = tags.get(0).getText();
-                delete(tagName);
-                assertNotExist(tagName);
-            }
-        } catch (IndexOutOfBoundsException e) {}
+        add(the("#stag"));
+        assertNthIs(0, the("#stag"));
+        ElementsCollection userTags = tags.filter(textBegin("#"));
+        for (SelenideElement userTag : userTags) {
+            delete(userTag);
+        }
+        add(the("#stag"));
+        assertNthIs(0, the("#stag"));
+        ElementsCollection userTags1 = tags.filter(textBegin("#"));
+        if (userTags1.size() == 1) {
+            delete(userTags1.get(0));
+        } else {
+            deleteAll();
+        }
+
     }
 
 }

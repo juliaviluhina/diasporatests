@@ -6,7 +6,9 @@ import ua.net.itlabs.categories.Buggy;
 import ua.net.itlabs.testDatas.DiasporaAspects;
 import ua.net.itlabs.testDatas.Users;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.$;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
 import static ua.net.itlabs.testDatas.DiasporaAspects.*;
@@ -50,6 +52,7 @@ public class DiasporaTest extends BaseTest {
 
         //only posts with filtered tag are shown
         Tags.filter(the("#tag1"));
+        $("#author_info").shouldHave(text(the("#tag1")));
         Feed.assertPostIsShown(Users.ROB, post1);
         Feed.assertPostIsNotShown(Users.ROB, post2);
 
@@ -89,62 +92,131 @@ public class DiasporaTest extends BaseTest {
         Feed.addPublicPost(the("Public Ana"));
         Feed.assertNthPostIs(0, ANA, the("Public Ana"));
         Menu.logOut();
-        //check - public post is shown in stream of linked user
+
+        //like post, indirect check - public post is shown in stream of linked user
         Diaspora.signInAs(BOB);
         Menu.assertLoggedUser(BOB);
-        Feed.assertPostIsShown(ANA, the("Public Ana")); //FAILED
+        //Feed.assertPostIsShown(ANA, the("Public Ana"));
+        Feed.toggleLike(ANA, the("Public Ana"));
+        Feed.assertLikes(ANA,the("Public Ana"), 1);
 
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Bob for work"));
-        Feed.assertNthPostIs(0, BOB, the("Bob for work"));
+        //check - for limited post is no possibility for resharing, indirect check - post is addded
+        //Feed.assertNthPostIs(0, BOB, the("Bob for work"));
+        Feed.assertReshareIsImpossible(BOB, the("Bob for work"));
         Menu.logOut();
-        //check - limited post in right aspect is shown in stream of linked user
+
+        //like and comment post, indirect check - limited post in right aspect is shown in stream of linked user
         Diaspora.signInAs(ANA);
         Menu.assertLoggedUser(ANA);
-        Feed.assertPostIsShown(BOB,the("Bob for work"));
+        //Feed.assertPostIsShown(BOB,the("Bob for work"));
+        Feed.toggleLike(BOB, the("Bob for work"));
+        Feed.assertLikes(BOB, the("Bob for work"), 1);
+        Feed.addComment(BOB, the("Bob for work"), the("Comment from Ana"));
+        Feed.assertComment(BOB, the("Bob for work"), ANA, the("Comment from Ana"));
 
         //limited post in wrong aspect
         Feed.addAspectPost(FAMILY, the("Ana for family"));
         Feed.assertNthPostIs(0, ANA, the("Ana for family"));
         Menu.logOut();
+
         //check - limited post in wrong aspect is not shown in stream of linked user
         Diaspora.signInAs(BOB);
         Menu.assertLoggedUser(BOB);
         Feed.assertPostIsNotShown(ANA, the("Ana for family"));
 
+        //comment post, check visibility of other comments
+        Feed.assertComment(BOB, the("Bob for work"), ANA, the("Comment from Ana"));
+        Feed.addComment(BOB, the("Bob for work"), the("Comment from Bob"));
+        Feed.assertComment(BOB, the("Bob for work"), BOB, the("Comment from Bob"));
+
         //public post with tag
         Feed.addPublicPost(the(tag + " Public Bob"));
         Feed.assertNthPostIs(0, BOB, the(tag + " Public Bob"));
         Menu.logOut();
-        //check - public post with tag is shown in stream of linked used
+
+        //reshare post, indirect check - public post with tag is shown in stream of linked used
         Diaspora.signInAs(ANA);
         Menu.assertLoggedUser(ANA);
-        Feed.assertPostIsShown(BOB,the(tag + " Public Bob"));
+        //Feed.assertPostIsShown(BOB,the(tag + " Public Bob"));
+        Feed.reshare(BOB,the(tag + " Public Bob"));
+        Feed.assertNthPostIs(0, ANA, the(tag + " Public Bob"));
         Menu.logOut();
 
         //check - public post is not shown in stream of unlinked user
         Diaspora.signInAs(ROB);
         Menu.assertLoggedUser(ROB);
         Feed.assertPostIsNotShown(ANA, the("Public Ana"));
-        //check - public post is shown in searching stream of unlinked user
+
+        //like public post on searching stream, indirect check - public post is shown in searching stream of unlinked user
         Menu.search(ANA.fullName);
         People.assertPerson(ANA.fullName);
-        Feed.assertPostIsShown(ANA, the("Public Ana"));
+        Feed.toggleLike(ANA, the("Public Ana"));
+        Feed.assertLikes(ANA, the("Public Ana"), 2);
+
         //check - limited post is not shown in stream of unlinked user
         Feed.assertPostIsNotShown(BOB, the("Bob for work"));
+
         //check - limited post is not shown in searching stream of unlinked user
         Menu.search(BOB.fullName);
         People.assertPerson(BOB.fullName);
         Feed.assertPostIsNotShown(BOB, the("Bob for work"));
-        //check - public post with tag is shown in stream of unlinked user with the same followed tag
-        Feed.assertPostIsShown(BOB,the(tag + " Public Bob"));
+
+        //comment post in searching stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
+        //Feed.assertPostIsShown(BOB,the(tag + " Public Bob"));
+        Feed.addComment(BOB,the(tag + " Public Bob"),the("Comment from Rob"));
+        Feed.assertComment(BOB,the(tag + " Public Bob"),ROB, the("Comment from Rob"));
+
+        //delete comment
         Menu.openStream();
-        Feed.assertPostIsShown(BOB,the(tag + " Public Bob"));
+        //Feed.assertPostIsShown(BOB,the(tag + " Public Bob"));
+        Feed.deleteComment(BOB,the(tag + " Public Bob"),ROB, the("Comment from Rob"));
+        Feed.assertCommentIsNotExist(BOB,the(tag + " Public Bob"),ROB, the("Comment from Rob"));
+
+        //unlike through MyActivities, indirect check - posts which liked earlier by this user is shown on my activity
+        NavBar.openMyActivity();
+        Feed.toggleLike(ANA, the("Public Ana"));
+        Feed.assertLikes(ANA, the("Public Ana"),1);
         Menu.logOut();
 
-        //todo - include operations with private post
-        //todo - include operations with post - comments, likes, reshares
-        //todo - include deletion posts
+        //delete public post
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
+        Feed.deletePost(ANA, the("Public Ana"));
+        Feed.assertPostIsNotShown(ANA, the("Public Ana"));
+        Menu.logOut();
+
+        //check - public post is not shown after deletion in other streams
+        Diaspora.signInAs(BOB);
+        Menu.assertLoggedUser(BOB);
+        Feed.assertPostIsNotShown(ANA, the("Public Ana"));
+
+        //check - in my activity stream is no deleted post with comment
+        NavBar.openMyActivity();
+        Feed.assertPostIsNotShown(ANA, the("Public Ana"));
+
+        //delete limited post in my activity stream
+        Feed.deletePost(BOB, the("Bob for work"));
+        Feed.assertPostIsNotShown(BOB, the("Bob for work"));
+
+        //delete reshared post
+        Feed.deletePost(BOB, the(tag + " Public Bob"));
+        Feed.assertPostIsNotShown(BOB, the("Bob for work"));
+
+        Menu.logOut();
+
+        //check - limited post is not shown after deletion
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
+        Feed.assertPostIsNotShown(BOB, the("Bob for work"));
+
+        //check - reshared post is not shown after deletion
+        Feed.assertPostIsNotShown(BOB, the("Bob for work"));
+
+        //check - after deletion reshared post in resharing post is no old content
+        Feed.assertPostIsNotShown(ANA, the(tag + " Public Bob"));
+        Menu.logOut();
 
     }
 

@@ -5,15 +5,17 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.DiasporaAspect;
 import datastructures.PodUser;
+import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.helpers.UniqueDataHelper.the;
+import static core.conditions.CustomCondition.*;
 
 public class Feed {
 
@@ -45,22 +47,80 @@ public class Feed {
 
     @Step
     public static void deletePost(PodUser from, String postText) {
-        SelenideElement post = posts.filter(text(from.fullName)).find(text(postText));
+        deletePost(postsByFilter(from, postText).get(0));
+    }
+
+    public static void deletePost(SelenideElement post) {
         post.hover();
-        post.find(".remove_post").click();
+        $(".remove_post").click();
         confirm(null);
     }
 
-    public static void assertNthPostIs(int nth, PodUser from, String post) {
-        posts.get(nth).shouldHave(text(from.fullName)).shouldHave(text(post));
+    @Step
+    public static void toggleLike(PodUser from, String post) {
+        assertPostIsShown(from, post).find(".like").click();
     }
 
-    public static void assertPostIsShown(PodUser from, String post) {
-        posts.filter(text(from.fullName)).filter(text(post)).shouldHave(size(1));
+    @Step
+    public static void addComment(PodUser from, String post, String comment) {
+        SelenideElement currentPost = assertPostIsShown(from, post);
+        currentPost.find(".focus_comment_textarea").click();
+        currentPost.find(".comment_box").setValue(comment);
+        currentPost.find(".new_comment").find(By.name("commit")).click();
+    }
+
+    @Step
+    public static void reshare(PodUser from, String post) {
+        postsByFilter(from, post).get(0).find(".reshare").click();
+        confirm(null);
+    }
+
+    @Step
+    public static void deleteComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
+        SelenideElement currentComment = commentsByFilter(fromPost, post, fromComment, comment).get(0);
+        currentComment.hover();
+        currentComment.find(".delete").click();
+        confirm(null);
+    }
+
+    public static void assertComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
+        commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1));
+    }
+
+    public static void assertCommentIsNotExist(PodUser fromPost, String post, PodUser fromComment, String comment) {
+        commentsByFilter(fromPost, post, fromComment, comment).shouldBe(empty);
+    }
+
+    public static void assertReshareIsImpossible(PodUser from, String post) {
+        postsByFilter(from, post).filter(cssClass("reshare")).shouldBe(empty);
+    }
+
+    public static void assertLikes(PodUser from, String post, int countLikes) {
+        postsByFilter(from, post).get(0).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
+    }
+
+    public static void assertNthPostIs(int nth, PodUser from, String post) {
+        posts.get(nth).shouldHave(textBegin(from.fullName)).shouldHave(text(post));
+    }
+
+    protected static ElementsCollection postsByFilter(PodUser from, String post) {
+        //return  posts.filter(textBegin(from.fullName)).filter(text(post));
+        return posts.filter(textBeginAndContain(from.fullName, post));
+    }
+
+    protected static ElementsCollection commentsByFilter(PodUser fromPost, String post, PodUser fromComment, String comment) {
+        SelenideElement currentPost = postsByFilter(fromPost, post).get(0);
+        ElementsCollection comments = currentPost.findAll(".comment");
+        //return comments.filter(textBegin(fromComment.fullName)).filter(text(comment));
+        return comments.filter(textBeginAndContain(fromComment.fullName, comment));
+    }
+
+    public static SelenideElement assertPostIsShown(PodUser from, String post) {
+        return postsByFilter(from, post).shouldHave(size(1)).get(0);
     }
 
     public static void assertPostIsNotShown(PodUser from, String post) {
-        posts.filter(text(from.fullName)).filter(text(post)).shouldBe(empty);
+        postsByFilter(from, post).shouldBe(empty);
     }
 
     public static void ensurePublicPostingMode() {
@@ -87,14 +147,20 @@ public class Feed {
     public static void deleteAllPosts(PodUser from) {
         addPublicPost(the("servicepost"));
         assertNthPostIs(0, from, the("servicepost"));
-        try {
-            while (posts.size() > 0) {
-                String post = posts.get(0).find(".markdown-content").getText();
-                deletePost(from, post);
-                assertPostIsNotShown(from, post);
-            }
-        } catch (IndexOutOfBoundsException e) {
+        ElementsCollection userPosts = posts.filter(textBegin(from.fullName));
+        for (SelenideElement userPost : userPosts) {
+            deletePost(userPost);
         }
+        addPublicPost(the("servicepost"));
+        assertNthPostIs(0, from, the("servicepost"));
+        ElementsCollection userPosts1 = posts.filter(textBegin(from.fullName));
+        if (userPosts1.size() == 1) {
+            deletePost(userPosts1.get(0));
+        } else {
+            deleteAllPosts(from);
+        }
+
     }
+
 
 }
