@@ -55,7 +55,7 @@ public class Feed {
         Coordinates coordinates = post.getCoordinates();
         coordinates.inViewPort();
         post.find(".post-content").hover();
-        $(".remove_post").click();
+        post.find(".remove_post").click();
         confirm(null);
     }
 
@@ -90,6 +90,22 @@ public class Feed {
 
     public static void assertComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
         commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1));
+    }
+
+    public static void assertCommentCanNotBeDeleted(PodUser fromPost, String post, PodUser fromComment, String comment) {
+        SelenideElement currentComment = commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1)).get(0);
+        Coordinates coordinates = currentComment.getCoordinates();
+        coordinates.inViewPort();
+        currentComment.hover();
+        currentComment.findAll(".delete").shouldBe(empty);
+    }
+
+    public static void assertPostCanNotBeDeleted(PodUser fromPost, String post) {
+        SelenideElement currentPost = assertPostIsShown(fromPost, post);
+        Coordinates coordinates = currentPost.getCoordinates();
+        coordinates.inViewPort();
+        currentPost.find(".post-content").hover();
+        currentPost.findAll(".remove_post").shouldBe(empty);
     }
 
     public static void assertCommentIsNotExist(PodUser fromPost, String post, PodUser fromComment, String comment) {

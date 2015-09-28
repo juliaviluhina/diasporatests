@@ -15,7 +15,7 @@ import java.io.IOException;
 public class BaseTest {
     @BeforeClass
     public static void clearDataBeforeTests() {
-        Configuration.timeout = 15000;
+        Configuration.timeout = 20000;
         if (System.getProperty("withClearedDataOnStart").equals("true")) {
             //System.out.println("clearing data before tests");
             clearUserData(Users.ANA);

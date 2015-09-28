@@ -81,10 +81,10 @@ public class DiasporaTest extends BaseTest {
         //GIVEN - setup relation between users, addition one the same followed tag
         String tag = "#ana_bob_rob_sam";
         //who with whom through which aspect, which followed tag, with whom are not any links
-        setupLinksFor(ANA, BOB, ACQUAINTANCES, tag, ROB, SAM);
-        setupLinksFor(BOB, ANA, WORK, tag, ROB, SAM);
-        setupLinksFor(ROB, SAM, FRIENDS, tag, ANA, BOB);
-        setupLinksFor(SAM, ROB, FAMILY, tag, ANA, BOB);
+//        setupLinksFor(ANA, BOB, ACQUAINTANCES, tag, ROB, SAM);
+//        setupLinksFor(BOB, ANA, WORK, tag, ROB, SAM);
+//        setupLinksFor(ROB, SAM, FRIENDS, tag, ANA, BOB);
+//        setupLinksFor(SAM, ROB, FAMILY, tag, ANA, BOB);
 
         //public post
         Diaspora.signInAs(ANA);
@@ -184,33 +184,34 @@ public class DiasporaTest extends BaseTest {
         //delete public post
         Diaspora.signInAs(ANA);
         Menu.assertLoggedUser(ANA);
-        Feed.assertPostIsShown(ANA, the("Public Ana"));
+        NavBar.openMyActivity();
         Feed.deletePost(ANA, the("Public Ana"));
         Feed.assertPostIsNotShown(ANA, the("Public Ana"));
-        Menu.logOut();
-
-        //check - public post is not shown after deletion in other streams
-        Diaspora.signInAs(BOB);
-        Menu.assertLoggedUser(BOB);
-        Feed.assertPostIsNotShown(ANA, the("Public Ana"));
-
-        //check - in my activity stream is no deleted post with comment
-        NavBar.openMyActivity();
-        Feed.assertPostIsNotShown(ANA, the("Public Ana"));
-
-        //delete limited post in my activity stream
-        Feed.deletePost(BOB, the("Bob for work"));
-        Feed.assertPostIsNotShown(BOB, the("Bob for work"));
 
         //delete reshared post
-        Feed.deletePost(BOB, the(tag + " Public Bob"));
-        Feed.assertPostIsNotShown(BOB, the("Bob for work"));
+        NavBar.openStream();
+        Feed.deletePost(ANA, the(tag + " Public Bob"));
+        Feed.assertPostIsNotShown(ANA, the("Bob for work"));
 
+        //check comment of another user can not be deleted
+        Feed.assertCommentCanNotBeDeleted(BOB, the("Bob for work"), BOB, the("Comment from Bob"));
         Menu.logOut();
 
-        //check - limited post is not shown after deletion
+        //delete limited post in my activity stream
+        Diaspora.signInAs(BOB);
+        Menu.assertLoggedUser(BOB);
+        NavBar.openMyActivity();
+        Feed.deleteComment(BOB, the("Bob for work"), BOB, the("Comment from Bob"));
+        Feed.deletePost(BOB, the("Bob for work"));
+        Feed.assertPostIsNotShown(BOB, the("Bob for work"));
+        Menu.logOut();
+
+        //check post of another user can not be deleted
         Diaspora.signInAs(ANA);
         Menu.assertLoggedUser(ANA);
+        Feed.assertPostCanNotBeDeleted(BOB,the(tag + " Public Bob") );
+
+        //check - limited post is not shown after deletion
         Feed.assertPostIsNotShown(BOB, the("Bob for work"));
 
         //check - reshared post is not shown after deletion
