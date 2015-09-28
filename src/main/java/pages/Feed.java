@@ -114,9 +114,8 @@ public class Feed {
     }
 
     protected static ElementsCollection commentsByFilter(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        SelenideElement currentPost = postsByFilter(fromPost, post).get(0);
+        SelenideElement currentPost = assertPostIsShown(fromPost, post);
         ElementsCollection comments = currentPost.findAll(".comment");
-        //return comments.filter(textBegin(fromComment.fullName)).filter(text(comment));
         return comments.filter(textBeginAndContain(fromComment.fullName, comment));
     }
 

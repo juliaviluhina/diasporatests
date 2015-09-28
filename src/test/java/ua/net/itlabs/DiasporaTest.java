@@ -81,10 +81,10 @@ public class DiasporaTest extends BaseTest {
         //GIVEN - setup relation between users, addition one the same followed tag
         String tag = "#ana_bob_rob_sam";
         //who with whom through which aspect, which followed tag, with whom are not any links
-//        setupLinksFor(ANA, BOB, ACQUAINTANCES, tag, ROB, SAM);
-//        setupLinksFor(BOB, ANA, WORK, tag, ROB, SAM);
-//        setupLinksFor(ROB, SAM, FRIENDS, tag, ANA, BOB);
-//        setupLinksFor(SAM, ROB, FAMILY, tag, ANA, BOB);
+        setupLinksFor(ANA, BOB, ACQUAINTANCES, tag, ROB, SAM);
+        setupLinksFor(BOB, ANA, WORK, tag, ROB, SAM);
+        setupLinksFor(ROB, SAM, FRIENDS, tag, ANA, BOB);
+        setupLinksFor(SAM, ROB, FAMILY, tag, ANA, BOB);
 
         //public post
         Diaspora.signInAs(ANA);
@@ -168,9 +168,10 @@ public class DiasporaTest extends BaseTest {
         Feed.addComment(BOB,the(tag + " Public Bob"),the("Comment from Rob"));
         Feed.assertComment(BOB,the(tag + " Public Bob"),ROB, the("Comment from Rob"));
 
-        //delete comment
+        //delete comment in stream
         Menu.openStream();
-        //Feed.assertPostIsShown(BOB,the(tag + " Public Bob"));
+        //NavBar.openTags();
+        //Tags.filter(tag);
         Feed.deleteComment(BOB,the(tag + " Public Bob"),ROB, the("Comment from Rob"));
         Feed.assertCommentIsNotExist(BOB,the(tag + " Public Bob"),ROB, the("Comment from Rob"));
 
@@ -183,7 +184,7 @@ public class DiasporaTest extends BaseTest {
         //delete public post
         Diaspora.signInAs(ANA);
         Menu.assertLoggedUser(ANA);
-        //NavBar.openMyActivity();
+        Feed.assertPostIsShown(ANA, the("Public Ana"));
         Feed.deletePost(ANA, the("Public Ana"));
         Feed.assertPostIsNotShown(ANA, the("Public Ana"));
         Menu.logOut();
