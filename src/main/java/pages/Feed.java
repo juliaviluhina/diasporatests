@@ -6,6 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import datastructures.DiasporaAspect;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
+import org.openqa.selenium.interactions.internal.Coordinates;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
@@ -47,11 +48,13 @@ public class Feed {
 
     @Step
     public static void deletePost(PodUser from, String postText) {
-        deletePost(postsByFilter(from, postText).get(0));
+        deletePost(assertPostIsShown(from, postText));
     }
 
     public static void deletePost(SelenideElement post) {
-        post.hover();
+        Coordinates coordinates = post.getCoordinates();
+        coordinates.inViewPort();
+        post.find(".post-content").hover();
         $(".remove_post").click();
         confirm(null);
     }
@@ -71,13 +74,15 @@ public class Feed {
 
     @Step
     public static void reshare(PodUser from, String post) {
-        postsByFilter(from, post).get(0).find(".reshare").click();
+        assertPostIsShown(from, post).find(".reshare").click();
         confirm(null);
     }
 
     @Step
     public static void deleteComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
         SelenideElement currentComment = commentsByFilter(fromPost, post, fromComment, comment).get(0);
+        Coordinates coordinates = currentComment.getCoordinates();
+        coordinates.inViewPort();
         currentComment.hover();
         currentComment.find(".delete").click();
         confirm(null);
@@ -96,7 +101,7 @@ public class Feed {
     }
 
     public static void assertLikes(PodUser from, String post, int countLikes) {
-        postsByFilter(from, post).get(0).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
+        assertPostIsShown(from, post).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
     }
 
     public static void assertNthPostIs(int nth, PodUser from, String post) {
@@ -159,7 +164,6 @@ public class Feed {
         } else {
             deleteAllPosts(from);
         }
-
     }
 
 

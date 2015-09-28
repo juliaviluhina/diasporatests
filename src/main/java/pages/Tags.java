@@ -2,6 +2,8 @@ package pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
+import org.openqa.selenium.interactions.internal.Coordinates;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
@@ -27,17 +29,14 @@ public class Tags {
 
     @Step
     public static void delete(String tagName) {
-//        tags.find(exactText(tagName)).hover();
-//        //System.out.println("#unfollow_" + tagName.substring(1));
-//        $("#unfollow_" + tagName.substring(1)).click();
-//        confirm(null);
         delete(tags.find(exactText(tagName)));
     }
 
     public static void delete(SelenideElement tag) {
+        Coordinates coordinates = tag.getCoordinates();
+        coordinates.inViewPort();
         tag.hover();
         $("#unfollow_" + tag.getText().substring(1)).click();
-        //tag.find(".delete_tag_following").click();
         confirm(null);
     }
 
@@ -68,7 +67,7 @@ public class Tags {
         add(the("#stag"));
         assertNthIs(0, the("#stag"));
         ElementsCollection userTags1 = tags.filter(textBegin("#"));
-        if (userTags1.size() == 1) {
+        if (tags.size() == 1) {
             delete(userTags1.get(0));
         } else {
             deleteAll();

@@ -15,15 +15,15 @@ import java.io.IOException;
 public class BaseTest {
     @BeforeClass
     public static void clearDataBeforeTests() {
+        Configuration.timeout = 15000;
         if (System.getProperty("withClearedDataOnStart").equals("true")) {
-            Configuration.timeout = 30000;
             //System.out.println("clearing data before tests");
             clearUserData(Users.ANA);
             clearUserData(Users.BOB);
             clearUserData(Users.ROB);
             clearUserData(Users.SAM);
         }
-        Configuration.timeout = 10000;
+
     }
 
     @After
