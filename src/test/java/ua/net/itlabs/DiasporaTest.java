@@ -81,10 +81,10 @@ public class DiasporaTest extends BaseTest {
         //GIVEN - setup relation between users, addition one the same followed tag
         String tag = "#ana_bob_rob_sam";
         //who with whom through which aspect, which followed tag, with whom are not any links
-//        setupLinksFor(ANA, BOB, ACQUAINTANCES, tag, ROB, SAM);
-//        setupLinksFor(BOB, ANA, WORK, tag, ROB, SAM);
-//        setupLinksFor(ROB, SAM, FRIENDS, tag, ANA, BOB);
-//        setupLinksFor(SAM, ROB, FAMILY, tag, ANA, BOB);
+        setupLinksFor(ANA, BOB, ACQUAINTANCES, tag, ROB, SAM);
+        setupLinksFor(BOB, ANA, WORK, tag, ROB, SAM);
+        setupLinksFor(ROB, SAM, FRIENDS, tag, ANA, BOB);
+        setupLinksFor(SAM, ROB, FAMILY, tag, ANA, BOB);
 
         //public post
         Diaspora.signInAs(ANA);
