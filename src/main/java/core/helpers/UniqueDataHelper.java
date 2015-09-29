@@ -16,4 +16,8 @@ public class UniqueDataHelper {
         return dataContainer.get(name);
     }
 
+    public static void clearThe(){
+        dataContainer.clear();
+    }
+
 }

@@ -4,13 +4,15 @@ import com.codeborne.selenide.Configuration;
 import datastructures.DiasporaAspect;
 import datastructures.PodUser;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import pages.*;
 import ru.yandex.qatools.allure.annotations.Step;
-import ua.net.itlabs.testDatas.DiasporaAspects;
 import ua.net.itlabs.testDatas.Users;
 
 import java.io.IOException;
+
+import static core.helpers.UniqueDataHelper.clearThe;
 
 public class BaseTest {
     @BeforeClass
@@ -24,6 +26,11 @@ public class BaseTest {
             clearUserData(Users.SAM);
         }
 
+    }
+
+    @Before
+    public void ActionsBeforeTest() {
+        clearThe();
     }
 
     @After
@@ -44,20 +51,20 @@ public class BaseTest {
     }
 
     @Step
-    public void setupLinksFor(PodUser user, PodUser linkedUser, DiasporaAspect diasporaAspect, String followedTag, PodUser ... unlinkedUsers){
+    public void setupLinksFor(PodUser user, PodUser linkedUser, DiasporaAspect diasporaAspect, String followedTag, PodUser... unlinkedUsers) {
         //user relation setup
         Diaspora.signInAs(user);
         Menu.assertLoggedUser(user);
         //user have diasporaAspect relation with linkedUser
         Menu.search(linkedUser.fullName);
-        People.assertPerson(linkedUser.fullName);
-        People.ensureAspectForContact(diasporaAspect);
+        Feed.assertPerson(linkedUser.fullName);
+        Aspects.ensureAspectsForContact(diasporaAspect);
         //user have not any relation with unlinkedUser1
-        for (PodUser unlinkedUser:unlinkedUsers) {
+        for (PodUser unlinkedUser : unlinkedUsers) {
             Menu.search(unlinkedUser.fullName);
-            People.assertPerson(unlinkedUser.fullName);
-            People.ensureNoAspectsForContact();
-            People.assertAspectsAreNotUsed();
+            Feed.assertPerson(unlinkedUser.fullName);
+            Aspects.ensureNoAspectsForContact();
+            Aspects.assertAspectsAreNotUsed();
         }
         //Addition followed tag
         Menu.openStream();
@@ -68,17 +75,39 @@ public class BaseTest {
     }
 
     @Step
-    public void setupLinksFor(PodUser user, String followedTag, PodUser ... unlinkedUsers){
+    public void setupLinksFor(PodUser user, String followedTag, PodUser... unlinkedUsers) {
         //user relation setup
         Diaspora.signInAs(user);
         Menu.assertLoggedUser(user);
         //user have not any relation with unlinkedUser1
-        for (PodUser unlinkedUser:unlinkedUsers) {
+        for (PodUser unlinkedUser : unlinkedUsers) {
             Menu.search(unlinkedUser.fullName);
-            People.assertPerson(unlinkedUser.fullName);
-            People.ensureNoAspectsForContact();
-            People.assertAspectsAreNotUsed();
+            Feed.assertPerson(unlinkedUser.fullName);
+            Aspects.ensureNoAspectsForContact();
+            Aspects.assertAspectsAreNotUsed();
         }
+        //Addition followed tag
+        Menu.openStream();
+        NavBar.openTags();
+        Tags.add(followedTag);
+        Tags.assertExist(followedTag);
+        Menu.logOut();
+    }
+
+    @Step
+    public void setupLinksFor(PodUser user, PodUser linkedUser, String followedTag, PodUser unlinkedUser, DiasporaAspect... diasporaAspects) {
+        //user relation setup
+        Diaspora.signInAs(user);
+        Menu.assertLoggedUser(user);
+        //user have diasporaAspect relation with linkedUser
+        Menu.search(linkedUser.fullName);
+        Feed.assertPerson(linkedUser.fullName);
+        Aspects.ensureAspectsForContact(diasporaAspects);
+        //user have not any relation with unlinkedUser1
+        Menu.search(unlinkedUser.fullName);
+        Feed.assertPerson(unlinkedUser.fullName);
+        Aspects.ensureNoAspectsForContact();
+        Aspects.assertAspectsAreNotUsed();
         //Addition followed tag
         Menu.openStream();
         NavBar.openTags();

@@ -17,6 +17,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.helpers.UniqueDataHelper.the;
 import static core.conditions.CustomCondition.*;
+import static pages.Aspects.aspectIsUsed;
 
 public class Feed {
 
@@ -108,6 +109,10 @@ public class Feed {
         confirm(null);
     }
 
+    public static void assertPerson(String fullName) {
+        $("#diaspora_handle").shouldHave(Condition.exactText(fullName));
+    }
+
     public static void assertComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
         commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1));
     }
@@ -172,9 +177,7 @@ public class Feed {
         setAspect.shouldHave(Condition.text("Public"));
     }
 
-    protected static Boolean aspectIsUsed(SelenideElement aspect) {
-        return aspect.getAttribute("class").contains("selected");
-    }
+
 
     public static void ensurePrivatePostingMode() {
         if (aspect.getText().contains("Select aspects")) {
@@ -204,7 +207,7 @@ public class Feed {
             aspect.find(".all_aspects").click();
         }
         setAspect.click();
-        SelenideElement selectingAspect = aspect.findAll(".aspect_selector").get(diasporaAspect.number);
+        SelenideElement selectingAspect = aspect.findAll(".aspect_selector").find(text(diasporaAspect.name));
         selectingAspect.click();
         setAspect.shouldHave(Condition.text(selectingAspect.getText()));
         setAspect.click();
