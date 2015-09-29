@@ -77,7 +77,7 @@ public class DiasporaTest extends BaseTest {
     }
 
     @Test
-    public void testUserActivitiesAndLimitOfAccess() {
+    public void testUserActivitiesAndAccessForUsersOfDifferentPods() {
         //GIVEN - setup relation between users, addition one the same followed tag
         String tag = "#ana_bob_rob_sam";
         //who with whom through which aspect, which followed tag, with whom are not any links
@@ -191,7 +191,7 @@ public class DiasporaTest extends BaseTest {
         //delete reshared post
         NavBar.openStream();
         Feed.deletePost(ANA, the(tag + " Public Bob"));
-        Feed.assertPostIsNotShown(ANA, the("Bob for work"));
+        Feed.assertPostIsNotShown(ANA, the(tag + " Public Bob"));
 
         //check comment of another user can not be deleted
         Feed.assertCommentCanNotBeDeleted(BOB, the("Bob for work"), BOB, the("Comment from Bob"));
@@ -214,15 +214,160 @@ public class DiasporaTest extends BaseTest {
         //check - limited post is not shown after deletion
         Feed.assertPostIsNotShown(BOB, the("Bob for work"));
 
-        //check - reshared post is not shown after deletion
-        Feed.assertPostIsNotShown(BOB, the("Bob for work"));
-
         //check - after deletion reshared post in resharing post is no old content
         Feed.assertPostIsNotShown(ANA, the(tag + " Public Bob"));
         Menu.logOut();
 
     }
 
+    @Test
+    public void testUserActivitiesAndAccessForUsersOfOnePod() {
+        //GIVEN - setup relation between users, addition one the same followed tag
+        String tag = "#a_b";
+        //who with whom through which aspect, which followed tag, with whom are not any links
+        setupLinksFor(ANA, ROB, ACQUAINTANCES, tag, EVE);
+        setupLinksFor(ROB, ANA, WORK, tag, EVE);
+        setupLinksFor(EVE, tag, ANA, ROB);
+
+        //public post
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
+        Feed.addPublicPost(the("Public Ana"));
+        Feed.assertNthPostIs(0, ANA, the("Public Ana"));
+        Menu.logOut();
+
+        //like post, indirect check - public post is shown in stream of linked user
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
+        Feed.toggleLike(ANA, the("Public Ana"));
+        Feed.assertLikes(ANA,the("Public Ana"), 1);
+
+        //limited post in right aspect
+        Feed.addAspectPost(WORK, the("Rob for work"));
+        //check - for limited post is no possibility for resharing, indirect check - post is added
+        Feed.assertReshareIsImpossible(ROB, the("Rob for work"));
+        Menu.logOut();
+
+        //like and comment post, indirect check - limited post in right aspect is shown in stream of linked user
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
+        Feed.toggleLike(ROB, the("Rob for work"));
+        Feed.assertLikes(ROB, the("Rob for work"), 1);
+        Feed.addComment(ROB, the("Rob for work"), the("Comment from Ana"));
+        Feed.assertComment(ROB, the("Rob for work"), ANA, the("Comment from Ana"));
+
+        //limited post in wrong aspect
+        Feed.addAspectPost(FAMILY, the("Ana for family"));
+        Feed.assertNthPostIs(0, ANA, the("Ana for family"));
+        Menu.logOut();
+
+        //check - limited post in wrong aspect is not shown in stream of linked user
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
+        Feed.assertPostIsNotShown(ANA, the("Ana for family"));
+
+        //comment post, check visibility of other comments
+        Feed.assertComment(ROB, the("Rob for work"), ANA, the("Comment from Ana"));
+        Feed.addComment(ROB, the("Rob for work"), the("Comment from Rob"));
+        Feed.assertComment(ROB, the("Rob for work"), ROB, the("Comment from Rob"));
+
+        //public post with tag
+        Feed.addPublicPost(the(tag + " Public Rob"));
+        Feed.assertNthPostIs(0, ROB, the(tag + " Public Rob"));
+        Menu.logOut();
+
+        //reshare post, indirect check - public post with tag is shown in stream of linked used
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
+        Feed.reshare(ROB,the(tag + " Public Rob"));
+        Feed.assertNthPostIs(0, ANA, the(tag + " Public Rob"));
+
+        //delete post
+        NavBar.openMyActivity();
+        Feed.deletePost(ANA, the("Public Ana"));
+        Feed.assertPostIsNotShown(ANA, the("Public Ana"));
+
+        //check comment of another user can not be deleted
+        Feed.assertCommentCanNotBeDeleted(ROB, the("Rob for work"), ROB, the("Comment from Rob"));
+
+        //check post of another user can not be deleted
+        NavBar.openStream();
+        Feed.assertPostCanNotBeDeleted(ROB,the(tag + " Public Rob") );
+        Menu.logOut();
+
+
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
+        //check - resharing post is shown
+        Feed.assertPostIsShown(ANA, the(tag + " Public Rob"));
+        //check - deleted post is not shown
+        Feed.assertPostIsNotShown(ANA, the("Public Ana"));
+
+        NavBar.openMyActivity();
+        //delete comment in my activity stream
+        Feed.deleteComment(ROB, the("Rob for work"), ROB, the("Comment from Rob"));
+        //delete limited post in my activity stream
+        Feed.deletePost(ROB, the("Rob for work"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for work"));
+        //delete reshared post
+        Feed.deletePost(ROB,the(tag + " Public Rob"));
+        Feed.assertPostIsNotShown(ROB, the(tag + " Public Rob"));
+        Menu.logOut();
+
+        //add private post
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
+        Feed.addPrivatePost(the("Private Ana"));
+        Feed.assertNthPostIs(0, ANA, the("Private Ana"));
+
+        //add all aspects post
+        Feed.addAllAspectsPost(the("All aspects Ana"));
+        Feed.assertNthPostIs(0, ANA, the("All aspects Ana"));
+
+        //check - limited post is not shown after deletion
+        Feed.assertPostIsNotShown(ROB, the("Rob for work"));
+
+        //check - reshared post is not shown after deletion
+        Feed.assertPostIsNotShown(ANA, the(tag + " Public Rob"));
+
+        //check - resharing post do not contain data from deleted reshared post
+        Feed.assertPostIsNotShown(ANA, the(tag + " Public Rob"));
+        Menu.logOut();
+
+
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
+        //add new public post with tag, like, comment
+        Feed.addPublicPost(the(tag + " Public Rob next"));
+        Feed.toggleLike(ROB,the(tag + " Public Rob next"));
+        Feed.assertLikes(ROB, the(tag + " Public Rob next"), 1);
+        Feed.addComment(ROB, the(tag + " Public Rob next"), "Comment from Rob");
+        Feed.assertComment(ROB, the(tag + " Public Rob next"), ROB, "Comment from Rob");
+        //check post for all aspects is shown
+        Feed.assertPostIsShown(ANA, the("All aspects Ana"));
+        //check private post of another user is not shown
+        Feed.assertPostIsNotShown(ANA, the("Private Ana"));
+        Menu.logOut();
+
+        Diaspora.signInAs(EVE);
+        Menu.assertLoggedUser(EVE);
+        //like public post, indirect check - public post with tag is shown
+        Feed.toggleLike(ROB, the(tag + " Public Rob next"));;
+        Feed.assertLikes(ROB, the(tag + " Public Rob next"), 2);
+        //add comment, delete comment
+        Feed.addComment(ROB, the(tag + " Public Rob next"), "Comment from Eve");
+        Feed.deleteComment(ROB, the(tag + " Public Rob next"), EVE, "Comment from Eve");
+        //check - comments of other users is shown and can not be deleted
+        Feed.assertCommentCanNotBeDeleted(ROB, the(tag + " Public Rob next"), ROB, "Comment from Rob");
+        //check post for all aspects is shown
+        Feed.assertPostIsNotShown(ANA, the("All aspects Ana"));
+        //check private post of another user is not shown
+        Feed.assertPostIsNotShown(ANA, the("Private Ana"));
+        //deleted public post with tag is not shown
+        Feed.assertPostIsNotShown(ROB, the(tag + " Public Rob"));
+        Menu.logOut();
+
+    }
 
 
     @Test

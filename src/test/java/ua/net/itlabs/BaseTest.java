@@ -44,7 +44,7 @@ public class BaseTest {
     }
 
     @Step
-    public void setupLinksFor(PodUser user, PodUser linkedUser, DiasporaAspect diasporaAspect, String followedTag, PodUser unlinkedUser1, PodUser unlinkedUser2){
+    public void setupLinksFor(PodUser user, PodUser linkedUser, DiasporaAspect diasporaAspect, String followedTag, PodUser ... unlinkedUsers){
         //user relation setup
         Diaspora.signInAs(user);
         Menu.assertLoggedUser(user);
@@ -53,15 +53,32 @@ public class BaseTest {
         People.assertPerson(linkedUser.fullName);
         People.ensureAspectForContact(diasporaAspect);
         //user have not any relation with unlinkedUser1
-        Menu.search(unlinkedUser1.fullName);
-        People.assertPerson(unlinkedUser1.fullName);
-        People.ensureNoAspectsForContact();
-        People.assertAspectsAreNotUsed();
+        for (PodUser unlinkedUser:unlinkedUsers) {
+            Menu.search(unlinkedUser.fullName);
+            People.assertPerson(unlinkedUser.fullName);
+            People.ensureNoAspectsForContact();
+            People.assertAspectsAreNotUsed();
+        }
+        //Addition followed tag
+        Menu.openStream();
+        NavBar.openTags();
+        Tags.add(followedTag);
+        Tags.assertExist(followedTag);
+        Menu.logOut();
+    }
+
+    @Step
+    public void setupLinksFor(PodUser user, String followedTag, PodUser ... unlinkedUsers){
+        //user relation setup
+        Diaspora.signInAs(user);
+        Menu.assertLoggedUser(user);
         //user have not any relation with unlinkedUser1
-        Menu.search(unlinkedUser2.fullName);
-        People.assertPerson(unlinkedUser2.fullName);
-        People.ensureNoAspectsForContact();
-        People.assertAspectsAreNotUsed();
+        for (PodUser unlinkedUser:unlinkedUsers) {
+            Menu.search(unlinkedUser.fullName);
+            People.assertPerson(unlinkedUser.fullName);
+            People.ensureNoAspectsForContact();
+            People.assertAspectsAreNotUsed();
+        }
         //Addition followed tag
         Menu.openStream();
         NavBar.openTags();

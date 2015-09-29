@@ -38,6 +38,26 @@ public class Feed {
     }
 
     @Step
+    public static void addPrivatePost(String text) {
+        newPostText.click();
+        newPostText.setValue(text);
+
+        ensurePrivatePostingMode();
+        share.click();
+
+    }
+
+    @Step
+    public static void addAllAspectsPost(String text) {
+        newPostText.click();
+        newPostText.setValue(text);
+
+        ensureAllAspectsPostingMode();
+        share.click();
+
+    }
+
+    @Step
     public static void addAspectPost(DiasporaAspect diasporaAspect, String text) {
         newPostText.click();
         newPostText.setValue(text);
@@ -150,6 +170,32 @@ public class Feed {
         setAspect.click();
         aspect.find(".public").click();
         setAspect.shouldHave(Condition.text("Public"));
+    }
+
+    protected static Boolean aspectIsUsed(SelenideElement aspect) {
+        return aspect.getAttribute("class").contains("selected");
+    }
+
+    public static void ensurePrivatePostingMode() {
+        if (aspect.getText().contains("Select aspects")) {
+            return;
+        }
+        setAspect.click();
+        aspect.find(".all_aspects").click();
+        setAspect.click();
+        ElementsCollection aspects = aspect.findAll(".aspect_selector");
+        aspects.get(0).click();
+        for (SelenideElement aspect:aspects) {
+            if (aspectIsUsed(aspect)) {aspect.click();}
+        }
+    }
+
+    public static void ensureAllAspectsPostingMode() {
+        if (aspect.getText().contains("All aspects")) {
+            return;
+        }
+        setAspect.click();
+        aspect.find(".all_aspects").click();
     }
 
     public static void ensureAspectPostingMode(DiasporaAspect diasporaAspect) {
