@@ -59,7 +59,7 @@ public class Feed {
     }
 
     @Step
-    public static void addAspectPost(DiasporaAspect diasporaAspect, String text) {
+    public static void addAspectPost(String diasporaAspect, String text) {
         newPostText.click();
         newPostText.setValue(text);
 
@@ -201,13 +201,13 @@ public class Feed {
         aspect.find(".all_aspects").click();
     }
 
-    public static void ensureAspectPostingMode(DiasporaAspect diasporaAspect) {
+    public static void ensureAspectPostingMode(String diasporaAspect) {
         if (!aspect.getText().contains("All aspects")) {
             setAspect.click();
             aspect.find(".all_aspects").click();
         }
         setAspect.click();
-        SelenideElement selectingAspect = aspect.findAll(".aspect_selector").find(text(diasporaAspect.name));
+        SelenideElement selectingAspect = aspect.findAll(".aspect_selector").find(text(diasporaAspect));
         selectingAspect.click();
         setAspect.shouldHave(Condition.text(selectingAspect.getText()));
         setAspect.click();

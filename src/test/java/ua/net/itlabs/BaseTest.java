@@ -1,7 +1,6 @@
 package ua.net.itlabs;
 
 import com.codeborne.selenide.Configuration;
-import datastructures.DiasporaAspect;
 import datastructures.PodUser;
 import org.junit.After;
 import org.junit.Before;
@@ -51,7 +50,7 @@ public class BaseTest {
     }
 
     @Step
-    public void setupLinksFor(PodUser user, PodUser linkedUser, DiasporaAspect diasporaAspect, String followedTag, PodUser... unlinkedUsers) {
+    public void setupLinksFor(PodUser user, PodUser linkedUser, String diasporaAspect, String followedTag, PodUser... unlinkedUsers) {
         //user relation setup
         Diaspora.signInAs(user);
         Menu.assertLoggedUser(user);
@@ -95,7 +94,7 @@ public class BaseTest {
     }
 
     @Step
-    public void setupLinksFor(PodUser user, PodUser linkedUser, String followedTag, PodUser unlinkedUser, DiasporaAspect... diasporaAspects) {
+    public void setupLinksFor(PodUser user, PodUser linkedUser, String followedTag, PodUser unlinkedUser, String... diasporaAspects) {
         //user relation setup
         Diaspora.signInAs(user);
         Menu.assertLoggedUser(user);

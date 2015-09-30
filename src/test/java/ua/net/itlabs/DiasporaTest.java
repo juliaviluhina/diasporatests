@@ -1,16 +1,13 @@
 package ua.net.itlabs;
 
-import datastructures.DiasporaAspect;
 import org.junit.Test;
 import pages.*;
 import ua.net.itlabs.categories.Buggy;
 import ua.net.itlabs.testDatas.Users;
 
-import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static core.conditions.CustomCollectionCondition.textsBegin;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
 import static ua.net.itlabs.testDatas.DiasporaAspects.*;
@@ -381,7 +378,7 @@ public class DiasporaTest extends BaseTest {
         setupLinksFor(ANA, ROB, tag, EVE, FAMILY, FRIENDS);
         setupLinksFor(ROB, ANA, tag, EVE, WORK, ACQUAINTANCES);
         setupLinksFor(EVE, tag, ANA, ROB);
-        //add post for different aspects
+        //add posts - Eve
         Diaspora.signInAs(Users.EVE);
         Menu.assertLoggedUser(Users.EVE);
         Feed.addPublicPost(the(tag + " Public Eve"));
@@ -389,7 +386,7 @@ public class DiasporaTest extends BaseTest {
         Feed.addAllAspectsPost(the("All aspects Eve"));
         Feed.assertNthPostIs(0, EVE, the("All aspects Eve"));
         Menu.logOut();
-
+        //add posts - Ana
         Diaspora.signInAs(Users.ANA);
         Menu.assertLoggedUser(Users.ANA);
         Feed.addAspectPost(FRIENDS, the("Ana for friends"));
@@ -397,12 +394,12 @@ public class DiasporaTest extends BaseTest {
         Feed.addAspectPost(WORK, the("Ana for work"));
         Feed.assertNthPostIs(0, ANA, the("Ana for work"));
         Menu.logOut();
-
+        //Add posts - Rob
         Diaspora.signInAs(Users.ROB);
         Menu.assertLoggedUser(Users.ROB);
         Feed.addAspectPost(FAMILY, the("Rob for family"));
 
-        //check - all available posts in stream
+        //check - all available posts in Rob's stream
         Feed.assertPostIsShown(ROB, the("Rob for family"));
         Feed.assertPostIsShown(EVE, the(tag + " Public Eve"));
         Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
@@ -420,7 +417,7 @@ public class DiasporaTest extends BaseTest {
         Feed.assertPostIsNotShown(ANA, the("Ana for work"));
 
         //filtering - Friends is enabled
-        Aspects.toggleAspect(FRIENDS.name);
+        Aspects.toggleAspect(FRIENDS);
         Feed.assertPostIsNotShown(ROB, the("Rob for family"));
         Feed.assertPostIsNotShown(EVE, the(tag + " Public Eve"));
         Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
@@ -428,7 +425,7 @@ public class DiasporaTest extends BaseTest {
         Feed.assertPostIsNotShown(ANA, the("Ana for work"));
 
         //filtering - Family, Friends is enabled
-        Aspects.toggleAspect(FAMILY.name);
+        Aspects.toggleAspect(FAMILY);
         Feed.assertPostIsShown(ROB, the("Rob for family"));
         Feed.assertPostIsNotShown(EVE, the(tag + " Public Eve"));
         Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
@@ -436,7 +433,7 @@ public class DiasporaTest extends BaseTest {
         Feed.assertPostIsNotShown(ANA, the("Ana for work"));
 
         //filtering - Family, Friends, Work is enabled
-        Aspects.toggleAspect(WORK.name);
+        Aspects.toggleAspect(WORK);
         Feed.assertPostIsShown(ROB, the("Rob for family"));
         Feed.assertPostIsNotShown(EVE, the(tag + " Public Eve"));
         Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
@@ -444,16 +441,57 @@ public class DiasporaTest extends BaseTest {
         Feed.assertPostIsNotShown(ANA, the("Ana for work"));
 
         //add new aspect and link user in aspect
+        Aspects.add(the("Aspect"));
+        Menu.search(EVE.fullName);
+        Feed.assertPerson(EVE.fullName);
+        Aspects.ensureAspectsForContact(the("Aspect"));
+        //add new post in this aspect
+        Menu.openStream();
+        Feed.addAspectPost(the("Aspect"), the(the("Aspect") +" Rob for new aspect"));
+        Feed.assertPostIsShown(ROB, the(the("Aspect") +" Rob for new aspect"));
 
-        //add new aspect, add new post for this aspect, add contact in this aspect
-//        Aspects.add(the("Aspect"));
-//        DiasporaAspect newAspect = new DiasporaAspect(5,the("Aspect"));
-//        Feed.addAspectPost(newAspect, the("Rob for new aspect"));
-//
-//        Menu.search(EVE.fullName);
-//        Feed.assertPerson(EVE.fullName);
-//        Aspects.ensureAspectsForContact(newAspect);
+        //deselect aspect work and select added aspect
+        NavBar.openMyAspects();
+        Aspects.toggleAspect(WORK);
+        Aspects.toggleAspect(the("Aspect"));
 
+        Feed.assertPostIsShown(ROB, the("Rob for family"));
+        Feed.assertPostIsShown(ROB, the(the("Aspect") +" Rob for new aspect"));
+        Feed.assertPostIsShown(EVE, the(tag + " Public Eve"));
+        Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
+        Feed.assertPostIsNotShown(ANA, the("Ana for friends"));
+        Feed.assertPostIsNotShown(ANA, the("Ana for work"));
+
+        //edit aspect
+        Aspects.switchToEditMode(the("Aspect"));
+        Aspects.rename(the("Aspect"), the("Asp"));
+        Menu.openStream();
+        NavBar.openMyAspects();
+        Aspects.assertAspectIsNotShownInNavBar(the("Aspect"));
+
+        //delete aspect
+        Aspects.switchToEditMode(the("Asp"));
+        Aspects.delete();
+        Menu.openStream();
+        NavBar.openMyAspects();
+        Aspects.assertAspectIsNotShownInNavBar(the("Asp"));
+
+        Feed.assertPostIsShown(ROB, the("Rob for family"));
+        Feed.assertPostIsNotShown(ROB, the(the("Aspect") + " Rob for new aspect"));
+        Feed.assertPostIsNotShown(EVE, the(tag + " Public Eve"));
+        Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
+        Feed.assertPostIsNotShown(ANA, the("Ana for friends"));
+        Feed.assertPostIsNotShown(ANA, the("Ana for work"));
+
+        //select all
+        Aspects.toggleAll();
+        Aspects.assertToggleAllText("Deselect all");
+        Feed.assertPostIsNotShown(ROB, the(the("Aspect") +" Rob for new aspect"));
+        Feed.assertPostIsShown(ROB, the("Rob for family"));
+        Feed.assertPostIsNotShown(EVE, the(tag + " Public Eve"));
+        Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
+        Feed.assertPostIsShown(ANA, the("Ana for friends"));
+        Feed.assertPostIsNotShown(ANA, the("Ana for work"));
     }
 
 
@@ -498,21 +536,5 @@ public class DiasporaTest extends BaseTest {
         Tags.assertNthIs(1, the("#Ytag"));
 
     }
-
-//    @Test
-//    public void testCur() {
-//
-//        Diaspora.signInAs(BOB);
-//        Menu.assertLoggedUser(BOB);
-//        Menu.search(EVE.fullName);
-//        Feed.assertPerson(EVE.fullName);
-//        Aspects.ensureAspectsForContact(FAMILY,ACQUAINTANCES);
-//        Aspects.ensureNoAspectsForContact();
-//        Menu.openStream();
-//        Feed.addAspectPost(FRIENDS, "For friends");
-//        Feed.addAllAspectsPost("For all aspects");
-//        Feed.addPublicPost("Public post");
-//        Feed.addPrivatePost("Private post");
-//    }
 
 }
