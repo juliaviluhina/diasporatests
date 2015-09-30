@@ -56,15 +56,31 @@ public class Aspects {
         if (manageContact.getText().equals("Add contact")) {
             return;
         }
+//        manageContact.click();
+//        aspects.shouldHave(textsBegin(STANDART_ASPECTS));
+//        String[] aspectTexts = aspects.getTexts();
+//        for (String aspectText : aspectTexts) {
+//            SelenideElement aspect = aspects.find(text(aspectText));
+//            if (!aspectIsUsed(aspect)) {
+//                continue;
+//            }
+//            aspect.click();
+//        }
+//        $("#diaspora_handle").click();
         manageContact.click();
         aspects.shouldHave(textsBegin(STANDART_ASPECTS));
         String[] aspectTexts = aspects.getTexts();
-        for (String aspectText : aspectTexts) {
-            SelenideElement aspect = aspects.find(text(aspectText));
-            if (!aspectIsUsed(aspect)) {
-                continue;
+        Boolean[] beUsed = new Boolean[aspectTexts.length];
+        for (int i = 0; i < aspectTexts.length; i++) {
+            beUsed[i] = aspectIsUsed(aspects.get(i));
+        }
+        for (int i = 0; i < aspects.size(); i++) {
+            if (beUsed[i]) {
+                aspects.get(i).click();
+                $("#diaspora_handle").click();
+                manageContact.click();
+                aspects.shouldHave(textsBegin(STANDART_ASPECTS));
             }
-            aspect.click();
         }
         $("#diaspora_handle").click();
     }
@@ -85,12 +101,20 @@ public class Aspects {
             shouldBeUsed[i] = FALSE;
         }
         for (DiasporaAspect diasporaAspect : diasporaAspects) {
-            shouldBeUsed[diasporaAspect.number] = TRUE;
+            for (int i=0; i<aspectTexts.length; i++) {
+                if (aspectTexts[i].contains(diasporaAspect.name)) {
+                    shouldBeUsed[i] = TRUE;
+                    break;
+                }
+            }
         }
 
         for (int i = 0; i < aspects.size(); i++) {
             if (beUsed[i] != shouldBeUsed[i]) {
                 aspects.get(i).click();
+                $("#diaspora_handle").click();
+                manageContact.click();
+                aspects.shouldHave(textsBegin(STANDART_ASPECTS));
             }
         }
         $("#diaspora_handle").click();

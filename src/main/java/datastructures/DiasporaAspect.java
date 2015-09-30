@@ -2,11 +2,9 @@ package datastructures;
 
 public class DiasporaAspect {
 
-    public int number;
     public String name;
 
-    public DiasporaAspect(int number, String name) {
-        this.number = number;
+    public DiasporaAspect(String name) {
         this.name = name;
     }
 }

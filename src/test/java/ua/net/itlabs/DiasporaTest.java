@@ -6,8 +6,11 @@ import pages.*;
 import ua.net.itlabs.categories.Buggy;
 import ua.net.itlabs.testDatas.Users;
 
+import static com.codeborne.selenide.CollectionCondition.texts;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
 import static ua.net.itlabs.testDatas.DiasporaAspects.*;
@@ -382,13 +385,17 @@ public class DiasporaTest extends BaseTest {
         Diaspora.signInAs(Users.EVE);
         Menu.assertLoggedUser(Users.EVE);
         Feed.addPublicPost(the(tag + " Public Eve"));
+        Feed.assertNthPostIs(0, EVE, the(tag + " Public Eve"));
         Feed.addAllAspectsPost(the("All aspects Eve"));
+        Feed.assertNthPostIs(0, EVE, the("All aspects Eve"));
         Menu.logOut();
 
         Diaspora.signInAs(Users.ANA);
         Menu.assertLoggedUser(Users.ANA);
         Feed.addAspectPost(FRIENDS, the("Ana for friends"));
+        Feed.assertNthPostIs(0, ANA, the("Ana for friends"));
         Feed.addAspectPost(WORK, the("Ana for work"));
+        Feed.assertNthPostIs(0, ANA, the("Ana for work"));
         Menu.logOut();
 
         Diaspora.signInAs(Users.ROB);
@@ -491,5 +498,21 @@ public class DiasporaTest extends BaseTest {
         Tags.assertNthIs(1, the("#Ytag"));
 
     }
+
+//    @Test
+//    public void testCur() {
+//
+//        Diaspora.signInAs(BOB);
+//        Menu.assertLoggedUser(BOB);
+//        Menu.search(EVE.fullName);
+//        Feed.assertPerson(EVE.fullName);
+//        Aspects.ensureAspectsForContact(FAMILY,ACQUAINTANCES);
+//        Aspects.ensureNoAspectsForContact();
+//        Menu.openStream();
+//        Feed.addAspectPost(FRIENDS, "For friends");
+//        Feed.addAllAspectsPost("For all aspects");
+//        Feed.addPublicPost("Public post");
+//        Feed.addPrivatePost("Private post");
+//    }
 
 }
