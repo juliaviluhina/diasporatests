@@ -8,10 +8,10 @@ import ua.net.itlabs.testDatas.Users;
 import static com.codeborne.selenide.Condition.visible;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
-import static pages.Contacts.FRIENDS;
-import static pages.Contacts.FAMILY;
-import static pages.Contacts.WORK;
-import static pages.Contacts.ACQUAINTANCES;
+import static pages.Aspects.FRIENDS;
+import static pages.Aspects.FAMILY;
+import static pages.Aspects.WORK;
+import static pages.Aspects.ACQUAINTANCES;
 
 public class DiasporaTest extends BaseTest {
 

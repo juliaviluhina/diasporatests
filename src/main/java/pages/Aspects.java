@@ -12,6 +12,13 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class Aspects {
 
+    public static final String FAMILY = "Family";
+    public static final String FRIENDS = "Friends";
+    public static final String WORK = "Work";
+    public static final String ACQUAINTANCES = "Acquaintances";
+    public static final String[] STANDART_ASPECTS = {FAMILY, FRIENDS, WORK, ACQUAINTANCES};
+
+
     public static ElementsCollection aspectsNavBar = $$("#aspects_list li a");
     public static ElementsCollection aspectContainersNavBar = $$("#aspects_list li");
 

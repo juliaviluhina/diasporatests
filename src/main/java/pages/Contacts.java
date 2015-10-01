@@ -12,24 +12,19 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
+import static java.lang.Boolean.*;
 import static core.conditions.CustomCollectionCondition.textsBegin;
 import static core.conditions.CustomCondition.textBegin;
 import static core.helpers.UniqueDataHelper.clearThe;
 import static core.helpers.UniqueDataHelper.the;
-import static java.lang.Boolean.*;
+import static pages.Aspects.STANDART_ASPECTS;
+
 
 public class Contacts {
-
-    public static final String FAMILY = "Family";
-    public static final String FRIENDS = "Friends";
-    public static final String WORK = "Work";
-    public static final String ACQUAINTANCES = "Acquaintances";
-    public static final String[] STANDART_ASPECTS = {FAMILY, FRIENDS, WORK, ACQUAINTANCES};
 
     public static ElementsCollection aspects = $$(".aspect a");
     public static SelenideElement manageContact = $(".btn.dropdown-toggle");
     public static ElementsCollection aspectsOfContact = $$(".aspect_selector");
-
 
     @Step
     public static void addAspect(String aspect) {
