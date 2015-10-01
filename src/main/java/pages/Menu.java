@@ -17,10 +17,11 @@ import static com.codeborne.selenide.Selenide.$$;
 public class Menu {
 
     public static SelenideElement userMenu = $("#user_menu");
+    public static SelenideElement subMenuIndicator = $(".user-menu-more-indicator");
 
     @Step
     public static void logOut() {
-        $(".user-menu-more-indicator").click();
+        subMenuIndicator.click();
         userMenu.find("[data-method='delete']").click();
     }
 
@@ -34,6 +35,12 @@ public class Menu {
     @Step
     public static void openStream() {
         $(".header-nav [href='/stream']").click();
+    }
+
+    @Step
+    public static void openContacts(){
+        subMenuIndicator.click();
+        $("[href='/contacts']").click();
     }
 
     public static void assertLoggedUser(PodUser user) {

@@ -14,9 +14,10 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
+import static core.helpers.UniqueDataHelper.clearThe;
 import static core.helpers.UniqueDataHelper.the;
 import static core.conditions.CustomCondition.*;
-import static pages.Aspects.aspectIsUsed;
+import static pages.Contacts.aspectIsUsed;
 
 public class Feed {
 
@@ -212,22 +213,20 @@ public class Feed {
         setAspect.click();
     }
 
+
     public static void deleteAllPosts(PodUser from) {
+        clearThe();
         addPublicPost(the("servicepost"));
         assertNthPostIs(0, from, the("servicepost"));
+        int countDeleted = 0;
         ElementsCollection userPosts = posts.filter(textBegin(from.fullName));
         for (SelenideElement userPost : userPosts) {
             deletePost(userPost);
+            countDeleted++;
         }
-        addPublicPost(the("servicepost"));
-        assertNthPostIs(0, from, the("servicepost"));
-        ElementsCollection userPosts1 = posts.filter(textBegin(from.fullName));
-        if (userPosts1.size() == 1) {
-            deletePost(userPosts1.get(0));
-        } else {
+        if (countDeleted > 1) {
             deleteAllPosts(from);
         }
     }
-
 
 }

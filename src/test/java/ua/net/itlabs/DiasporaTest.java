@@ -5,12 +5,13 @@ import pages.*;
 import ua.net.itlabs.categories.Buggy;
 import ua.net.itlabs.testDatas.Users;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static core.conditions.CustomCollectionCondition.textsBegin;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
-import static ua.net.itlabs.testDatas.DiasporaAspects.*;
+import static pages.Contacts.FRIENDS;
+import static pages.Contacts.FAMILY;
+import static pages.Contacts.WORK;
+import static pages.Contacts.ACQUAINTANCES;
 
 public class DiasporaTest extends BaseTest {
 
@@ -444,7 +445,7 @@ public class DiasporaTest extends BaseTest {
         Aspects.add(the("Aspect"));
         Menu.search(EVE.fullName);
         Feed.assertPerson(EVE.fullName);
-        Aspects.ensureAspectsForContact(the("Aspect"));
+        Contacts.ensureAspectsForContact(the("Aspect"));
         //add new post in this aspect
         Menu.openStream();
         Feed.addAspectPost(the("Aspect"), the(the("Aspect") +" Rob for new aspect"));
@@ -464,14 +465,14 @@ public class DiasporaTest extends BaseTest {
 
         //edit aspect
         Aspects.switchToEditMode(the("Aspect"));
-        Aspects.rename(the("Aspect"), the("Asp"));
+        Contacts.rename(the("Aspect"), the("Asp"));
         Menu.openStream();
         NavBar.openMyAspects();
         Aspects.assertAspectIsNotShownInNavBar(the("Aspect"));
 
         //delete aspect
         Aspects.switchToEditMode(the("Asp"));
-        Aspects.delete();
+        Contacts.deleteAspect();
         Menu.openStream();
         NavBar.openMyAspects();
         Aspects.assertAspectIsNotShownInNavBar(the("Asp"));

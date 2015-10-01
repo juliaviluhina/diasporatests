@@ -12,6 +12,7 @@ import ua.net.itlabs.testDatas.Users;
 import java.io.IOException;
 
 import static core.helpers.UniqueDataHelper.clearThe;
+import static ua.net.itlabs.testDatas.Users.*;
 
 public class BaseTest {
     @BeforeClass
@@ -19,12 +20,12 @@ public class BaseTest {
         Configuration.timeout = 20000;
         if (System.getProperty("withClearedDataOnStart").equals("true")) {
             //System.out.println("clearing data before tests");
-            clearUserData(Users.ANA);
-            clearUserData(Users.BOB);
-            clearUserData(Users.ROB);
-            clearUserData(Users.SAM);
+            clearUserData(ANA);
+            clearUserData(BOB);
+            clearUserData(ROB);
+            clearUserData(SAM);
+            clearUserData(EVE);
         }
-
     }
 
     @Before
@@ -46,6 +47,9 @@ public class BaseTest {
         NavBar.openTags();
         Tags.deleteAll();
 
+        Menu.openContacts();
+        Contacts.deleteAllUserAspects();
+
         Menu.logOut();
     }
 
@@ -57,13 +61,13 @@ public class BaseTest {
         //user have diasporaAspect relation with linkedUser
         Menu.search(linkedUser.fullName);
         Feed.assertPerson(linkedUser.fullName);
-        Aspects.ensureAspectsForContact(diasporaAspect);
+        Contacts.ensureAspectsForContact(diasporaAspect);
         //user have not any relation with unlinkedUser1
         for (PodUser unlinkedUser : unlinkedUsers) {
             Menu.search(unlinkedUser.fullName);
             Feed.assertPerson(unlinkedUser.fullName);
-            Aspects.ensureNoAspectsForContact();
-            Aspects.assertAspectsAreNotUsed();
+            Contacts.ensureNoAspectsForContact();
+            Contacts.assertAspectsAreNotUsed();
         }
         //Addition followed tag
         Menu.openStream();
@@ -82,8 +86,8 @@ public class BaseTest {
         for (PodUser unlinkedUser : unlinkedUsers) {
             Menu.search(unlinkedUser.fullName);
             Feed.assertPerson(unlinkedUser.fullName);
-            Aspects.ensureNoAspectsForContact();
-            Aspects.assertAspectsAreNotUsed();
+            Contacts.ensureNoAspectsForContact();
+            Contacts.assertAspectsAreNotUsed();
         }
         //Addition followed tag
         Menu.openStream();
@@ -101,12 +105,12 @@ public class BaseTest {
         //user have diasporaAspect relation with linkedUser
         Menu.search(linkedUser.fullName);
         Feed.assertPerson(linkedUser.fullName);
-        Aspects.ensureAspectsForContact(diasporaAspects);
+        Contacts.ensureAspectsForContact(diasporaAspects);
         //user have not any relation with unlinkedUser1
         Menu.search(unlinkedUser.fullName);
         Feed.assertPerson(unlinkedUser.fullName);
-        Aspects.ensureNoAspectsForContact();
-        Aspects.assertAspectsAreNotUsed();
+        Contacts.ensureNoAspectsForContact();
+        Contacts.assertAspectsAreNotUsed();
         //Addition followed tag
         Menu.openStream();
         NavBar.openTags();
