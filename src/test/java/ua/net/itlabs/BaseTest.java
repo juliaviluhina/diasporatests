@@ -6,8 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import pages.*;
-import ru.yandex.qatools.allure.annotations.Step;
-import ua.net.itlabs.testDatas.Users;
 
 import java.io.IOException;
 
@@ -50,72 +48,6 @@ public class BaseTest {
         Menu.openContacts();
         Contacts.deleteAllUserAspects();
 
-        Menu.logOut();
-    }
-
-    @Step
-    public void setupLinksFor(PodUser user, PodUser linkedUser, String diasporaAspect, String followedTag, PodUser... unlinkedUsers) {
-        //user relation setup
-        Diaspora.signInAs(user);
-        Menu.assertLoggedUser(user);
-        //user have diasporaAspect relation with linkedUser
-        Menu.search(linkedUser.fullName);
-        Feed.assertPerson(linkedUser.fullName);
-        Contacts.ensureAspectsForContact(diasporaAspect);
-        //user have not any relation with unlinkedUser1
-        for (PodUser unlinkedUser : unlinkedUsers) {
-            Menu.search(unlinkedUser.fullName);
-            Feed.assertPerson(unlinkedUser.fullName);
-            Contacts.ensureNoAspectsForContact();
-            Contacts.assertAspectsAreNotUsed();
-        }
-        //Addition followed tag
-        Menu.openStream();
-        NavBar.openTags();
-        Tags.add(followedTag);
-        Tags.assertExist(followedTag);
-        Menu.logOut();
-    }
-
-    @Step
-    public void setupLinksFor(PodUser user, String followedTag, PodUser... unlinkedUsers) {
-        //user relation setup
-        Diaspora.signInAs(user);
-        Menu.assertLoggedUser(user);
-        //user have not any relation with unlinkedUser1
-        for (PodUser unlinkedUser : unlinkedUsers) {
-            Menu.search(unlinkedUser.fullName);
-            Feed.assertPerson(unlinkedUser.fullName);
-            Contacts.ensureNoAspectsForContact();
-            Contacts.assertAspectsAreNotUsed();
-        }
-        //Addition followed tag
-        Menu.openStream();
-        NavBar.openTags();
-        Tags.add(followedTag);
-        Tags.assertExist(followedTag);
-        Menu.logOut();
-    }
-
-    @Step
-    public void setupLinksFor(PodUser user, PodUser linkedUser, String followedTag, PodUser unlinkedUser, String... diasporaAspects) {
-        //user relation setup
-        Diaspora.signInAs(user);
-        Menu.assertLoggedUser(user);
-        //user have diasporaAspect relation with linkedUser
-        Menu.search(linkedUser.fullName);
-        Feed.assertPerson(linkedUser.fullName);
-        Contacts.ensureAspectsForContact(diasporaAspects);
-        //user have not any relation with unlinkedUser1
-        Menu.search(unlinkedUser.fullName);
-        Feed.assertPerson(unlinkedUser.fullName);
-        Contacts.ensureNoAspectsForContact();
-        Contacts.assertAspectsAreNotUsed();
-        //Addition followed tag
-        Menu.openStream();
-        NavBar.openTags();
-        Tags.add(followedTag);
-        Tags.assertExist(followedTag);
         Menu.logOut();
     }
 

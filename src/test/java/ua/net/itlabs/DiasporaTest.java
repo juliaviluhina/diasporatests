@@ -1,5 +1,6 @@
 package ua.net.itlabs;
 
+import core.helpers.PodUsersRelationsHelper;
 import org.junit.Test;
 import pages.*;
 import ua.net.itlabs.categories.Buggy;
@@ -12,6 +13,7 @@ import static pages.Aspects.FRIENDS;
 import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
+import static core.helpers.PodUsersRelationsHelper.*;
 
 public class DiasporaTest extends BaseTest {
 
@@ -151,7 +153,6 @@ public class DiasporaTest extends BaseTest {
 
         //like public post on searching stream, indirect check - public post is shown in searching stream of unlinked user
         Menu.search(ANA.fullName);
-        Feed.assertPerson(ANA.fullName);
         Feed.toggleLike(ANA, the("Public Ana"));
         Feed.assertLikes(ANA, the("Public Ana"), 2);
 
@@ -160,7 +161,6 @@ public class DiasporaTest extends BaseTest {
 
         //check - limited post is not shown in searching stream of unlinked user
         Menu.search(BOB.fullName);
-        Feed.assertPerson(BOB.fullName);
         Feed.assertPostIsNotShown(BOB, the("Bob for work"));
 
         //comment post in searching stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
@@ -444,12 +444,11 @@ public class DiasporaTest extends BaseTest {
         //add new aspect and link user in aspect
         Aspects.add(the("Aspect"));
         Menu.search(EVE.fullName);
-        Feed.assertPerson(EVE.fullName);
-        Contacts.ensureAspectsForContact(the("Aspect"));
+        Contact.ensureAspectsForContact(the("Aspect"));
         //add new post in this aspect
         Menu.openStream();
-        Feed.addAspectPost(the("Aspect"), the(the("Aspect") +" Rob for new aspect"));
-        Feed.assertPostIsShown(ROB, the(the("Aspect") +" Rob for new aspect"));
+        Feed.addAspectPost(the("Aspect"), the(the("Aspect") + " Rob for new aspect"));
+        Feed.assertPostIsShown(ROB, the(the("Aspect") + " Rob for new aspect"));
 
         //deselect aspect work and select added aspect
         NavBar.openMyAspects();
@@ -457,7 +456,7 @@ public class DiasporaTest extends BaseTest {
         Aspects.toggleAspect(the("Aspect"));
 
         Feed.assertPostIsShown(ROB, the("Rob for family"));
-        Feed.assertPostIsShown(ROB, the(the("Aspect") +" Rob for new aspect"));
+        Feed.assertPostIsShown(ROB, the(the("Aspect") + " Rob for new aspect"));
         Feed.assertPostIsShown(EVE, the(tag + " Public Eve"));
         Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
         Feed.assertPostIsNotShown(ANA, the("Ana for friends"));
@@ -465,7 +464,7 @@ public class DiasporaTest extends BaseTest {
 
         //edit aspect
         Aspects.switchToEditMode(the("Aspect"));
-        Contacts.rename(the("Aspect"), the("Asp"));
+        Contacts.rename(the("Asp"));
         Menu.openStream();
         NavBar.openMyAspects();
         Aspects.assertAspectIsNotShownInNavBar(the("Aspect"));
@@ -487,7 +486,7 @@ public class DiasporaTest extends BaseTest {
         //select all
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Deselect all");
-        Feed.assertPostIsNotShown(ROB, the(the("Aspect") +" Rob for new aspect"));
+        Feed.assertPostIsNotShown(ROB, the(the("Aspect") + " Rob for new aspect"));
         Feed.assertPostIsShown(ROB, the("Rob for family"));
         Feed.assertPostIsNotShown(EVE, the(tag + " Public Eve"));
         Feed.assertPostIsNotShown(EVE, the("All aspects Eve"));
@@ -535,6 +534,113 @@ public class DiasporaTest extends BaseTest {
         //actual result - tag order is different
         Tags.assertNthIs(0, the("#Ztag"));
         Tags.assertNthIs(1, the("#Ytag"));
+
+    }
+
+    @Test
+    public void testContacts() {
+        //GIVEN - setup relation between users in some aspect
+        //who with whom through which aspects
+        setupLinksFor(ROB, ANA, "", EVE, FAMILY, FRIENDS);
+        //add posts for different aspects
+        Diaspora.signInAs(Users.ROB);
+        Menu.assertLoggedUser(Users.ROB);
+        Feed.addAspectPost(FAMILY, the("Rob for Family"));
+        Feed.assertNthPostIs(0, ROB, the("Rob for Family"));
+        Feed.addAspectPost(FRIENDS, the("Rob for Friends"));
+        Feed.assertNthPostIs(0, ROB, the("Rob for Friends"));
+        Feed.addAspectPost(ACQUAINTANCES, the("Rob for Acquaintances"));
+        Feed.assertNthPostIs(0, ROB, the("Rob for Acquaintances"));
+        //add new aspect in Contacts page, add relation in this aspect
+        Menu.openContacts();
+        Contacts.addAspect(the("Aspect"));
+        Contacts.selectAspect(the("Aspect"));
+        Contacts.addLinkedContactForAspect(the("Aspect"), ANA);
+        Contacts.selectAspect(FRIENDS);//only after this action counter is changed
+        Contacts.assertCountContactsInAspect(the("Aspect"), 1);
+
+        //delete aspect for contact
+        int countFriends = Contacts.countContactsInAspect(FRIENDS);
+        Contacts.deleteLinkedContactForAspect(FRIENDS, ANA);
+        countFriends--;
+        //check aspect counter
+        Contacts.selectAspect(FRIENDS);//only after this action counter is changed
+        Contacts.assertCountContactsInAspect(FRIENDS, countFriends);
+
+        //add post for Friends after deletion aspect for contact
+        Menu.openStream();
+        Feed.addAspectPost(FRIENDS, the("Rob for Friends 2 "));
+        Feed.assertNthPostIs(0, ROB, the("Rob for Friends 2 "));
+
+        //add post for new aspect
+        Feed.addAspectPost(the("Aspect"), the("Aspect")+the(" Rob for new aspect"));
+        Feed.assertNthPostIs(0, ROB, the("Aspect")+the(" Rob for new aspect"));
+        Menu.logOut();
+
+        //check posts in Ana`s stream
+        Diaspora.signInAs(Users.ANA);
+        Menu.assertLoggedUser(Users.ANA);
+        Feed.assertPostIsShown(ROB, the("Rob for Family"));
+        Feed.assertPostIsShown(ROB, the("Rob for Friends"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Friends 2"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Acquaintances"));
+        Feed.assertPostIsShown(ROB, the("Aspect")+the(" Rob for new aspect"));
+        Menu.logOut();
+
+        //check posts in Eve`s stream
+        Diaspora.signInAs(Users.EVE);
+        Menu.assertLoggedUser(Users.EVE);
+        Feed.assertPostIsNotShown(ROB, the("Rob for Family"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Friends"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Friends 2"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Acquaintances"));
+        Feed.assertPostIsNotShown(ROB, the("Aspect") + the(" Rob for new aspect"));
+        Menu.logOut();
+
+        //change Rob`s aspects for Ana through button
+        Diaspora.signInAs(Users.ROB);
+        Menu.assertLoggedUser(Users.ROB);
+        Menu.openContacts();
+        Contacts.openAllContacts();
+        Contact.ensureAspectsForContact(Contact.contact(ANA), ACQUAINTANCES, the("Aspect"));
+
+        //add post for Friends after addition aspect for contact
+        Menu.openStream();
+        Feed.addAspectPost(ACQUAINTANCES, the("Rob for Acquaintances 2 "));
+        Feed.assertNthPostIs(0, ROB, the("Rob for Acquaintances 2 "));
+        Menu.logOut();
+
+        //check posts in Ana`s stream
+        Diaspora.signInAs(Users.ANA);
+        Menu.assertLoggedUser(Users.ANA);
+        Feed.assertPostIsShown(ROB, the("Rob for Family"));
+        Feed.assertPostIsShown(ROB, the("Rob for Friends"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Friends 2"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Acquaintances"));
+        Feed.assertPostIsShown(ROB, the("Rob for Acquaintances 2 "));
+        Feed.assertPostIsShown(ROB, the("Aspect")+the(" Rob for new aspect"));
+
+        Menu.logOut();
+
+        //delete Rob`s aspect
+        Diaspora.signInAs(Users.ROB);
+        Menu.assertLoggedUser(Users.ROB);
+        Menu.openContacts();
+        Contacts.selectAspect(the("Aspect"));
+        Contacts.deleteAspect();
+        Contacts.assertAspectIsNotShown(the("Aspect"));
+        Menu.logOut();
+
+        //check posts in Ana`s stream
+        Diaspora.signInAs(Users.ANA);
+        Menu.assertLoggedUser(Users.ANA);
+        Feed.assertPostIsShown(ROB, the("Rob for Family"));
+        Feed.assertPostIsShown(ROB, the("Rob for Friends"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Friends 2"));
+        Feed.assertPostIsNotShown(ROB, the("Rob for Acquaintances"));
+        Feed.assertPostIsShown(ROB, the("Rob for Acquaintances 2 "));
+        Feed.assertPostIsShown(ROB, the("Aspect") + the(" Rob for new aspect"));
+        Menu.logOut();
 
     }
 

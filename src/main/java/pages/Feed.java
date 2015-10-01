@@ -17,7 +17,7 @@ import static com.codeborne.selenide.Selenide.confirm;
 import static core.helpers.UniqueDataHelper.clearThe;
 import static core.helpers.UniqueDataHelper.the;
 import static core.conditions.CustomCondition.*;
-import static pages.Contacts.aspectIsUsed;
+import static pages.Aspects.aspectIsUsed;
 
 public class Feed {
 
@@ -107,10 +107,6 @@ public class Feed {
         currentComment.hover();
         currentComment.find(".delete").click();
         confirm(null);
-    }
-
-    public static void assertPerson(String fullName) {
-        $("#diaspora_handle").shouldHave(Condition.exactText(fullName));
     }
 
     public static void assertComment(PodUser fromPost, String post, PodUser fromComment, String comment) {

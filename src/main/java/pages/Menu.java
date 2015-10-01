@@ -30,6 +30,8 @@ public class Menu {
         $("#q").setValue(text);
         $$(".ac_results").shouldHave(texts(text));
         $("#q").pressEnter();
+
+        Contact.ensureSearchedContact(text);
     }
 
     @Step
