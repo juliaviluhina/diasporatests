@@ -69,7 +69,7 @@ public class PodUsersRelationsHelper {
         this.linkedUsers = new PodUser[1];
         this.linkedUsers[0] = linkedUser;
 
-        this.aspects = new String[0];
+        this.aspects = new String[1];
         this.aspects[0] = diasporaAspect;
 
         this.unlinkedUsers = new PodUser[unlinkedUsers.length];
