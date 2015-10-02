@@ -1,12 +1,11 @@
 package ua.net.itlabs;
 
-import core.helpers.PodUsersRelationsHelper;
 import org.junit.Test;
 import pages.*;
 import ua.net.itlabs.categories.Buggy;
-import ua.net.itlabs.testDatas.Users;
 
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.open;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
 import static pages.Aspects.FRIENDS;
@@ -14,6 +13,7 @@ import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 import static core.helpers.PodUsersRelationsHelper.*;
+import static pages.Contact.contact;
 
 public class DiasporaTest extends BaseTest {
 
@@ -22,19 +22,19 @@ public class DiasporaTest extends BaseTest {
         //GIVEN - new public posts linked with tags in user account from the same pod
         String post1 = the("Public post with tag " + the("#tag1") + " : ");
         String post2 = the("Public post with tag " + the("#tag2") + " : ");
-        Diaspora.signInAs(Users.ROB);
-        Menu.assertLoggedUser(Users.ROB);
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
         Feed.addPublicPost(post1);
-        Feed.assertNthPostIs(0, Users.ROB, post1);
+        Feed.assertNthPostIs(0, ROB, post1);
         Feed.addPublicPost(post2);
-        Feed.assertNthPostIs(0, Users.ROB, post2);
+        Feed.assertNthPostIs(0, ROB, post2);
         Menu.logOut();
 
-        Diaspora.signInAs(Users.ANA);
+        Diaspora.signInAs(ANA);
 
         //tags is not used and posts is not shown
-        Feed.assertPostIsNotShown(Users.ROB, post1);
-        Feed.assertPostIsNotShown(Users.ROB, post2);
+        Feed.assertPostIsNotShown(ROB, post1);
+        Feed.assertPostIsNotShown(ROB, post2);
 
         NavBar.openTags();
 
@@ -55,14 +55,14 @@ public class DiasporaTest extends BaseTest {
         //only posts with filtered tag are shown
         Tags.filter(the("#tag1"));
         //$("#author_info").shouldHave(text(the("#tag1")));
-        Feed.assertPostIsShown(Users.ROB, post1);
-        Feed.assertPostIsNotShown(Users.ROB, post2);
+        Feed.assertPostIsShown(ROB, post1);
+        Feed.assertPostIsNotShown(ROB, post2);
 
         //without filtering both posts are shown
         Menu.openStream();
         NavBar.openTags();
-        Feed.assertPostIsShown(Users.ROB, post1);
-        Feed.assertPostIsShown(Users.ROB, post2);
+        Feed.assertPostIsShown(ROB, post1);
+        Feed.assertPostIsShown(ROB, post2);
 
         Tags.delete(the("#tag1"));
         Tags.assertNotExist(the("#tag1"));
@@ -73,8 +73,8 @@ public class DiasporaTest extends BaseTest {
 
         //in view mode of whole stream posts with followed text are shown
         NavBar.openStream();
-        Feed.assertPostIsNotShown(Users.ROB, post1);
-        Feed.assertPostIsShown(Users.ROB, post2);
+        Feed.assertPostIsNotShown(ROB, post1);
+        Feed.assertPostIsShown(ROB, post2);
 
     }
 
@@ -380,24 +380,24 @@ public class DiasporaTest extends BaseTest {
         setupLinksFor(ROB, ANA, tag, EVE, WORK, ACQUAINTANCES);
         setupLinksFor(EVE, tag, ANA, ROB);
         //add posts - Eve
-        Diaspora.signInAs(Users.EVE);
-        Menu.assertLoggedUser(Users.EVE);
+        Diaspora.signInAs(EVE);
+        Menu.assertLoggedUser(EVE);
         Feed.addPublicPost(the(tag + " Public Eve"));
         Feed.assertNthPostIs(0, EVE, the(tag + " Public Eve"));
         Feed.addAllAspectsPost(the("All aspects Eve"));
         Feed.assertNthPostIs(0, EVE, the("All aspects Eve"));
         Menu.logOut();
         //add posts - Ana
-        Diaspora.signInAs(Users.ANA);
-        Menu.assertLoggedUser(Users.ANA);
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
         Feed.addAspectPost(FRIENDS, the("Ana for friends"));
         Feed.assertNthPostIs(0, ANA, the("Ana for friends"));
         Feed.addAspectPost(WORK, the("Ana for work"));
         Feed.assertNthPostIs(0, ANA, the("Ana for work"));
         Menu.logOut();
         //Add posts - Rob
-        Diaspora.signInAs(Users.ROB);
-        Menu.assertLoggedUser(Users.ROB);
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
         Feed.addAspectPost(FAMILY, the("Rob for family"));
 
         //check - all available posts in Rob's stream
@@ -498,7 +498,7 @@ public class DiasporaTest extends BaseTest {
     //for test case #1 - Expected result
     @Test
     public void testSignInForAccountWithPosts() {
-        Diaspora.signInAs(Users.BOB);
+        Diaspora.signInAs(BOB);
         NavBar.navBar.shouldBe(visible);
     }
 
@@ -506,7 +506,7 @@ public class DiasporaTest extends BaseTest {
     @Test
     @Buggy
     public void testSignInForAccountWithoutPosts() {
-        Diaspora.signInAs(Users.DAVE);
+        Diaspora.signInAs(DAVE);
         NavBar.navBar.shouldBe(visible);
     }
 
@@ -515,7 +515,7 @@ public class DiasporaTest extends BaseTest {
     @Buggy
     public void testTagsOrder() {
         //step 1,2 - add tag Y and Z
-        Diaspora.signInAs(Users.ANA);
+        Diaspora.signInAs(ANA);
         NavBar.openTags();
         Tags.add(the("#Ytag"));
         Tags.assertExist(the("#Ytag"));
@@ -528,7 +528,7 @@ public class DiasporaTest extends BaseTest {
 
         //step 4
         Menu.logOut();
-        Diaspora.signInAs(Users.ANA);
+        Diaspora.signInAs(ANA);
         NavBar.openTags();
 
         //actual result - tag order is different
@@ -543,8 +543,8 @@ public class DiasporaTest extends BaseTest {
         //who with whom through which aspects
         setupLinksFor(ROB, ANA, "", EVE, FAMILY, FRIENDS);
         //add posts for different aspects
-        Diaspora.signInAs(Users.ROB);
-        Menu.assertLoggedUser(Users.ROB);
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
         Feed.addAspectPost(FAMILY, the("Rob for Family"));
         Feed.assertNthPostIs(0, ROB, the("Rob for Family"));
         Feed.addAspectPost(FRIENDS, the("Rob for Friends"));
@@ -578,8 +578,8 @@ public class DiasporaTest extends BaseTest {
         Menu.logOut();
 
         //check posts in Ana`s stream
-        Diaspora.signInAs(Users.ANA);
-        Menu.assertLoggedUser(Users.ANA);
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
         Feed.assertPostIsShown(ROB, the("Rob for Family"));
         Feed.assertPostIsShown(ROB, the("Rob for Friends"));
         Feed.assertPostIsNotShown(ROB, the("Rob for Friends 2"));
@@ -588,8 +588,8 @@ public class DiasporaTest extends BaseTest {
         Menu.logOut();
 
         //check posts in Eve`s stream
-        Diaspora.signInAs(Users.EVE);
-        Menu.assertLoggedUser(Users.EVE);
+        Diaspora.signInAs(EVE);
+        Menu.assertLoggedUser(EVE);
         Feed.assertPostIsNotShown(ROB, the("Rob for Family"));
         Feed.assertPostIsNotShown(ROB, the("Rob for Friends"));
         Feed.assertPostIsNotShown(ROB, the("Rob for Friends 2"));
@@ -598,11 +598,11 @@ public class DiasporaTest extends BaseTest {
         Menu.logOut();
 
         //change Rob`s aspects for Ana through button
-        Diaspora.signInAs(Users.ROB);
-        Menu.assertLoggedUser(Users.ROB);
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
         Menu.openContacts();
         Contacts.openAllContacts();
-        Contact.ensureAspectsForContact(Contact.contact(ANA), ACQUAINTANCES, the("Aspect"));
+        Contact.ensureAspectsForContact(contact(ANA), ACQUAINTANCES, the("Aspect"));
 
         //add post for Friends after addition aspect for contact
         Menu.openStream();
@@ -611,8 +611,8 @@ public class DiasporaTest extends BaseTest {
         Menu.logOut();
 
         //check posts in Ana`s stream
-        Diaspora.signInAs(Users.ANA);
-        Menu.assertLoggedUser(Users.ANA);
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
         Feed.assertPostIsShown(ROB, the("Rob for Family"));
         Feed.assertPostIsShown(ROB, the("Rob for Friends"));
         Feed.assertPostIsNotShown(ROB, the("Rob for Friends 2"));
@@ -623,8 +623,8 @@ public class DiasporaTest extends BaseTest {
         Menu.logOut();
 
         //delete Rob`s aspect
-        Diaspora.signInAs(Users.ROB);
-        Menu.assertLoggedUser(Users.ROB);
+        Diaspora.signInAs(ROB);
+        Menu.assertLoggedUser(ROB);
         Menu.openContacts();
         Contacts.selectAspect(the("Aspect"));
         Contacts.deleteAspect();
@@ -632,8 +632,8 @@ public class DiasporaTest extends BaseTest {
         Menu.logOut();
 
         //check posts in Ana`s stream
-        Diaspora.signInAs(Users.ANA);
-        Menu.assertLoggedUser(Users.ANA);
+        Diaspora.signInAs(ANA);
+        Menu.assertLoggedUser(ANA);
         Feed.assertPostIsShown(ROB, the("Rob for Family"));
         Feed.assertPostIsShown(ROB, the("Rob for Friends"));
         Feed.assertPostIsNotShown(ROB, the("Rob for Friends 2"));
@@ -644,4 +644,14 @@ public class DiasporaTest extends BaseTest {
 
     }
 
+    @Test
+    public void testChainOfSearch() {
+        Diaspora.signInAs(BOB);
+        Menu.assertLoggedUser(BOB);
+        Menu.search(ANA.fullName);
+        Menu.search(ROB.fullName);
+        Menu.search(SAM.fullName);
+        open(BOB.podLink+"/people?q=eve_tjvi%40diaspora.koehn.com");
+        Contact.ensureSearchedContact(EVE.fullName);
+    }
 }

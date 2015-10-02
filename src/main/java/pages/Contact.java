@@ -33,8 +33,7 @@ public class Contact {
 
     //search results can be  shown in two variants
     public static void ensureSearchedContact(String fullName) {
-        ElementsCollection contactHeaders = $$("#diaspora_handle").filter(text(fullName));
-        if (contactHeaders.size() == 0) {
+        if ($$("#search_title").filter(text(fullName)).size() > 0) {
             $$(".stream_element").find(text(fullName)).find(".avatar").click();
         }
         $("#diaspora_handle").shouldHave(text(fullName));
