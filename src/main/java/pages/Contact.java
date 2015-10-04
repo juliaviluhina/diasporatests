@@ -37,7 +37,7 @@ public class Contact {
     public static void ensureSearchedContact(String fullName) {
         if ($$("#search_title").filter(text(fullName)).size() > 0) {
             $$(".stream_element").filter(text(fullName)).shouldHave(size(1));
-            $$(".stream_element").filter(text(fullName)).get(0).find(".avatar").click();
+            $$(".stream_element").filter(text(fullName)).get(0).find(".hovercardable").click();
             $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
         }
         else {
