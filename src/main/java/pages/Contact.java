@@ -36,10 +36,13 @@ public class Contact {
     //search results can be  shown in two variants
     public static void ensureSearchedContact(String fullName) {
         if ($$("#search_title").filter(text(fullName)).size() > 0) {
-            $$(".stream_element").find(text(fullName)).find(".avatar").click();
+            $$(".stream_element").filter(text(fullName)).shouldHave(size(1));
+            $$(".stream_element").filter(text(fullName)).get(0).find(".avatar").click();
+            $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
         }
-        //$("#diaspora_handle").shouldHave(text(fullName));
-        $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
+        else {
+            $("#diaspora_handle").shouldHave(text(fullName));
+        }
     }
 
 
