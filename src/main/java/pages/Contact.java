@@ -1,10 +1,12 @@
 package pages;
 
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 
+import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -36,7 +38,8 @@ public class Contact {
         if ($$("#search_title").filter(text(fullName)).size() > 0) {
             $$(".stream_element").find(text(fullName)).find(".avatar").click();
         }
-        $("#diaspora_handle").shouldHave(text(fullName));
+        //$("#diaspora_handle").shouldHave(text(fullName));
+        $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
     }
 
 
