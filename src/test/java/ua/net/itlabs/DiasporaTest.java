@@ -637,12 +637,16 @@ public class DiasporaTest extends BaseTest {
 
     @Test
     public void testChainOfSearch() {
-        Diaspora.signInAs(BOB);
-        Menu.assertLoggedUser(BOB);
-        Menu.search(ANA.fullName);
-        Menu.search(ROB.fullName);
-        Menu.search(SAM.fullName);
-        open(BOB.podLink+"/people?q=eve_tjvi%40diaspora.koehn.com");
-        Contact.ensureSearchedContact(EVE.fullName);
+//        Diaspora.signInAs(BOB);
+//        Menu.assertLoggedUser(BOB);
+//        Menu.search(ANA.fullName);
+//        Menu.search(ROB.fullName);
+//        Menu.search(SAM.fullName);
+//        open(BOB.podLink+"/people?q=eve_tjvi%40diaspora.koehn.com");
+//        Contact.ensureSearchedContact(EVE.fullName);
+        Relation.forUser(ANA).notToUsers(BOB,ROB,SAM,EVE).build();
+        Relation.forUser(BOB).notToUsers(ANA,ROB,EVE,SAM).build();
+        Relation.forUser(SAM).notToUsers(ANA,EVE,BOB,ROB).build();
+        Relation.forUser(EVE).notToUsers(EVE,BOB,ROB,SAM).build();
     }
 }
