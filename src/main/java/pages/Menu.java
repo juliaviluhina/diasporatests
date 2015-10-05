@@ -51,7 +51,7 @@ public class Menu {
     }
 
     @Step
-    public static void ensureNewSignIn() {
+    public static void ensureLoggedOut() {
         if ($("header").findAll(".dark-header").size() == 0) {
             return;
         }

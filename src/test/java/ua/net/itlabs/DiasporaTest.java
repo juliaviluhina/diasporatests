@@ -1,5 +1,6 @@
 package ua.net.itlabs;
 
+import core.steps.Relation;
 import org.junit.Test;
 import pages.*;
 import ua.net.itlabs.categories.Buggy;
@@ -12,7 +13,6 @@ import static pages.Aspects.FRIENDS;
 import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
-import static core.helpers.PodUsersRelationsHelper.*;
 import static pages.Contact.contact;
 
 public class DiasporaTest extends BaseTest {
@@ -21,8 +21,9 @@ public class DiasporaTest extends BaseTest {
     public void testFollowedTags() {
         //GIVEN - setup relation between users, addition one the same followed tag
         //new public posts linked with tags in user account from the same pod
-        setupLinksFor(ROB,"",ANA);
-        setupLinksFor(ANA,"",ROB);
+        Relation.forUser(ROB).notToUsers(ANA).build();
+        Relation.forUser(ANA).notToUsers(BOB).build();
+
         String post1 = the("Public post with tag " + the("#tag1") + " : ");
         String post2 = the("Public post with tag " + the("#tag2") + " : ");
         Diaspora.signInAs(ROB);
@@ -72,11 +73,10 @@ public class DiasporaTest extends BaseTest {
     public void testUserActivitiesAndAccessForUsersOfDifferentPods() {
         //GIVEN - setup relation between users, addition one the same followed tag
         String tag = "#ana_bob_rob_sam";
-        //who with whom through which aspect, which followed tag, with whom are not any links
-        setupLinksFor(ANA, BOB, ACQUAINTANCES, tag, ROB, SAM);
-        setupLinksFor(BOB, ANA, WORK, tag, ROB, SAM);
-        setupLinksFor(ROB, SAM, FRIENDS, tag, ANA, BOB);
-        setupLinksFor(SAM, ROB, FAMILY, tag, ANA, BOB);
+        Relation.forUser(ANA).toUser(BOB,ACQUAINTANCES).notToUsers(ROB, SAM).withTags(tag).build();
+        Relation.forUser(BOB).toUser(ANA,WORK).notToUsers(ROB,SAM).withTags(tag).build();
+        Relation.forUser(ROB).toUser(SAM, FRIENDS).notToUsers(ANA,BOB).withTags(tag).build();
+        Relation.forUser(SAM).toUser(ROB, FAMILY).notToUsers(ANA,BOB).withTags(tag).build();
 
         //public post
         Diaspora.signInAs(ANA);
@@ -215,9 +215,9 @@ public class DiasporaTest extends BaseTest {
         //GIVEN - setup relation between users, addition one the same followed tag
         String tag = "#a_r";
         //who with whom through which aspect, which followed tag, with whom are not any links
-        setupLinksFor(ANA, ROB, ACQUAINTANCES, tag, EVE);
-        setupLinksFor(ROB, ANA, WORK, tag, EVE);
-        setupLinksFor(EVE, tag, ANA, ROB);
+        Relation.forUser(ANA).toUser(ROB,ACQUAINTANCES).notToUsers(EVE).withTags(tag).build();
+        Relation.forUser(ROB).toUser(ANA,WORK).notToUsers(EVE).withTags(tag).build();
+        Relation.forUser(EVE).notToUsers(ANA,BOB).withTags(tag).build();
 
         //public post
         Diaspora.signInAs(ANA);
@@ -366,9 +366,10 @@ public class DiasporaTest extends BaseTest {
         //GIVEN - setup relation between users in some aspect
         //who with whom through which aspects
         String tag = "#a_r";
-        setupLinksFor(ANA, ROB, tag, EVE, FAMILY, FRIENDS);
-        setupLinksFor(ROB, ANA, tag, EVE, WORK, ACQUAINTANCES);
-        setupLinksFor(EVE, tag, ANA, ROB);
+        Relation.forUser(ANA).toUser(ROB, FAMILY, FRIENDS).notToUsers(EVE).withTags(tag).build();
+        Relation.forUser(ROB).toUser(ANA, WORK, ACQUAINTANCES).notToUsers(EVE).withTags(tag).build();
+        Relation.forUser(EVE).notToUsers(ANA,BOB).withTags(tag).build();
+
         //add posts - Eve
         Diaspora.signInAs(EVE);
         Menu.assertLoggedUser(EVE);
@@ -531,7 +532,7 @@ public class DiasporaTest extends BaseTest {
     public void testContacts() {
         //GIVEN - setup relation between users in some aspect
         //who with whom through which aspects
-        setupLinksFor(ROB, ANA, "", EVE, FAMILY, FRIENDS);
+        Relation.forUser(BOB).toUser(ANA, FAMILY, FRIENDS).notToUsers(EVE).build();
         //add posts for different aspects
         Diaspora.signInAs(ROB);
         Menu.assertLoggedUser(ROB);

@@ -1,7 +1,6 @@
 package ua.net.itlabs;
 
 import com.codeborne.selenide.Configuration;
-import datastructures.PodUser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -11,6 +10,8 @@ import java.io.IOException;
 
 import static core.helpers.UniqueDataHelper.clearThe;
 import static ua.net.itlabs.testDatas.Users.*;
+import static core.steps.Scenarios.*;
+
 
 public class BaseTest {
     @BeforeClass
@@ -33,22 +34,9 @@ public class BaseTest {
 
     @After
     public void tearDown() throws IOException {
-        Menu.ensureNewSignIn();
+        Menu.ensureLoggedOut();
     }
 
-    public static void clearUserData(PodUser user) {
-        Diaspora.signInAs(user);
 
-        NavBar.openStream();
-        Feed.deleteAllPosts(user);
-
-        NavBar.openTags();
-        Tags.deleteAll();
-
-        Menu.openContacts();
-        Contacts.deleteAllUserAspects();
-
-        Menu.logOut();
-    }
 
 }
