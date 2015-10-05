@@ -109,10 +109,12 @@ public class Feed {
         confirm(null);
     }
 
+    @Step
     public static void assertComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
         commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1));
     }
 
+    @Step
     public static void assertCommentCanNotBeDeleted(PodUser fromPost, String post, PodUser fromComment, String comment) {
         SelenideElement currentComment = commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1)).get(0);
         Coordinates coordinates = currentComment.getCoordinates();
@@ -121,6 +123,7 @@ public class Feed {
         currentComment.findAll(".delete").shouldBe(empty);
     }
 
+    @Step
     public static void assertPostCanNotBeDeleted(PodUser fromPost, String post) {
         SelenideElement currentPost = assertPostIsShown(fromPost, post);
         Coordinates coordinates = currentPost.getCoordinates();
@@ -129,41 +132,50 @@ public class Feed {
         currentPost.findAll(".remove_post").shouldBe(empty);
     }
 
+    @Step
     public static void assertCommentIsNotExist(PodUser fromPost, String post, PodUser fromComment, String comment) {
         commentsByFilter(fromPost, post, fromComment, comment).shouldBe(empty);
     }
 
+    @Step
     public static void assertReshareIsImpossible(PodUser from, String post) {
         postsByFilter(from, post).filter(cssClass("reshare")).shouldBe(empty);
     }
 
+    @Step
     public static void assertLikes(PodUser from, String post, int countLikes) {
         assertPostIsShown(from, post).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
     }
 
+    @Step
     public static void assertNthPostIs(int nth, PodUser from, String post) {
         posts.get(nth).shouldHave(textBegin(from.fullName)).shouldHave(text(post));
     }
 
+    @Step
     protected static ElementsCollection postsByFilter(PodUser from, String post) {
         //return  posts.filter(textBegin(from.fullName)).filter(text(post));
         return posts.filter(textBeginAndContain(from.fullName, post));
     }
 
+    @Step
     protected static ElementsCollection commentsByFilter(PodUser fromPost, String post, PodUser fromComment, String comment) {
         SelenideElement currentPost = assertPostIsShown(fromPost, post);
         ElementsCollection comments = currentPost.findAll(".comment");
         return comments.filter(textBeginAndContain(fromComment.fullName, comment));
     }
 
+    @Step
     public static SelenideElement assertPostIsShown(PodUser from, String post) {
         return postsByFilter(from, post).shouldHave(size(1)).get(0);
     }
 
+    @Step
     public static void assertPostIsNotShown(PodUser from, String post) {
         postsByFilter(from, post).shouldBe(empty);
     }
 
+    @Step
     public static void ensurePublicPostingMode() {
         if (aspect.getText().contains("Public")) {
             return;
@@ -174,7 +186,7 @@ public class Feed {
     }
 
 
-
+    @Step
     public static void ensurePrivatePostingMode() {
         if (aspect.getText().contains("Select aspects")) {
             return;
@@ -189,6 +201,7 @@ public class Feed {
         }
     }
 
+    @Step
     public static void ensureAllAspectsPostingMode() {
         if (aspect.getText().contains("All aspects")) {
             return;
@@ -197,6 +210,7 @@ public class Feed {
         aspect.find(".all_aspects").click();
     }
 
+    @Step
     public static void ensureAspectPostingMode(String diasporaAspect) {
         if (!aspect.getText().contains("All aspects")) {
             setAspect.click();

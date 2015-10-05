@@ -73,18 +73,22 @@ public class Contacts {
         $(".all_contacts a").click();
     }
 
+    @Step
     public static int countContactsInAspect(String aspect) {
         return Integer.parseInt(aspects.filter(textEnd("\n" + aspect)).get(0).find(".badge").getText());
     }
 
+    @Step
     public static void assertCountContactsInAspect(String aspect, int countContacts) {
         aspects.filter(textEnd("\n" + aspect)).get(0).find(".badge").shouldHave(exactText(Integer.toString(countContacts)));
     }
 
+    @Step
     public static void assertAspectIsShown(String aspect) {
         aspects.filter(textEnd("\n" + aspect)).shouldHave(size(1));
     }
 
+    @Step
     public static void assertAspectIsNotShown(String aspect) {
         aspects.filter(textEnd("\n" + aspect)).shouldBe(empty);
     }

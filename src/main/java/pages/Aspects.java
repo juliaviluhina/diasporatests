@@ -47,18 +47,22 @@ public class Aspects {
         currentAspect.find(".modify_aspect").click();
     }
 
+    @Step
     public static void assertAspectIsShownInNavBar(String aspect) {
         aspectsNavBar.filter(text(aspect)).shouldHave(size(1));
     }
 
+    @Step
     public static void assertAspectIsNotShownInNavBar(String aspect) {
         aspectsNavBar.filter(text(aspect)).shouldHave(size(0));
     }
 
+    @Step
     public static void assertToggleAllText(String text) {
         $(".toggle_selector").shouldHave(text(text));
     }
 
+    @Step
     public static Boolean aspectIsUsed(SelenideElement aspect) {
         return aspect.getAttribute("class").contains("selected");
     }

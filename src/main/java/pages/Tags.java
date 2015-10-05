@@ -46,14 +46,17 @@ public class Tags {
         tags.find(exactText(tagName)).click();
     }
 
+    @Step
     public static void assertNotExist(String tagName) {
         tags.filter(exactText(tagName)).shouldBe(empty);
     }
 
+    @Step
     public static void assertExist(String tagName) {
         tags.filter(exactText(tagName)).shouldHave(size(1));
     }
 
+    @Step
     public static void assertNthIs(int nth, String tagName) {
         tags.get(nth).shouldHave(exactText(tagName));
     }

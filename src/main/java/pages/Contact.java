@@ -5,6 +5,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
+import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
@@ -33,23 +34,34 @@ public class Contact {
         return contact.find(manageContactLocator);
     }
 
-    //search results can be  shown in two variants
+    @Step
     public static void ensureSearchedContact(String fullName) {
         if ($$("#search_title").filter(text(fullName)).size() > 0) {
-            $$(".stream_element").filter(text(fullName)).shouldHave(size(1));
-            $$(".stream_element").filter(text(fullName)).get(0).find(".hovercardable").click();
-            $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
+            ensureSearchedContact1(fullName);
         }
         else {
-            $("#diaspora_handle").shouldHave(text(fullName));
+            ensureSearchedContact2(fullName);
         }
     }
 
+    @Step
+    public static void ensureSearchedContact1(String fullName) {
+        $$(".stream_element").filter(text(fullName)).shouldHave(size(1));
+        $$(".stream_element").filter(text(fullName)).get(0).find(".hovercardable").click();
+        $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
+    }
 
+    @Step
+    public static void ensureSearchedContact2(String fullName) {
+        $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
+    }
+
+    @Step
     public static void ensureNoAspectsForContact() {
         ensureNoAspectsForContact(contactHeader);
     }
 
+    @Step
     public static void ensureNoAspectsForContact(SelenideElement contact) {
         if (manageContact(contact).getText().equals("Add contact")) {
             return;
@@ -71,11 +83,12 @@ public class Contact {
         }
     }
 
-
+    @Step
     public static void ensureAspectsForContact(String... diasporaAspects) {
         ensureAspectsForContact(contactHeader, diasporaAspects);
     }
 
+    @Step
     public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
         if (diasporaAspects.length == 1) {
             if (manageContact(contact).getText().equals(diasporaAspects[0])) {

@@ -485,47 +485,47 @@ public class DiasporaTest extends BaseTest {
     }
 
 
-//    //for test case #1 - Expected result
-//    @Test
-//    public void testSignInForAccountWithPosts() {
-//        Diaspora.signInAs(BOB);
-//        NavBar.navBar.shouldBe(visible);
-//    }
-//
-//    //for test case #1 - Actual result
-//    @Test
-//    @Buggy
-//    public void testSignInForAccountWithoutPosts() {
-//        Diaspora.signInAs(DAVE);
-//        NavBar.navBar.shouldBe(visible);
-//    }
-//
-//    //for test case #2
-//    @Test
-//    @Buggy
-//    public void testTagsOrder() {
-//        //step 1,2 - add tag Y and Z
-//        Diaspora.signInAs(ANA);
-//        NavBar.openTags();
-//        Tags.add(the("#Ytag"));
-//        Tags.assertExist(the("#Ytag"));
-//        Tags.add(the("#Ztag"));
-//        Tags.assertExist(the("#Ztag"));
-//
-//        //step 3 - check order - like in actual result
-//        Tags.assertNthIs(0, the("#Ztag"));
-//        Tags.assertNthIs(1, the("#Ytag"));
-//
-//        //step 4
-//        Menu.logOut();
-//        Diaspora.signInAs(ANA);
-//        NavBar.openTags();
-//
-//        //actual result - tag order is different
-//        Tags.assertNthIs(0, the("#Ztag"));
-//        Tags.assertNthIs(1, the("#Ytag"));
-//
-//    }
+    //for test case #1 - Expected result
+    @Test
+    public void testSignInForAccountWithPosts() {
+        Diaspora.signInAs(BOB);
+        NavBar.navBar.shouldBe(visible);
+    }
+
+    //for test case #1 - Actual result
+    @Test
+    @Buggy
+    public void testSignInForAccountWithoutPosts() {
+        Diaspora.signInAs(DAVE);
+        NavBar.navBar.shouldBe(visible);
+    }
+
+    //for test case #2
+    @Test
+    @Buggy
+    public void testTagsOrder() {
+        //step 1,2 - add tag Y and Z
+        Diaspora.signInAs(ANA);
+        NavBar.openTags();
+        Tags.add(the("#Ytag"));
+        Tags.assertExist(the("#Ytag"));
+        Tags.add(the("#Ztag"));
+        Tags.assertExist(the("#Ztag"));
+
+        //step 3 - check order - like in actual result
+        Tags.assertNthIs(0, the("#Ztag"));
+        Tags.assertNthIs(1, the("#Ytag"));
+
+        //step 4
+        Menu.logOut();
+        Diaspora.signInAs(ANA);
+        NavBar.openTags();
+
+        //actual result - tag order is different
+        Tags.assertNthIs(0, the("#Ztag"));
+        Tags.assertNthIs(1, the("#Ytag"));
+
+    }
 
     @Test
     public void testContacts() {

@@ -45,10 +45,12 @@ public class Menu {
         $("[href='/contacts']").click();
     }
 
+    @Step
     public static void assertLoggedUser(PodUser user) {
         userMenu.find(".user-name").shouldHave(exactText(user.fullName));
     }
 
+    @Step
     public static void ensureNewSignIn() {
         if ($("header").findAll(".dark-header").size() == 0) {
             return;
