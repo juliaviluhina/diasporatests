@@ -15,4 +15,8 @@ public class PodUser {
         this.email = email;
         fullName = userName+"@"+podLink.replaceFirst("https://","");
     }
+
+    public String toString() {
+        return userName;
+    }
 }

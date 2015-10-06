@@ -10,6 +10,7 @@ import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.size;
+import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -139,7 +140,7 @@ public class Feed {
 
     @Step
     public static void assertReshareIsImpossible(PodUser from, String post) {
-        postsByFilter(from, post).filter(cssClass("reshare")).shouldBe(empty);
+        posts.filter(textBeginAndContain(from.fullName, post)).filter(cssClass("reshare")).shouldBe(empty);
     }
 
     @Step
@@ -153,12 +154,6 @@ public class Feed {
     }
 
     @Step
-    protected static ElementsCollection postsByFilter(PodUser from, String post) {
-        //return  posts.filter(textBegin(from.fullName)).filter(text(post));
-        return posts.filter(textBeginAndContain(from.fullName, post));
-    }
-
-    @Step
     protected static ElementsCollection commentsByFilter(PodUser fromPost, String post, PodUser fromComment, String comment) {
         SelenideElement currentPost = assertPostIsShown(fromPost, post);
         ElementsCollection comments = currentPost.findAll(".comment");
@@ -167,12 +162,12 @@ public class Feed {
 
     @Step
     public static SelenideElement assertPostIsShown(PodUser from, String post) {
-        return postsByFilter(from, post).shouldHave(size(1)).get(0);
+        return posts.filter(textBeginAndContain(from.fullName, post)).shouldHave(size(1)).get(0);
     }
 
     @Step
     public static void assertPostIsNotShown(PodUser from, String post) {
-        postsByFilter(from, post).shouldBe(empty);
+        posts.filter(textBeginAndContain(from.fullName, post)).shouldBe(empty);
     }
 
     @Step

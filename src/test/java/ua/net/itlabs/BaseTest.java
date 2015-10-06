@@ -19,11 +19,11 @@ public class BaseTest {
         Configuration.timeout = 120000;
         if (System.getProperty("withClearedDataOnStart").equals("true")) {
             //System.out.println("clearing data before tests");
-            clearUserData(ANA);
-            clearUserData(BOB);
-            clearUserData(ROB);
-            clearUserData(SAM);
-            clearUserData(EVE);
+            clearUserData(ANA_P1);
+            clearUserData(BOB_P2);
+            clearUserData(ROB_P1);
+            clearUserData(SAM_P2);
+            clearUserData(EVE_P1);
         }
     }
 
