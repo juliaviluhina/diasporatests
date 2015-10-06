@@ -36,8 +36,8 @@ public class Contact {
 
     @Step
     public static void ensureSearchedContact(String fullName) {
-        //if ($$("#search_title").filter(text(fullName)).size() > 0) {
-        if ($$("#diaspora_handle").filter(text(fullName)).size() == 0) {
+        if ($$("#search_title").filter(text(fullName)).size() > 0) {
+        //if ($$("#diaspora_handle").filter(text(fullName)).size() == 0) {
             ensureSearchedContact1(fullName);
         }
         else {
