@@ -497,7 +497,7 @@ public class DiasporaTest extends BaseTest {
     public void testContacts() {
         //GIVEN - setup relation between users in some aspect
         //add posts for different aspects
-        Relation.forUser(BOB_P2).toUser(ANA_P1, FAMILY, FRIENDS).notToUsers(EVE_P1).build();
+        Relation.forUser(ROB_P1).toUser(ANA_P1, FAMILY, FRIENDS).notToUsers(EVE_P1).build();
         Diaspora.signInAs(ROB_P1);
         Feed.addAspectPost(FAMILY, the("Rob for Family"));
         Feed.addAspectPost(FRIENDS, the("Rob for Friends"));
