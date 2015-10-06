@@ -4,34 +4,36 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
-import static core.conditions.CustomCollectionCondition.textsBegin;
 
 public class NavBar {
 
-    public static SelenideElement navBar =  $("#leftNavBar");
-    public static SelenideElement tagsHeader = $("[href='/followed_tags']");
+    private static SelenideElement container =  $("#leftNavBar");
 
     @Step
     public static void openTags() {
-        tagsHeader.click();
+        container.find("[href='/followed_tags']").click();
     }
 
     @Step
     public static void openStream(){
-        navBar.find("[href='/stream']").click();
+        container.find("[href='/stream']").click();
     }
 
     @Step
     public static void openMyActivity(){
-        navBar.find("[href='/activity']").click();
+        container.find("[href='/activity']").click();
     }
 
     @Step
     public static void openMyAspects(){
-        navBar.find("[href='/aspects']").click();
-        navBar.find("[href='/aspects']").click();
+        container.find("[href='/aspects']").click();
+        container.find("[href='/aspects']").click();
+    }
+
+    @Step
+    public static void should(Condition... conditions) {
+        container.should(conditions);
     }
 
 }

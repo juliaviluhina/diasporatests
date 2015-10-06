@@ -5,8 +5,7 @@ import org.junit.Test;
 import pages.*;
 import ua.net.itlabs.categories.Buggy;
 
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Condition.appear;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
 import static pages.Aspects.FRIENDS;
@@ -23,42 +22,40 @@ public class DiasporaTest extends BaseTest {
         //new public posts linked with tags in user account from the same pod
         Relation.forUser(ROB).notToUsers(ANA).build();
         Relation.forUser(ANA).notToUsers(BOB).build();
-
         String post1 = the("Public post with tag " + the("#tag1") + " : ");
         String post2 = the("Public post with tag " + the("#tag2") + " : ");
         Diaspora.signInAs(ROB);
-        Menu.assertLoggedUser(ROB);
         Feed.addPublicPost(post1);
-        Feed.assertNthPostIs(0, ROB, post1);
         Feed.addPublicPost(post2);
-        Feed.assertNthPostIs(0, ROB, post2);
         Menu.logOut();
 
         Diaspora.signInAs(ANA);
 
-        //tags is not used and posts is not shown
+        //tags is not used and ROB`s public posts is not shown in stream
         Feed.assertPostIsNotShown(ROB, post1);
         Feed.assertPostIsNotShown(ROB, post2);
 
         NavBar.openTags();
 
         Tags.add(the("#tag1"));
-        Tags.assertExist(the("#tag1"));
-
-        Tags.add(the("#tag2"));
-        Tags.assertExist(the("#tag2"));
-
         //only posts with filtered tag are shown
         Tags.filter(the("#tag1"));
         Feed.assertPostIsShown(ROB, post1);
         Feed.assertPostIsNotShown(ROB, post2);
 
-        //without filtering both posts are shown
         Menu.openStream();
         NavBar.openTags();
+
+        Tags.add(the("#tag2"));
+        Tags.filter(the("#tag2"));
+        Feed.assertPostIsNotShown(ROB, post1);
+        Feed.assertPostIsShown(ROB, post2);
+
+        Menu.openStream();
         Feed.assertPostIsShown(ROB, post1);
         Feed.assertPostIsShown(ROB, post2);
 
+        NavBar.openTags();
         Tags.delete(the("#tag1"));
         Tags.assertNotExist(the("#tag1"));
 
@@ -490,7 +487,7 @@ public class DiasporaTest extends BaseTest {
     @Test
     public void testSignInForAccountWithPosts() {
         Diaspora.signInAs(BOB);
-        NavBar.navBar.shouldBe(visible);
+        NavBar.should(appear);
     }
 
     //for test case #1 - Actual result
@@ -498,7 +495,7 @@ public class DiasporaTest extends BaseTest {
     @Buggy
     public void testSignInForAccountWithoutPosts() {
         Diaspora.signInAs(DAVE);
-        NavBar.navBar.shouldBe(visible);
+        NavBar.should(appear);
     }
 
     //for test case #2
