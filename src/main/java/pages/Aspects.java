@@ -48,12 +48,12 @@ public class Aspects {
     }
 
     @Step
-    public static void assertAspectIsShownInNavBar(String aspect) {
+    public static void assertAspectInNavBar(String aspect) {
         aspectsNavBar.filter(text(aspect)).shouldHave(size(1));
     }
 
     @Step
-    public static void assertAspectIsNotShownInNavBar(String aspect) {
+    public static void assertNoAspectInNavBar(String aspect) {
         aspectsNavBar.filter(text(aspect)).shouldHave(size(0));
     }
 

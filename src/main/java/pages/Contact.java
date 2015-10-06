@@ -36,26 +36,11 @@ public class Contact {
 
     @Step
     public static void ensureSearchedContact(String fullName) {
-        if ($$("#search_title").filter(text(fullName)).size() > 0) {
-        //if ($$("#diaspora_handle").filter(text(fullName)).size() == 0) {
-            ensureSearchedContact1(fullName);
-        }
-        else {
-            ensureSearchedContact2(fullName);
-        }
+        //even id search result site is shown - clicking in avatar load Contact site
+        SelenideElement avatar = $("[alt='"+fullName+"']");
+        avatar.click();
     }
 
-    @Step
-    public static void ensureSearchedContact1(String fullName) {
-        $$(".stream_element").filter(text(fullName)).shouldHave(size(1));
-        $$(".stream_element").filter(text(fullName)).get(0).find(".hovercardable").click();
-        $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
-    }
-
-    @Step
-    public static void ensureSearchedContact2(String fullName) {
-        $$("#diaspora_handle").filter(text(fullName)).shouldHave(size(1));
-    }
 
     @Step
     public static void ensureNoAspectsForContact() {

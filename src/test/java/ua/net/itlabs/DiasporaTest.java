@@ -32,28 +32,28 @@ public class DiasporaTest extends BaseTest {
         Diaspora.signInAs(ANA_P1);
 
         //tags is not used and public posts is not shown in stream
-        Feed.assertPostIsNotShown(ROB_P1, post1);
-        Feed.assertPostIsNotShown(ROB_P1, post2);
+        Feed.assertNoPostFrom(ROB_P1, post1);
+        Feed.assertNoPostFrom(ROB_P1, post2);
 
         NavBar.openTags();
 
         Tags.add(the("#tag1"));
         //only posts with filtered tag are shown
         Tags.filter(the("#tag1"));
-        Feed.assertPostIsShown(ROB_P1, post1);
-        Feed.assertPostIsNotShown(ROB_P1, post2);
+        Feed.assertPostFrom(ROB_P1, post1);
+        Feed.assertNoPostFrom(ROB_P1, post2);
 
         Menu.openStream();
         NavBar.openTags();
 
         Tags.add(the("#tag2"));
         Tags.filter(the("#tag2"));
-        Feed.assertPostIsNotShown(ROB_P1, post1);
-        Feed.assertPostIsShown(ROB_P1, post2);
+        Feed.assertNoPostFrom(ROB_P1, post1);
+        Feed.assertPostFrom(ROB_P1, post2);
 
         Menu.openStream();
-        Feed.assertPostIsShown(ROB_P1, post1);
-        Feed.assertPostIsShown(ROB_P1, post2);
+        Feed.assertPostFrom(ROB_P1, post1);
+        Feed.assertPostFrom(ROB_P1, post2);
 
         NavBar.openTags();
         Tags.delete(the("#tag1"));
@@ -61,8 +61,8 @@ public class DiasporaTest extends BaseTest {
 
         //in view mode of whole stream posts with followed text are shown
         NavBar.openStream();
-        Feed.assertPostIsNotShown(ROB_P1, post1);
-        Feed.assertPostIsShown(ROB_P1, post2);
+        Feed.assertNoPostFrom(ROB_P1, post1);
+        Feed.assertPostFrom(ROB_P1, post2);
 
     }
 
@@ -106,7 +106,7 @@ public class DiasporaTest extends BaseTest {
 
         //check - limited post in wrong aspect is not shown in stream of linked user
         Diaspora.signInAs(BOB_P2);
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for family"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for family"));
 
         //comment post, check visibility of other comments
         Feed.assertComment(BOB_P2, the("Bob for work"), ANA_P1, the("Comment from Ana"));
@@ -126,7 +126,7 @@ public class DiasporaTest extends BaseTest {
 
         //check - public post is not shown in stream of unlinked user
         Diaspora.signInAs(ROB_P1);
-        Feed.assertPostIsNotShown(ANA_P1, the("Public Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
 
         //like public post on searching stream, indirect check - public post is shown in searching stream of unlinked user
         Menu.search(ANA_P1.fullName);
@@ -134,11 +134,11 @@ public class DiasporaTest extends BaseTest {
         Feed.assertLikes(ANA_P1, the("Public Ana"), 2);
 
         //check - limited post is not shown in stream of unlinked user
-        Feed.assertPostIsNotShown(BOB_P2, the("Bob for work"));
+        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
 
         //check - limited post is not shown in searching stream of unlinked user
         Menu.search(BOB_P2.fullName);
-        Feed.assertPostIsNotShown(BOB_P2, the("Bob for work"));
+        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
 
         //comment post in searching stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
         Feed.addComment(BOB_P2, the(tag + " Public Bob"), the("Comment from Rob"));
@@ -159,12 +159,12 @@ public class DiasporaTest extends BaseTest {
         Diaspora.signInAs(ANA_P1);
         NavBar.openMyActivity();
         Feed.deletePost(ANA_P1, the("Public Ana"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Public Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
 
         //delete reshared post
         NavBar.openStream();
         Feed.deletePost(ANA_P1, the(tag + " Public Bob"));
-        Feed.assertPostIsNotShown(ANA_P1, the(tag + " Public Bob"));
+        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
 
         //check comment of another user can not be deleted
         Feed.assertCommentCanNotBeDeleted(BOB_P2, the("Bob for work"), BOB_P2, the("Comment from Bob"));
@@ -175,7 +175,7 @@ public class DiasporaTest extends BaseTest {
         NavBar.openMyActivity();
         Feed.deleteComment(BOB_P2, the("Bob for work"), BOB_P2, the("Comment from Bob"));
         Feed.deletePost(BOB_P2, the("Bob for work"));
-        Feed.assertPostIsNotShown(BOB_P2, the("Bob for work"));
+        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
         Menu.logOut();
 
         //check post of another user can not be deleted
@@ -183,10 +183,10 @@ public class DiasporaTest extends BaseTest {
         Feed.assertPostCanNotBeDeleted(BOB_P2, the(tag + " Public Bob"));
 
         //check - limited post is not shown after deletion
-        Feed.assertPostIsNotShown(BOB_P2, the("Bob for work"));
+        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
 
         //check - after deletion reshared post in resharing post is no old content
-        Feed.assertPostIsNotShown(ANA_P1, the(tag + " Public Bob"));
+        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
         Menu.logOut();
 
     }
@@ -230,7 +230,7 @@ public class DiasporaTest extends BaseTest {
 
         //check - limited post in wrong aspect is not shown in stream of linked user
         Diaspora.signInAs(ROB_P1);
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for family"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for family"));
 
         //comment post, check visibility of other comments
         Feed.assertComment(ROB_P1, the("Rob for work"), ANA_P1, the("Comment from Ana"));
@@ -250,7 +250,7 @@ public class DiasporaTest extends BaseTest {
         //delete post
         NavBar.openMyActivity();
         Feed.deletePost(ANA_P1, the("Public Ana"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Public Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
 
         //check comment of another user can not be deleted
         Feed.assertCommentCanNotBeDeleted(ROB_P1, the("Rob for work"), ROB_P1, the("Comment from Rob"));
@@ -263,19 +263,19 @@ public class DiasporaTest extends BaseTest {
 
         Diaspora.signInAs(ROB_P1);
         //check - resharing post is shown
-        Feed.assertPostIsShown(ANA_P1, the(tag + " Public Rob"));
+        Feed.assertPostFrom(ANA_P1, the(tag + " Public Rob"));
         //check - deleted post is not shown
-        Feed.assertPostIsNotShown(ANA_P1, the("Public Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
 
         NavBar.openMyActivity();
         //delete comment in my activity stream
         Feed.deleteComment(ROB_P1, the("Rob for work"), ROB_P1, the("Comment from Rob"));
         //delete limited post in my activity stream
         Feed.deletePost(ROB_P1, the("Rob for work"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for work"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for work"));
         //delete reshared post
         Feed.deletePost(ROB_P1, the(tag + " Public Rob"));
-        Feed.assertPostIsNotShown(ROB_P1, the(tag + " Public Rob"));
+        Feed.assertNoPostFrom(ROB_P1, the(tag + " Public Rob"));
         Menu.logOut();
 
         //add private post
@@ -288,13 +288,13 @@ public class DiasporaTest extends BaseTest {
         Feed.assertNthPostIs(0, ANA_P1, the("All aspects Ana"));
 
         //check - limited post is not shown after deletion
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for work"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for work"));
 
         //check - reshared post is not shown after deletion
-        Feed.assertPostIsNotShown(ANA_P1, the(tag + " Public Rob"));
+        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Rob"));
 
         //check - resharing post do not contain data from deleted reshared post
-        Feed.assertPostIsNotShown(ANA_P1, the(tag + " Public Rob"));
+        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Rob"));
         Menu.logOut();
 
 
@@ -306,9 +306,9 @@ public class DiasporaTest extends BaseTest {
         Feed.addComment(ROB_P1, the(tag + " Public Rob next"), "Comment from Rob");
         Feed.assertComment(ROB_P1, the(tag + " Public Rob next"), ROB_P1, "Comment from Rob");
         //check post for all aspects is shown
-        Feed.assertPostIsShown(ANA_P1, the("All aspects Ana"));
+        Feed.assertPostFrom(ANA_P1, the("All aspects Ana"));
         //check private post of another user is not shown
-        Feed.assertPostIsNotShown(ANA_P1, the("Private Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("Private Ana"));
         Menu.logOut();
 
         Diaspora.signInAs(EVE_P1);
@@ -321,11 +321,11 @@ public class DiasporaTest extends BaseTest {
         //check - comments of other users is shown and can not be deleted
         Feed.assertCommentCanNotBeDeleted(ROB_P1, the(tag + " Public Rob next"), ROB_P1, "Comment from Rob");
         //check post for all aspects is shown
-        Feed.assertPostIsNotShown(ANA_P1, the("All aspects Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("All aspects Ana"));
         //check private post of another user is not shown
-        Feed.assertPostIsNotShown(ANA_P1, the("Private Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("Private Ana"));
         //deleted public post with tag is not shown
-        Feed.assertPostIsNotShown(ROB_P1, the(tag + " Public Rob"));
+        Feed.assertNoPostFrom(ROB_P1, the(tag + " Public Rob"));
         Menu.logOut();
 
     }
@@ -358,45 +358,45 @@ public class DiasporaTest extends BaseTest {
         Feed.addAspectPost(FAMILY, the("Rob for family"));
 
         //check - all available posts in Rob's stream
-        Feed.assertPostIsShown(ROB_P1, the("Rob for family"));
-        Feed.assertPostIsShown(EVE_P1, the(tag + " Public Eve"));
-        Feed.assertPostIsNotShown(EVE_P1, the("All aspects Eve"));
-        Feed.assertPostIsShown(ANA_P1, the("Ana for friends"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for work"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for family"));
+        Feed.assertPostFrom(EVE_P1, the(tag + " Public Eve"));
+        Feed.assertNoPostFrom(EVE_P1, the("All aspects Eve"));
+        Feed.assertPostFrom(ANA_P1, the("Ana for friends"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
 
         //filtering - all aspects is disabled - all aspects
         NavBar.openMyAspects();
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Select all");
         Feed.assertNthPostIs(0, ROB_P1, the("Rob for family"));
-        Feed.assertPostIsNotShown(EVE_P1, the(tag + " Public Eve"));
-        Feed.assertPostIsNotShown(EVE_P1, the("All aspects Eve"));
-        Feed.assertPostIsShown(ANA_P1, the("Ana for friends"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for work"));
+        Feed.assertNoPostFrom(EVE_P1, the(tag + " Public Eve"));
+        Feed.assertNoPostFrom(EVE_P1, the("All aspects Eve"));
+        Feed.assertPostFrom(ANA_P1, the("Ana for friends"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
 
         //filtering - Friends is enabled
         Aspects.toggleAspect(FRIENDS);
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for family"));
-        Feed.assertPostIsNotShown(EVE_P1, the(tag + " Public Eve"));
-        Feed.assertPostIsNotShown(EVE_P1, the("All aspects Eve"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for friends"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for work"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for family"));
+        Feed.assertNoPostFrom(EVE_P1, the(tag + " Public Eve"));
+        Feed.assertNoPostFrom(EVE_P1, the("All aspects Eve"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for friends"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
 
         //filtering - Family, Friends is enabled
         Aspects.toggleAspect(FAMILY);
-        Feed.assertPostIsShown(ROB_P1, the("Rob for family"));
-        Feed.assertPostIsNotShown(EVE_P1, the(tag + " Public Eve"));
-        Feed.assertPostIsNotShown(EVE_P1, the("All aspects Eve"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for friends"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for work"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for family"));
+        Feed.assertNoPostFrom(EVE_P1, the(tag + " Public Eve"));
+        Feed.assertNoPostFrom(EVE_P1, the("All aspects Eve"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for friends"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
 
         //filtering - Family, Friends, Work is enabled
         Aspects.toggleAspect(WORK);
-        Feed.assertPostIsShown(ROB_P1, the("Rob for family"));
-        Feed.assertPostIsNotShown(EVE_P1, the(tag + " Public Eve"));
-        Feed.assertPostIsNotShown(EVE_P1, the("All aspects Eve"));
-        Feed.assertPostIsShown(ANA_P1, the("Ana for friends"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for work"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for family"));
+        Feed.assertNoPostFrom(EVE_P1, the(tag + " Public Eve"));
+        Feed.assertNoPostFrom(EVE_P1, the("All aspects Eve"));
+        Feed.assertPostFrom(ANA_P1, the("Ana for friends"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
 
         //add new aspect and link user in aspect
         Aspects.add(the("Aspect"));
@@ -405,50 +405,50 @@ public class DiasporaTest extends BaseTest {
         //add new post in this aspect
         Menu.openStream();
         Feed.addAspectPost(the("Aspect"), the(the("Aspect") + " Rob for new aspect"));
-        Feed.assertPostIsShown(ROB_P1, the(the("Aspect") + " Rob for new aspect"));
+        Feed.assertPostFrom(ROB_P1, the(the("Aspect") + " Rob for new aspect"));
 
         //deselect aspect work and select added aspect
         NavBar.openMyAspects();
         Aspects.toggleAspect(WORK);
         Aspects.toggleAspect(the("Aspect"));
 
-        Feed.assertPostIsShown(ROB_P1, the("Rob for family"));
-        Feed.assertPostIsShown(ROB_P1, the(the("Aspect") + " Rob for new aspect"));
-        Feed.assertPostIsShown(EVE_P1, the(tag + " Public Eve"));
-        Feed.assertPostIsNotShown(EVE_P1, the("All aspects Eve"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for friends"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for work"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for family"));
+        Feed.assertPostFrom(ROB_P1, the(the("Aspect") + " Rob for new aspect"));
+        Feed.assertPostFrom(EVE_P1, the(tag + " Public Eve"));
+        Feed.assertNoPostFrom(EVE_P1, the("All aspects Eve"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for friends"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
 
         //edit aspect
         Aspects.switchToEditMode(the("Aspect"));
         Contacts.rename(the("Asp"));
         Menu.openStream();
         NavBar.openMyAspects();
-        Aspects.assertAspectIsNotShownInNavBar(the("Aspect"));
+        Aspects.assertNoAspectInNavBar(the("Aspect"));
 
         //delete aspect
         Aspects.switchToEditMode(the("Asp"));
         Contacts.deleteAspect();
         Menu.openStream();
         NavBar.openMyAspects();
-        Aspects.assertAspectIsNotShownInNavBar(the("Asp"));
+        Aspects.assertNoAspectInNavBar(the("Asp"));
 
-        Feed.assertPostIsShown(ROB_P1, the("Rob for family"));
-        Feed.assertPostIsNotShown(ROB_P1, the(the("Aspect") + " Rob for new aspect"));
-        Feed.assertPostIsNotShown(EVE_P1, the(tag + " Public Eve"));
-        Feed.assertPostIsNotShown(EVE_P1, the("All aspects Eve"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for friends"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for work"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for family"));
+        Feed.assertNoPostFrom(ROB_P1, the(the("Aspect") + " Rob for new aspect"));
+        Feed.assertNoPostFrom(EVE_P1, the(tag + " Public Eve"));
+        Feed.assertNoPostFrom(EVE_P1, the("All aspects Eve"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for friends"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
 
         //select all
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Deselect all");
-        Feed.assertPostIsNotShown(ROB_P1, the(the("Aspect") + " Rob for new aspect"));
-        Feed.assertPostIsShown(ROB_P1, the("Rob for family"));
-        Feed.assertPostIsNotShown(EVE_P1, the(tag + " Public Eve"));
-        Feed.assertPostIsNotShown(EVE_P1, the("All aspects Eve"));
-        Feed.assertPostIsShown(ANA_P1, the("Ana for friends"));
-        Feed.assertPostIsNotShown(ANA_P1, the("Ana for work"));
+        Feed.assertNoPostFrom(ROB_P1, the(the("Aspect") + " Rob for new aspect"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for family"));
+        Feed.assertNoPostFrom(EVE_P1, the(tag + " Public Eve"));
+        Feed.assertNoPostFrom(EVE_P1, the("All aspects Eve"));
+        Feed.assertPostFrom(ANA_P1, the("Ana for friends"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
     }
 
     //for test case #1 - Expected result
@@ -531,20 +531,20 @@ public class DiasporaTest extends BaseTest {
 
         //check posts in Ana`s stream
         Diaspora.signInAs(ANA_P1);
-        Feed.assertPostIsShown(ROB_P1, the("Rob for Family"));
-        Feed.assertPostIsShown(ROB_P1, the("Rob for Friends"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Friends 2"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Acquaintances"));
-        Feed.assertPostIsShown(ROB_P1, the("Aspect")+the(" Rob for new aspect"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for Family"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for Friends"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends 2"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Acquaintances"));
+        Feed.assertPostFrom(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
         Menu.logOut();
 
         //check posts in Eve`s stream
         Diaspora.signInAs(EVE_P1);
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Family"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Friends"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Friends 2"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Acquaintances"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Family"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends 2"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Acquaintances"));
+        Feed.assertNoPostFrom(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
         Menu.logOut();
 
         //change Rob`s aspects for Ana through button
@@ -561,12 +561,12 @@ public class DiasporaTest extends BaseTest {
 
         //check posts in Ana`s stream
         Diaspora.signInAs(ANA_P1);
-        Feed.assertPostIsShown(ROB_P1, the("Rob for Family"));
-        Feed.assertPostIsShown(ROB_P1, the("Rob for Friends"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Friends 2"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Acquaintances"));
-        Feed.assertPostIsShown(ROB_P1, the("Rob for Acquaintances 2 "));
-        Feed.assertPostIsShown(ROB_P1, the("Aspect")+the(" Rob for new aspect"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for Family"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for Friends"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends 2"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Acquaintances"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for Acquaintances 2 "));
+        Feed.assertPostFrom(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
 
         Menu.logOut();
 
@@ -575,17 +575,17 @@ public class DiasporaTest extends BaseTest {
         Menu.openContacts();
         Contacts.selectAspect(the("Aspect"));
         Contacts.deleteAspect();
-        Contacts.assertAspectIsNotShown(the("Aspect"));
+        Contacts.assertNoAspect(the("Aspect"));
         Menu.logOut();
 
         //check posts in Ana`s stream
         Diaspora.signInAs(ANA_P1);
-        Feed.assertPostIsShown(ROB_P1, the("Rob for Family"));
-        Feed.assertPostIsShown(ROB_P1, the("Rob for Friends"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Friends 2"));
-        Feed.assertPostIsNotShown(ROB_P1, the("Rob for Acquaintances"));
-        Feed.assertPostIsShown(ROB_P1, the("Rob for Acquaintances 2 "));
-        Feed.assertPostIsShown(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for Family"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for Friends"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends 2"));
+        Feed.assertNoPostFrom(ROB_P1, the("Rob for Acquaintances"));
+        Feed.assertPostFrom(ROB_P1, the("Rob for Acquaintances 2 "));
+        Feed.assertPostFrom(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
         Menu.logOut();
 
     }
@@ -599,9 +599,11 @@ public class DiasporaTest extends BaseTest {
 //        Menu.search(SAM_P2.fullName);
 //        open(BOB_P2.podLink+"/people?q=eve_tjvi%40diaspora.koehn.com");
 //        Contact.ensureSearchedContact(EVE_P1.fullName);
-        Relation.forUser(ANA_P1).notToUsers(BOB_P2, ROB_P1, SAM_P2, EVE_P1).build();
-        Relation.forUser(BOB_P2).notToUsers(ANA_P1, ROB_P1, EVE_P1, SAM_P2).build();
-        Relation.forUser(SAM_P2).notToUsers(ANA_P1, EVE_P1, BOB_P2, ROB_P1).build();
-        Relation.forUser(EVE_P1).notToUsers(EVE_P1, BOB_P2, ROB_P1, SAM_P2).build();
+        Relation.forUser(RON_P1).notToUsers(ANA_P1, BOB_P2, ROB_P1, SAM_P2, EVE_P1).build();
+        Relation.forUser(BOB_P2).notToUsers(RON_P1).build();
+        Relation.forUser(SAM_P2).notToUsers(RON_P1).build();
+        Relation.forUser(EVE_P1).notToUsers(RON_P1).build();
+        Relation.forUser(ANA_P1).notToUsers(RON_P1).build();
+
     }
 }

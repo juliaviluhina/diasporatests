@@ -10,7 +10,6 @@ import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -70,7 +69,7 @@ public class Feed {
 
     @Step
     public static void deletePost(PodUser from, String postText) {
-        deletePost(assertPostIsShown(from, postText));
+        deletePost(assertPostFrom(from, postText));
     }
 
     public static void deletePost(SelenideElement post) {
@@ -83,12 +82,12 @@ public class Feed {
 
     @Step
     public static void toggleLike(PodUser from, String post) {
-        assertPostIsShown(from, post).find(".like").click();
+        assertPostFrom(from, post).find(".like").click();
     }
 
     @Step
     public static void addComment(PodUser from, String post, String comment) {
-        SelenideElement currentPost = assertPostIsShown(from, post);
+        SelenideElement currentPost = assertPostFrom(from, post);
         currentPost.find(".focus_comment_textarea").click();
         currentPost.find(".comment_box").setValue(comment);
         currentPost.find(".new_comment").find(By.name("commit")).click();
@@ -96,7 +95,7 @@ public class Feed {
 
     @Step
     public static void reshare(PodUser from, String post) {
-        assertPostIsShown(from, post).find(".reshare").click();
+        assertPostFrom(from, post).find(".reshare").click();
         confirm(null);
     }
 
@@ -126,7 +125,7 @@ public class Feed {
 
     @Step
     public static void assertPostCanNotBeDeleted(PodUser fromPost, String post) {
-        SelenideElement currentPost = assertPostIsShown(fromPost, post);
+        SelenideElement currentPost = assertPostFrom(fromPost, post);
         Coordinates coordinates = currentPost.getCoordinates();
         coordinates.inViewPort();
         currentPost.find(".post-content").hover();
@@ -145,7 +144,7 @@ public class Feed {
 
     @Step
     public static void assertLikes(PodUser from, String post, int countLikes) {
-        assertPostIsShown(from, post).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
+        assertPostFrom(from, post).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
     }
 
     @Step
@@ -155,18 +154,18 @@ public class Feed {
 
     @Step
     protected static ElementsCollection commentsByFilter(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        SelenideElement currentPost = assertPostIsShown(fromPost, post);
+        SelenideElement currentPost = assertPostFrom(fromPost, post);
         ElementsCollection comments = currentPost.findAll(".comment");
         return comments.filter(textBeginAndContain(fromComment.fullName, comment));
     }
 
     @Step
-    public static SelenideElement assertPostIsShown(PodUser from, String post) {
+    public static SelenideElement assertPostFrom(PodUser from, String post) {
         return posts.filter(textBeginAndContain(from.fullName, post)).shouldHave(size(1)).get(0);
     }
 
     @Step
-    public static void assertPostIsNotShown(PodUser from, String post) {
+    public static void assertNoPostFrom(PodUser from, String post) {
         posts.filter(textBeginAndContain(from.fullName, post)).shouldBe(empty);
     }
 

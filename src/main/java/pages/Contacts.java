@@ -84,12 +84,12 @@ public class Contacts {
     }
 
     @Step
-    public static void assertAspectIsShown(String aspect) {
+    public static void assertAspect(String aspect) {
         aspects.filter(textEnd("\n" + aspect)).shouldHave(size(1));
     }
 
     @Step
-    public static void assertAspectIsNotShown(String aspect) {
+    public static void assertNoAspect(String aspect) {
         aspects.filter(textEnd("\n" + aspect)).shouldBe(empty);
     }
 
