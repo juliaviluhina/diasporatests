@@ -6,6 +6,8 @@ import pages.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Boolean.*;
+
 public class Relation {
 
     private final PodUser podUser;
@@ -13,6 +15,7 @@ public class Relation {
     private final List<LinkWithUser> linkWithUsers;
     private final List<PodUser> unlinkedUsers;
     private final List<String> followedTags;
+    private Boolean doLogOut;
 
     private static class LinkWithUser {
         public PodUser linkedUser;
@@ -40,6 +43,7 @@ public class Relation {
         private List<LinkWithUser> linkWithUsers;
         private List<PodUser> unlinkedUsers;
         private List<String> followedTags;
+        private Boolean doLogOut;
 
         private Builder(PodUser podUser) {
             this.podUser = podUser;
@@ -47,6 +51,12 @@ public class Relation {
             linkWithUsers = new ArrayList<LinkWithUser>();
             unlinkedUsers = new ArrayList<PodUser>();
             followedTags = new ArrayList<String>();
+            doLogOut = TRUE;
+        }
+
+        public Builder doNotLogOut() {
+            doLogOut = FALSE;
+            return this;
         }
 
         public Builder toUser(PodUser linkedUser, String... aspects) {
@@ -80,6 +90,7 @@ public class Relation {
         this.linkWithUsers = builder.linkWithUsers;
         this.unlinkedUsers = builder.unlinkedUsers;
         this.followedTags = builder.followedTags;
+        this.doLogOut = builder.doLogOut;
 
     }
 
@@ -102,7 +113,9 @@ public class Relation {
                 Tags.assertExist(followedTag);
             }
         }
-        Menu.logOut();
+        if (doLogOut) {
+            Menu.logOut();
+        }
 
         return this;
     }

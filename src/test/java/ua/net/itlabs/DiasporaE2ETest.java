@@ -14,7 +14,7 @@ import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 import static pages.Contact.contact;
 
-public class DiasporaTest extends BaseTest {
+public class DiasporaE2ETest extends BaseTest {
 
     @Test
     public void testFollowedTags() {
@@ -451,20 +451,7 @@ public class DiasporaTest extends BaseTest {
         Feed.assertNoPostFrom(ANA_P1, the("Ana for work"));
     }
 
-    //for test case #1 - Expected result
-    @Test
-    public void testSignInForAccountWithPosts() {
-        Diaspora.signInAs(BOB_P2);
-        NavBar.should(appear);
-    }
 
-    //for test case #1 - Actual result
-    @Test
-    @Buggy
-    public void testSignInForAccountWithoutPosts() {
-        Diaspora.signInAs(DAVE_P3);
-        NavBar.should(appear);
-    }
 
     //for test case #2
     @Test
@@ -590,20 +577,4 @@ public class DiasporaTest extends BaseTest {
 
     }
 
-    @Test
-    public void testChainOfSearch() {
-//        Diaspora.signInAs(BOB_P2);
-//        Menu.assertLoggedUser(BOB_P2);
-//        Menu.search(ANA_P1.fullName);
-//        Menu.search(ROB_P1.fullName);
-//        Menu.search(SAM_P2.fullName);
-//        open(BOB_P2.podLink+"/people?q=eve_tjvi%40diaspora.koehn.com");
-//        Contact.ensureSearchedContact(EVE_P1.fullName);
-        Relation.forUser(RON_P1).notToUsers(ANA_P1, BOB_P2, ROB_P1, SAM_P2, EVE_P1).build();
-        Relation.forUser(BOB_P2).notToUsers(RON_P1).build();
-        Relation.forUser(SAM_P2).notToUsers(RON_P1).build();
-        Relation.forUser(EVE_P1).notToUsers(RON_P1).build();
-        Relation.forUser(ANA_P1).notToUsers(RON_P1).build();
-
-    }
 }

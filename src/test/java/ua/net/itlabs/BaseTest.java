@@ -23,7 +23,7 @@ import static core.steps.Scenarios.*;
 public class BaseTest {
     @BeforeClass
     public static void clearDataBeforeTests() {
-        Configuration.timeout = 20000;
+        Configuration.timeout = 90000;
         if (System.getProperty("withClearedDataOnStart").equals("true")) {
             //System.out.println("clearing data before tests");
             clearUserData(ANA_P1);
@@ -41,12 +41,19 @@ public class BaseTest {
 
     @After
     public void tearDown() throws IOException {
-        screenshot();
+        byte[] lastSelenideScreenshot = lastSelenideScreenshot();
+        if (lastSelenideScreenshot != null) {
+            screenshot(lastSelenideScreenshot);
+        }
         Menu.ensureLoggedOut();
     }
 
     @Attachment(type = "image/png")
-    public byte[] screenshot() throws IOException {
+    public byte[] screenshot(byte[] dataForScreenshot) {
+        return dataForScreenshot;
+    }
+
+    private byte[] lastSelenideScreenshot() {
         Field allScreenshotsField = null;
         try {
             allScreenshotsField = ScreenShotLaboratory.class.getDeclaredField("allScreenshots");
@@ -60,7 +67,10 @@ public class BaseTest {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 
