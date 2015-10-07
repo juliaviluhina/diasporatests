@@ -2,7 +2,6 @@ package ua.net.itlabs;
 
 import org.junit.Test;
 import pages.Diaspora;
-import pages.Menu;
 import pages.NavBar;
 import ua.net.itlabs.categories.Buggy;
 

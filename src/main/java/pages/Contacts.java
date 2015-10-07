@@ -93,6 +93,11 @@ public class Contacts {
         aspects.filter(textEnd("\n" + aspect)).shouldBe(empty);
     }
 
+    @Step
+    public static void ensureAspectsForContact(PodUser podUser, String ... aspects) {
+        Contact.ensureAspectsForContact(contact(podUser), aspects);
+    }
+
     private static Boolean isStandartAspect(String aspect) {
         for (String standartAspect : STANDART_ASPECTS) {
             if (standartAspect.equals(aspect)) {

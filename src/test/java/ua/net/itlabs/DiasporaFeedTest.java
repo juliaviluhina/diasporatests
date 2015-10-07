@@ -6,7 +6,6 @@ import pages.*;
 
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
-import static pages.Contact.contact;
 import static ua.net.itlabs.testDatas.Users.ANA_P1;
 import static ua.net.itlabs.testDatas.Users.EVE_P1;
 import static ua.net.itlabs.testDatas.Users.ROB_P1;
