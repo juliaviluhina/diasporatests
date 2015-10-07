@@ -27,10 +27,11 @@ public class BaseTest {
         if (System.getProperty("withClearedDataOnStart").equals("true")) {
             //System.out.println("clearing data before tests");
             clearUserData(ANA_P1);
-            clearUserData(BOB_P2);
             clearUserData(ROB_P1);
-            clearUserData(SAM_P2);
             clearUserData(EVE_P1);
+            clearUserData(RON_P1);
+            clearUserData(BOB_P2);
+            clearUserData(SAM_P2);
         }
     }
 

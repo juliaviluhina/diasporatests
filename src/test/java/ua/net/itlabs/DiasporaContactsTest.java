@@ -78,6 +78,7 @@ public class DiasporaContactsTest extends BaseTest {
         Menu.logOut();
 
         //only after linking from Ana`a side posts from Ron can be shown in stream
+        Diaspora.signInAs(ANA_P1);
         Menu.openContacts();
         Contacts.openAllContacts();
         Contacts.ensureAspectsForContact(RON_P1, ACQUAINTANCES);

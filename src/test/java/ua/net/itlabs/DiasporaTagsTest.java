@@ -63,7 +63,7 @@ public class DiasporaTagsTest extends BaseTest {
     }
 
 
-    //for test case #2
+    //for test case #6417
     @Test
     @Buggy
     public void testTagsOrder() {

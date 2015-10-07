@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.$;
@@ -14,6 +15,8 @@ public class Menu {
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");//$(".user-menu-more-indicator");
     public static ElementsCollection userMenuItems = $$(".user-menu-item a");
+
+    private static String darkHeaderLocator = "header .dark-header";
 
     @Step
     public static void logOut() {
@@ -48,9 +51,14 @@ public class Menu {
 
     @Step
     public static void ensureLoggedOut() {
-        if ($$("header .dark-header").size() != 0) {
+        if ($$(darkHeaderLocator).size() != 0) {
             logOut();
         }
+    }
+
+    @Step
+    public static void assertLoggedOut() {
+        $$(darkHeaderLocator).shouldBe(empty);
     }
 
 }
