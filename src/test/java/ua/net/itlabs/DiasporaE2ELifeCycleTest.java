@@ -36,7 +36,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Bob for work"));
         //check - for limited post is no possibility for resharing, indirect check - post is addded
-        Feed.assertReshareIsImpossible(BOB_P2, the("Bob for work"));
+        Feed.assertPostCanNotBeReshared(BOB_P2, the("Bob for work"));
         Menu.logOut();
 
         //like and comment post, indirect check - limited post in right aspect is shown in stream of linked user
@@ -94,7 +94,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         //delete comment in stream
         Menu.openStream();
         Feed.deleteComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
-        Feed.assertCommentIsNotExist(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+        Feed.assertNoComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
 
         //unlike through MyActivities, indirect check - posts which liked earlier by this user is shown on my activity
         NavBar.openMyActivity();
@@ -160,7 +160,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Rob for work"));
         //check - for limited post is no possibility for resharing, indirect check - post is added
-        Feed.assertReshareIsImpossible(ROB_P1, the("Rob for work"));
+        Feed.assertPostCanNotBeReshared(ROB_P1, the("Rob for work"));
         Menu.logOut();
 
         //like and comment post, indirect check - limited post in right aspect is shown in stream of linked user

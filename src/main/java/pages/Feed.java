@@ -133,12 +133,12 @@ public class Feed {
     }
 
     @Step
-    public static void assertCommentIsNotExist(PodUser fromPost, String post, PodUser fromComment, String comment) {
+    public static void assertNoComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
         commentsByFilter(fromPost, post, fromComment, comment).shouldBe(empty);
     }
 
     @Step
-    public static void assertReshareIsImpossible(PodUser from, String post) {
+    public static void assertPostCanNotBeReshared(PodUser from, String post) {
         posts.filter(textBeginAndContain(from.fullName, post)).filter(cssClass("reshare")).shouldBe(empty);
     }
 

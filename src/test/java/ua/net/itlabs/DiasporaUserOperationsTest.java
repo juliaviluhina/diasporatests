@@ -1,5 +1,6 @@
 package ua.net.itlabs;
 
+import core.steps.Relation;
 import org.junit.Test;
 import pages.Diaspora;
 import pages.Feed;
@@ -10,6 +11,8 @@ import ua.net.itlabs.categories.Buggy;
 import static com.codeborne.selenide.Condition.appear;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
+import static pages.Aspects.FRIENDS;
+import static pages.Aspects.WORK;
 
 public class DiasporaUserOperationsTest extends BaseTest{
 
@@ -31,24 +34,130 @@ public class DiasporaUserOperationsTest extends BaseTest{
 
     @Test
     public void testAddDeletePosts() {
+        //add post
         Diaspora.signInAs(ANA_P1);
         Feed.addPublicPost(the("Public from Ana"));
         Feed.assertPostFrom(ANA_P1, the("Public from Ana") );
         Menu.logOut();
 
+        //check - posts of another user can not be deleted
         Diaspora.signInAs(RON_P1);
         Menu.search(ANA_P1.fullName);
         Feed.assertPostCanNotBeDeleted(ANA_P1,the("Public from Ana") );
         Menu.logOut();
 
+        //delete post
         Diaspora.signInAs(ANA_P1);
         Feed.deletePost(ANA_P1,the("Public from Ana") );
         Feed.assertNoPostFrom(ANA_P1,the("Public from Ana") );
         Menu.logOut();
 
+        //check - deleted post is not available for another user
         Diaspora.signInAs(RON_P1);
         Menu.search(ANA_P1.fullName);
         Feed.assertNoPostFrom(ANA_P1, the("Public from Ana") );
+
+    }
+
+    @Test
+    public void testAddDeleteCommentsOfPosts() {
+
+        //GIVEN - add relations between users and add post
+        Relation.forUser(SAM_P2).toUser(BOB_P2, FRIENDS).doNotLogOut().build();
+        Menu.openStream();
+        Feed.addAspectPost(FRIENDS, the("Sam for friends"));
+
+        //add comment for his own post
+        Feed.addComment(SAM_P2, the("Sam for friends"), the("Sam comments"));
+        Menu.logOut();
+
+        //add relation - for visibility post in stream
+        Relation.forUser(BOB_P2).toUser(SAM_P2, WORK).doNotLogOut().build();
+        Menu.openStream();
+
+        //check - comments of another users can not be deleted
+        Feed.assertCommentCanNotBeDeleted(SAM_P2, the("Sam for friends"),SAM_P2, the("Sam comments"));
+
+        //add comment for post of another user
+        Feed.addComment(SAM_P2, the("Sam for friends"), the("Bob comments"));
+        Feed.assertComment(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
+        Menu.logOut();
+
+        //check - even author of post can not delete comments f another user
+        Diaspora.signInAs(SAM_P2);
+        Feed.assertCommentCanNotBeDeleted(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
+
+        //delete comments for his own post
+        Feed.deleteComment(SAM_P2, the("Sam for friends"), SAM_P2, the("Sam comments"));
+        Feed.assertNoComment(SAM_P2, the("Sam for friends"), SAM_P2, the("Sam comments"));
+
+    }
+
+    @Test
+    public void testAddDeleteLikesOfPosts() {
+        //GIVEN - add relations between users and add post
+        Relation.forUser(SAM_P2).toUser(BOB_P2, FRIENDS).doNotLogOut().build();
+        Menu.openStream();
+        Feed.addAllAspectsPost(the("Sam all aspects"));
+
+        //like his own post
+        Feed.toggleLike(SAM_P2, the("Sam all aspects"));
+        Feed.assertLikes(SAM_P2, the("Sam all aspects"), 1 );
+        Menu.logOut();
+
+        //add relation - for visibility post in stream
+        Relation.forUser(BOB_P2).toUser(SAM_P2, WORK).doNotLogOut().build();
+        Menu.openStream();
+
+        //check information about previous likes
+        Feed.assertLikes(SAM_P2, the("Sam all aspects"), 1 );
+
+        //like post of another user
+        Feed.toggleLike(SAM_P2, the("Sam all aspects"));
+        Feed.assertLikes(SAM_P2, the("Sam all aspects"), 2 );
+
+        //unlike post
+        Feed.toggleLike(SAM_P2, the("Sam all aspects"));
+        Feed.assertLikes(SAM_P2, the("Sam all aspects"), 1 );
+
+    }
+
+    @Test
+    public void testResharingOfPosts() {
+        //GIVEN - add relations between users and add public and limited post
+        Relation.forUser(SAM_P2).toUser(BOB_P2, FRIENDS).doNotLogOut().build();
+        Menu.openStream();
+        Feed.addAspectPost(FRIENDS, the("Sam for friends"));
+        Feed.addPublicPost(the("Public Sam"));
+
+        //check - limited posts can not be reshared in any case
+        Feed.assertPostCanNotBeReshared(SAM_P2, the("Sam for friends"));
+        //check - his own public posts can not be rashared
+        Feed.assertPostCanNotBeReshared(SAM_P2, the("Public Sam"));
+        Menu.logOut();
+
+        //add relation - for visibility post in stream
+        Relation.forUser(BOB_P2).toUser(SAM_P2, WORK).doNotLogOut().build();
+        Menu.openStream();
+
+        //check - available limited posts can not be reshared in any case
+        Feed.assertPostCanNotBeReshared(SAM_P2, the("Sam for friends"));
+
+        //reshare post
+        Feed.reshare(SAM_P2, the("Public Sam"));
+
+        //check in stream - reshared post can be shown
+        Feed.assertPostFrom(BOB_P2, the("Public Sam"));
+        //check in stream - resharing post can be shown
+        Feed.assertPostFrom(SAM_P2, the("Public Sam"));
+        Menu.logOut();
+
+        Diaspora.signInAs(SAM_P2);
+        //check in stream - reshared by another user post can be shown
+        Feed.assertPostFrom(BOB_P2, the("Public Sam"));
+        //check in stream - resharing post can be shown
+        Feed.assertPostFrom(SAM_P2, the("Public Sam"));
+
     }
 
 }
