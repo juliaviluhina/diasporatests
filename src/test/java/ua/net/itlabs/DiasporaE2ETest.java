@@ -490,7 +490,7 @@ public class DiasporaE2ETest extends BaseTest {
         Feed.addAspectPost(FAMILY, the("Rob for Family"));
         Feed.addAspectPost(FRIENDS, the("Rob for Friends"));
         Feed.addAspectPost(ACQUAINTANCES, the("Rob for Acquaintances"));
-
+        Feed.assertNthPostIs(0, ROB_P1, the("Rob for Acquaintances"));//this check for wait moment when stream will be loaded
         //add new aspect in Contacts page, add relation in this aspect
         Menu.openContacts();
         Contacts.addAspect(the("Aspect"));

@@ -95,6 +95,7 @@ public class Relation {
     }
 
     public Relation createRelations() {
+        Menu.ensureLoggedOut();
         Diaspora.signInAs(podUser);
         Menu.assertLoggedUser(podUser);
         for (LinkWithUser linkWithUser : linkWithUsers) {
