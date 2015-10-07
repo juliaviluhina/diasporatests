@@ -66,6 +66,11 @@ public class Tags {
         clearThe();
         add(the("#stag"));
         assertNthIs(0, the("#stag"));
+
+        //when tags are more than one page - without this code does not work
+        Coordinates coordinates = $("#leftNavBar [href='/followed_tags']").getCoordinates();
+        coordinates.inViewPort();
+
         ElementsCollection userTags = tags.filter(textBegin("#"));
         int countDeleted = 0;
         for (SelenideElement userTag : userTags) {
