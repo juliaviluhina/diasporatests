@@ -1,28 +1,24 @@
 package pages;
 
-import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import java.util.NoSuchElementException;
-
-import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class Menu {
 
-    public static SelenideElement userMenu = $("#user_menu");
-    public static SelenideElement subMenuIndicator = $(".user-menu-more-indicator");
+    public static SelenideElement userMenuHeader = $(".user-menu-trigger");//$(".user-menu-more-indicator");
+    public static ElementsCollection userMenuItems = $$(".user-menu-item a");
 
     @Step
     public static void logOut() {
-        subMenuIndicator.click();
-        userMenu.find("[data-method='delete']").click();
+        userMenuHeader.click();
+        $$(".user-menu-item a").find(exactText("Log out")).click();
     }
 
     @Step
@@ -41,13 +37,13 @@ public class Menu {
 
     @Step
     public static void openContacts(){
-        subMenuIndicator.click();
-        $("[href='/contacts']").click();
+        userMenuHeader.click();
+        $$(".user-menu-item a").find(exactText("Contacts")).click();
     }
 
     @Step
     public static void assertLoggedUser(PodUser user) {
-        userMenu.find(".user-name").shouldHave(exactText(user.fullName));
+        userMenuHeader.find(".user-name").shouldHave(exactText(user.fullName));
     }
 
     @Step

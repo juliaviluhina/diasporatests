@@ -20,13 +20,14 @@ public class DiasporaE2ETest extends BaseTest {
     public void testFollowedTags() {
         //GIVEN - setup relation between users, addition one the same followed tag
         //new public posts linked with tags in user account from the same pod
-        Relation.forUser(ROB_P1).notToUsers(ANA_P1).build();
-        Relation.forUser(ANA_P1).notToUsers(ROB_P1).build();
         String post1 = the("Public post with tag " + the("#tag1") + " : ");
         String post2 = the("Public post with tag " + the("#tag2") + " : ");
-        Diaspora.signInAs(ROB_P1);
+        Relation.forUser(ANA_P1).notToUsers(ROB_P1).build();
+        Relation.forUser(ROB_P1).notToUsers(ANA_P1).doNotLogOut().build();
+        Menu.openStream();
         Feed.addPublicPost(post1);
         Feed.addPublicPost(post2);
+        Feed.assertNthPostIs(0,ROB_P1, post2); //without this check next operation is incorrect
         Menu.logOut();
 
         Diaspora.signInAs(ANA_P1);
