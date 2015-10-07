@@ -93,18 +93,76 @@ public class DiasporaContactsTest extends BaseTest {
         Menu.logOut();
     }
 
+    @Test
+    public void OperationWithNewAspectTest() {
+        //GIVEN - setup relation between users
+        Relation.forUser(ANA_P1).toUser(RON_P1, WORK).build();
+        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();
+
+        //add new aspect on contacts site
+        Menu.openContacts();
+        Contacts.addAspect(the("Asp1"));
+        Contacts.selectAspect(the("Asp1"));
+        Contacts.assertCountContactsInAspect(the("Asp1"),0);
+
+        //add link with this aspect
+        Contacts.addLinkedContactForAspect(the("Asp1"), ANA_P1);
+        Contacts.selectAspect(the("Asp1"));//only after this action counter is changed
+        Contacts.assertCountContactsInAspect(the("Asp1"), 1);
+
+        //add post with this aspect
+        Menu.openStream();
+        Feed.addAspectPost(the("Asp1"), the("Asp1") + " Post for new Aspect from Ron");
+        Feed.assertNthPostIs(0, RON_P1, the("Asp1") + " Post for new Aspect from Ron" );//this check for wait moment when stream will be loaded
+        Menu.logOut();
+
+        //check post visibility in stream of linked in new aspect contact
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertPostFrom(RON_P1, the("Asp1") + " Post for new Aspect from Ron");
+        Menu.logOut();
+
+        //rename aspect on contacts site
+        Diaspora.signInAs(RON_P1);
+        Menu.openContacts();
+        Contacts.selectAspect(the("Asp1"));
+        Contacts.rename(the("Asp2"));
+
+        //check changes in aspects in contacts site
+        Contacts.assertAspect(the("Asp2"));
+        Contacts.assertNoAspect(the("Asp1"));
+
+        //add new post for renamed aspect
+        Menu.openStream();
+        Feed.addAspectPost(the("Asp2"), the("Asp2") + " Post for renamed Aspect from Ron");
+        Feed.assertNthPostIs(0, RON_P1, the("Asp2") + " Post for renamed Aspect from Ron");
+        Menu.logOut();
+
+        //check post visibility in stream of linked in new aspect contact
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertPostFrom(RON_P1, the("Asp1") + " Post for new Aspect from Ron");
+        Feed.assertPostFrom(RON_P1, the("Asp2") + " Post for renamed Aspect from Ron");
+        Menu.logOut();
+
+        //delete added aspect
+        Diaspora.signInAs(RON_P1);
+        Menu.openContacts();
+        Contacts.selectAspect(the("Asp2"));
+        Contacts.deleteAspect();
+
+        //check - is no aspect in contact site after deletion
+        Contacts.assertNoAspect(the("Asp2"));
+        Menu.logOut();
+
+        //check post visibility in stream of linked contact (post limited in deleted aspect and earlier was available)
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertPostFrom(RON_P1, the("Asp1") + " Post for new Aspect from Ron");
+        Feed.assertPostFrom(RON_P1, the("Asp2") + " Post for renamed Aspect from Ron");
+        Menu.logOut();
+
+    }
 
 //    @Test
 //    public void testContacts() {
-//        //GIVEN - setup relation between users in some aspect
-//        //add posts for different aspects
-//        Relation.forUser(ROB_P1).toUser(ANA_P1, FAMILY, FRIENDS).notToUsers(EVE_P1).build();
-//        Diaspora.signInAs(ROB_P1);
-//        Feed.addAspectPost(FAMILY, the("Rob for Family"));
-//        Feed.addAspectPost(FRIENDS, the("Rob for Friends"));
-//        Feed.addAspectPost(ACQUAINTANCES, the("Rob for Acquaintances"));
-//        Feed.assertNthPostIs(0, ROB_P1, the("Rob for Acquaintances"));//this check for wait moment when stream will be loaded
-//        //add new aspect in Contacts page, add relation in this aspect
 //        Menu.openContacts();
 //        Contacts.addAspect(the("Aspect"));
 //        Contacts.selectAspect(the("Aspect"));
@@ -112,81 +170,9 @@ public class DiasporaContactsTest extends BaseTest {
 //        Contacts.selectAspect(FRIENDS);//only after this action counter is changed
 //        Contacts.assertCountContactsInAspect(the("Aspect"), 1);
 //
-//        //delete aspect for contact
-//        int countFriends = Contacts.countContactsInAspect(FRIENDS);
-//        Contacts.deleteLinkedContactForAspect(FRIENDS, ANA_P1);
-//        countFriends--;
-//        //check aspect counter
-//        Contacts.selectAspect(FRIENDS);//only after this action counter is changed
-//        Contacts.assertCountContactsInAspect(FRIENDS, countFriends);
-//
-//        //add post for Friends after deletion aspect for contact
-//        Menu.openStream();
-//        Feed.addAspectPost(FRIENDS, the("Rob for Friends 2 "));
-//        Feed.assertNthPostIs(0, ROB_P1, the("Rob for Friends 2 "));
-//
 //        //add post for new aspect
 //        Feed.addAspectPost(the("Aspect"), the("Aspect")+the(" Rob for new aspect"));
 //        Feed.assertNthPostIs(0, ROB_P1, the("Aspect")+the(" Rob for new aspect"));
-//        Menu.logOut();
-//
-//        //check posts in Ana`s stream
-//        Diaspora.signInAs(ANA_P1);
-//        Feed.assertPostFrom(ROB_P1, the("Rob for Family"));
-//        Feed.assertPostFrom(ROB_P1, the("Rob for Friends"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends 2"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Acquaintances"));
-//        Feed.assertPostFrom(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
-//        Menu.logOut();
-//
-//        //check posts in Eve`s stream
-//        Diaspora.signInAs(EVE_P1);
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Family"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends 2"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Acquaintances"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
-//        Menu.logOut();
-//
-//        //change Rob`s aspects for Ana through button
-//        Diaspora.signInAs(ROB_P1);
-//        Menu.openContacts();
-//        Contacts.openAllContacts();
-//        Contact.ensureAspectsForContact(contact(ANA_P1), ACQUAINTANCES, the("Aspect"));
-//
-//        //add post for Friends after addition aspect for contact
-//        Menu.openStream();
-//        Feed.addAspectPost(ACQUAINTANCES, the("Rob for Acquaintances 2 "));
-//        Feed.assertNthPostIs(0, ROB_P1, the("Rob for Acquaintances 2 "));
-//        Menu.logOut();
-//
-//        //check posts in Ana`s stream
-//        Diaspora.signInAs(ANA_P1);
-//        Feed.assertPostFrom(ROB_P1, the("Rob for Family"));
-//        Feed.assertPostFrom(ROB_P1, the("Rob for Friends"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends 2"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Acquaintances"));
-//        Feed.assertPostFrom(ROB_P1, the("Rob for Acquaintances 2 "));
-//        Feed.assertPostFrom(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
-//
-//        Menu.logOut();
-//
-//        //delete Rob`s aspect
-//        Diaspora.signInAs(ROB_P1);
-//        Menu.openContacts();
-//        Contacts.selectAspect(the("Aspect"));
-//        Contacts.deleteAspect();
-//        Contacts.assertNoAspect(the("Aspect"));
-//        Menu.logOut();
-//
-//        //check posts in Ana`s stream
-//        Diaspora.signInAs(ANA_P1);
-//        Feed.assertPostFrom(ROB_P1, the("Rob for Family"));
-//        Feed.assertPostFrom(ROB_P1, the("Rob for Friends"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Friends 2"));
-//        Feed.assertNoPostFrom(ROB_P1, the("Rob for Acquaintances"));
-//        Feed.assertPostFrom(ROB_P1, the("Rob for Acquaintances 2 "));
-//        Feed.assertPostFrom(ROB_P1, the("Aspect") + the(" Rob for new aspect"));
 //        Menu.logOut();
 //
 //    }

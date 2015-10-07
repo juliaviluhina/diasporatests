@@ -20,6 +20,7 @@ public class DiasporaFeedTest extends BaseTest{
         //add posts for aspect with link
         Relation.forUser(RON_P1).toUser(EVE_P1, FAMILY).doNotLogOut().build();
         Menu.openStream();
+        Feed.addPrivatePost(the("Private post from Ron"));
         Feed.addPublicPost(the("Public post from Ron"));
         Feed.addAllAspectsPost(the("Ron for all aspects"));
         Feed.addAspectPost(WORK, the("Ron for Work - unlinked aspect "));
@@ -29,6 +30,7 @@ public class DiasporaFeedTest extends BaseTest{
         Relation.forUser(EVE_P1).toUser(RON_P1, ACQUAINTANCES).doNotLogOut().build();
 
         Menu.openStream();
+        Feed.assertNoPostFrom(RON_P1, the("Private post from Ron"));
         Feed.assertPostFrom(RON_P1, the("Ron for Family - linked aspect "));
         Feed.assertPostFrom(RON_P1, the("Public post from Ron"));
         Feed.assertPostFrom(RON_P1, the("Ron for all aspects"));
@@ -42,6 +44,7 @@ public class DiasporaFeedTest extends BaseTest{
         Relation.forUser(EVE_P1).notToUsers(RON_P1).withTags(the("#tag")).build();
         Relation.forUser(RON_P1).toUser(EVE_P1, FAMILY).doNotLogOut().build();
         Menu.openStream();
+        Feed.addPrivatePost(the("Private post from Ron"));
         Feed.addPublicPost(the("#tag")+the(" Public post from Ron with followed tag"));
         Feed.addPublicPost(the("Public post from Ron"));
         Feed.addAllAspectsPost(the("Ron for all aspects"));
@@ -52,6 +55,7 @@ public class DiasporaFeedTest extends BaseTest{
 
         Diaspora.signInAs(EVE_P1);
         //in stream post is not shown
+        Feed.assertNoPostFrom(RON_P1, the("Private post from Ron"));
         Feed.assertPostFrom(RON_P1, the("#tag") + the(" Public post from Ron with followed tag"));
         Feed.assertNoPostFrom(RON_P1, the("Public post from Ron"));
         Feed.assertNoPostFrom(RON_P1, the("Ron for all aspects"));
@@ -60,6 +64,7 @@ public class DiasporaFeedTest extends BaseTest{
 
         //but post is shown in search stream
         Menu.search(RON_P1.fullName);
+        Feed.assertNoPostFrom(RON_P1, the("Private post from Ron"));
         Feed.assertPostFrom(RON_P1, the("#tag") + the(" Public post from Ron with followed tag"));
         Feed.assertPostFrom(RON_P1, the("Public post from Ron"));
         Feed.assertPostFrom(RON_P1, the("Ron for all aspects"));
@@ -99,6 +104,38 @@ public class DiasporaFeedTest extends BaseTest{
         Menu.openStream();
         Feed.assertNoPostFrom(RON_P1, the("Ron for Family - linked aspect "));
         Feed.assertNoPostFrom(RON_P1, the("#tag") + " Public post with followed tag");
+
+    }
+
+    @Test
+    public void testAccessToPostsFromUnLinkedUsersOfOnePod() {
+        //GIVEN - setup relation between users in some aspect
+        //add posts for aspect with link
+        Relation.forUser(EVE_P1).notToUsers(RON_P1).withTags(the("#tag")).build();
+        Relation.forUser(RON_P1).notToUsers(EVE_P1).doNotLogOut().build();
+        Menu.openStream();
+        Feed.addPublicPost(the("Public post from Ron"));
+        Feed.addPublicPost(the("#tag")+" Public post with followed tag");
+        Feed.addAllAspectsPost(the("Ron for all aspects"));
+        Feed.addAspectPost(WORK, the("Ron for Work"));
+        Feed.addPrivatePost(the("Private post from Ron"));
+        Feed.assertNthPostIs(0, RON_P1, the("Private post from Ron"));//this check for wait moment when stream will be loaded
+        Menu.logOut();
+
+        Diaspora.signInAs(EVE_P1);
+        Menu.openStream();
+        Feed.assertNoPostFrom(RON_P1, the("Public post from Ron"));
+        Feed.assertPostFrom(RON_P1, the("#tag") + " Public post with followed tag");
+        Feed.assertNoPostFrom(RON_P1, the("Ron for all aspects"));
+        Feed.assertNoPostFrom(RON_P1, the("Ron for Work"));
+        Feed.assertNoPostFrom(RON_P1, the("Private post from Ron"));
+
+        Menu.search(RON_P1.fullName);
+        Feed.assertPostFrom(RON_P1, the("Public post from Ron"));
+        Feed.assertPostFrom(RON_P1, the("#tag") + " Public post with followed tag");
+        Feed.assertNoPostFrom(RON_P1, the("Ron for all aspects"));
+        Feed.assertNoPostFrom(RON_P1, the("Ron for Work"));
+        Feed.assertNoPostFrom(RON_P1, the("Private post from Ron"));
 
     }
 
