@@ -34,6 +34,11 @@ public class Menu {
     }
 
     @Step
+    public static void openConversations() {
+        $("#nav_badges [href='/conversations']").click();
+    }
+
+    @Step
     public static void openStream() {
         $(".header-nav [href='/stream']").click();
     }
@@ -60,5 +65,7 @@ public class Menu {
     public static void assertLoggedOut() {
         $$(darkHeaderLocator).shouldBe(empty);
     }
+
+
 
 }
