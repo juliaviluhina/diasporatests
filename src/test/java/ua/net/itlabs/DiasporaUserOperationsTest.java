@@ -174,17 +174,4 @@ public class DiasporaUserOperationsTest extends BaseTest{
         Menu.logOut();
     }
 
-//    @Test
-//    public void testEnsureAspectForContact() {
-//        Diaspora.signInAs(RON_P1);
-//        //Menu.assertLoggedUser(RON_P1);
-//        Menu.search(SAM_P2.fullName);
-//
-//        Contact.ensureNoAspectsForContact();
-//
-//        Contact.ensureAspectsForContact(FRIENDS, WORK);
-//
-//        Contact.ensureAspectsForContact(FRIENDS, FAMILY, ACQUAINTANCES);
-//    }
-
 }

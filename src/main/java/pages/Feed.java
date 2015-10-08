@@ -17,7 +17,6 @@ import static com.codeborne.selenide.Selenide.confirm;
 import static core.helpers.UniqueDataHelper.clearThe;
 import static core.helpers.UniqueDataHelper.the;
 import static core.conditions.CustomCondition.*;
-import static pages.Aspects.aspectIsUsed;
 
 public class Feed {
 
@@ -204,8 +203,9 @@ public class Feed {
         setAspect.click();
         ElementsCollection aspects = aspect.findAll(".aspect_selector");
         aspects.get(0).click();
-        for (SelenideElement aspect:aspects) {
-            if (aspectIsUsed(aspect)) {aspect.click();}
+        String[] selectedAspectstext = aspects.filter(cssClass("selected")).getTexts();
+        for (String selectedAspectTest:selectedAspectstext) {
+            aspects.find(exactText(selectedAspectTest)).click();
         }
     }
 

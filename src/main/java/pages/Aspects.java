@@ -62,9 +62,4 @@ public class Aspects {
         $(".toggle_selector").shouldHave(text(text));
     }
 
-    @Step
-    public static Boolean aspectIsUsed(SelenideElement aspect) {
-        return aspect.getAttribute("class").contains("selected");
-    }
-
 }

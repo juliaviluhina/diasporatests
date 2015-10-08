@@ -21,7 +21,7 @@ public class Menu {
     @Step
     public static void logOut() {
         userMenuHeader.click();
-        $$(".user-menu-item a").find(exactText("Log out")).click();
+        userMenuItems.find(exactText("Log out")).click();
     }
 
     @Step
@@ -41,7 +41,7 @@ public class Menu {
     @Step
     public static void openContacts(){
         userMenuHeader.click();
-        $$(".user-menu-item a").find(exactText("Contacts")).click();
+        userMenuItems.find(exactText("Contacts")).click();
     }
 
     @Step

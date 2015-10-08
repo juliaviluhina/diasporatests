@@ -1,24 +1,18 @@
 package pages;
 
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import core.steps.AspectManager;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.Condition.hasAttribute;
 import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static core.conditions.CustomCollectionCondition.textsBegin;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static pages.Aspects.STANDART_ASPECTS;
-import static pages.Aspects.aspectIsUsed;
 
 public class Contact {
 
@@ -48,7 +42,7 @@ public class Contact {
 
     @Step
     public static void ensureNoAspectsForContact(SelenideElement contact) {
-        AspectManager.ensureNoAspects(manageContact(contact), contact);
+        new AspectManager(manageContact(contact), contact).ensureNoAspects();
     }
 
 
@@ -59,74 +53,96 @@ public class Contact {
 
     @Step
     public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
-        AspectManager.ensureAspects(manageContact(contact), contact, diasporaAspects);
+        new AspectManager(manageContact(contact), contact).ensureAspects(diasporaAspects);
     }
 
-    //    protected static ElementsCollection aspectsOfContact(SelenideElement contact) {
-//        return contact.findAll(".aspect_selector");
-//    }
-//
-//    protected static ElementsCollection selectedAspectsOfContact(SelenideElement contact) {
-//        return contact.findAll(".aspect_selector.selected");
-//    }
+    private static class AspectManager {
+        private SelenideElement btnManageAspect;
+        private SelenideElement aspectsContainer;
 
-//    @Step
-//    public static void ensureNoAspectsForContact(SelenideElement contact) {
-//        if (manageContact(contact).getText().equals("Add contact")) {
-//            return;
-//        }
-//        manageContact(contact).click();
-//        aspectsOfContact(contact).shouldHave(textsBegin(STANDART_ASPECTS));
-//        String[] aspectTexts = aspectsOfContact(contact).getTexts();
-//        Boolean[] beUsed = new Boolean[aspectTexts.length];
-//        for (int i = 0; i < aspectTexts.length; i++) {
-//            beUsed[i] = aspectIsUsed(aspectsOfContact(contact).get(i));
-//        }
-//        contact.click();
-//        for (int i = 0; i < aspectTexts.length; i++) {
-//            if (beUsed[i]) {
-//                manageContact(contact).click();
-//                aspectsOfContact(contact).get(i).click();
-//                contact.click();
-//            }
-//        }
-//    }
+        private String[] aspectTexts;
+        private String[] selectedAspectTexts;
+        private Boolean[] beUsed;
+        private Boolean[] shouldBeUsed;
+
+        public AspectManager(SelenideElement btnManageAspect, SelenideElement aspectsContainer) {
+            this.btnManageAspect = btnManageAspect;
+            this.aspectsContainer = aspectsContainer;
+        }
+
+        private ElementsCollection aspects() {
+            return aspectsContainer.findAll(".aspect_selector");
+        }
+
+        private ElementsCollection selectedAspects() {
+            return aspectsContainer.findAll(".aspect_selector.selected");
+        }
+
+        @Step
+        private void fixStartState() {
+            btnManageAspect.click();
+            aspects().shouldHave(textsBegin(STANDART_ASPECTS));
+            aspectTexts = aspects().getTexts();
+            selectedAspectTexts = selectedAspects().getTexts();
+            beUsed = new Boolean[aspectTexts.length];
+            shouldBeUsed = new Boolean[aspectTexts.length];
+            for (int i = 0; i < aspectTexts.length; i++) {
+                beUsed[i] = FALSE;
+                shouldBeUsed[i] = FALSE;
+                for (int j = 0; j < selectedAspectTexts.length; j++) {
+                    if (aspectTexts[i].equals(selectedAspectTexts[j])) {
+                        beUsed[i] = TRUE;
+                        break;
+                    }
+                }
+            }
+            aspectsContainer.click();
+        }
 
 
-//    @Step
-//    public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
-//        if (diasporaAspects.length == 1) {
-//            if (manageContact(contact).getText().equals(diasporaAspects[0])) {
-//                return;
-//            }
-//        }
-//        manageContact(contact).click();
-//        aspectsOfContact(contact).shouldHave(textsBegin(STANDART_ASPECTS));
-//        String[] aspectTexts = aspectsOfContact(contact).getTexts();
-//        Boolean[] beUsed = new Boolean[aspectTexts.length];
-//        Boolean[] shouldBeUsed = new Boolean[aspectTexts.length];
-//        for (int i = 0; i < aspectTexts.length; i++) {
-//            beUsed[i] = aspectIsUsed(aspectsOfContact(contact).get(i));
-//            shouldBeUsed[i] = FALSE;
-//        }
-//        contact.click();
-//        for (String diasporaAspect : diasporaAspects) {
-//            for (int i = 0; i < aspectTexts.length; i++) {
-//                if (aspectTexts[i].contains(diasporaAspect)) {
-//                    shouldBeUsed[i] = TRUE;
-//                    break;
-//                }
-//            }
-//        }
-//
-//        for (int i = 0; i < beUsed.length; i++) {
-//            if (beUsed[i] != shouldBeUsed[i]) {
-//                manageContact(contact).click();
-//                aspectsOfContact(contact).get(i).click();
-//                contact.click();
-//            }
-//        }
-//    }
+        @Step
+        public void ensureNoAspects() {
 
+            if (btnManageAspect.getText().equals("Add contact")) {
+                return;
+            }
+            fixStartState();
+            for (int i = 0; i < aspectTexts.length; i++) {
+                if (beUsed[i]) {
+                    btnManageAspect.click();
+                    aspects().get(i).click();
+                    aspectsContainer.click();
+                }
+            }
+        }
+
+        @Step
+        public void ensureAspects(String... diasporaAspects) {
+
+            if (diasporaAspects.length == 1) {
+                if (btnManageAspect.getText().equals(diasporaAspects[0])) {
+                    return;
+                }
+            }
+            fixStartState();
+            for (String diasporaAspect : diasporaAspects) {
+                for (int i = 0; i < aspectTexts.length; i++) {
+                    if (aspectTexts[i].contains(diasporaAspect)) {
+                        shouldBeUsed[i] = TRUE;
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < beUsed.length; i++) {
+                if (beUsed[i] != shouldBeUsed[i]) {
+                    btnManageAspect.click();
+                    aspects().get(i).click();
+                    aspectsContainer.click();
+                }
+            }
+        }
+
+    }
 
 }
