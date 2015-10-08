@@ -4,6 +4,7 @@ package pages;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import core.steps.AspectManager;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
@@ -28,10 +29,6 @@ public class Contact {
         return $$(".stream_element").filter(text(podUser.fullName)).get(0);
     }
 
-    protected static ElementsCollection aspectsOfContact(SelenideElement contact) {
-        return contact.findAll(".aspect_selector");
-    }
-
     protected static SelenideElement manageContact(SelenideElement contact) {
         return contact.find(manageContactLocator);
     }
@@ -39,7 +36,7 @@ public class Contact {
     @Step
     public static void ensureSearchedContact(String fullName) {
         //even id search result site is shown - clicking in avatar load Contact site
-        SelenideElement avatar = $("[alt='"+fullName+"']");
+        SelenideElement avatar = $("[alt='" + fullName + "']");
         avatar.click();
     }
 
@@ -51,25 +48,9 @@ public class Contact {
 
     @Step
     public static void ensureNoAspectsForContact(SelenideElement contact) {
-        if (manageContact(contact).getText().equals("Add contact")) {
-            return;
-        }
-        manageContact(contact).click();
-        aspectsOfContact(contact).shouldHave(textsBegin(STANDART_ASPECTS));
-        String[] aspectTexts = aspectsOfContact(contact).getTexts();
-        Boolean[] beUsed = new Boolean[aspectTexts.length];
-        for (int i = 0; i < aspectTexts.length; i++) {
-            beUsed[i] = aspectIsUsed(aspectsOfContact(contact).get(i));
-        }
-        contact.click();
-        for (int i = 0; i < aspectTexts.length; i++) {
-            if (beUsed[i]) {
-                manageContact(contact).click();
-                aspectsOfContact(contact).get(i).click();
-                contact.click();
-            }
-        }
+        AspectManager.ensureNoAspects(manageContact(contact), contact);
     }
+
 
     @Step
     public static void ensureAspectsForContact(String... diasporaAspects) {
@@ -78,37 +59,74 @@ public class Contact {
 
     @Step
     public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
-        if (diasporaAspects.length == 1) {
-            if (manageContact(contact).getText().equals(diasporaAspects[0])) {
-                return;
-            }
-        }
-        manageContact(contact).click();
-        aspectsOfContact(contact).shouldHave(textsBegin(STANDART_ASPECTS));
-        String[] aspectTexts = aspectsOfContact(contact).getTexts();
-        Boolean[] beUsed = new Boolean[aspectTexts.length];
-        Boolean[] shouldBeUsed = new Boolean[aspectTexts.length];
-        for (int i = 0; i < aspectTexts.length; i++) {
-            beUsed[i] = aspectIsUsed(aspectsOfContact(contact).get(i));
-            shouldBeUsed[i] = FALSE;
-        }
-        contact.click();
-        for (String diasporaAspect : diasporaAspects) {
-            for (int i=0; i<aspectTexts.length; i++) {
-                if (aspectTexts[i].contains(diasporaAspect)) {
-                    shouldBeUsed[i] = TRUE;
-                    break;
-                }
-            }
-        }
-
-        for (int i = 0; i < beUsed.length; i++) {
-            if (beUsed[i] != shouldBeUsed[i]) {
-                manageContact(contact).click();
-                aspectsOfContact(contact).get(i).click();
-                contact.click();
-            }
-        }
+        AspectManager.ensureAspects(manageContact(contact), contact, diasporaAspects);
     }
+
+    //    protected static ElementsCollection aspectsOfContact(SelenideElement contact) {
+//        return contact.findAll(".aspect_selector");
+//    }
+//
+//    protected static ElementsCollection selectedAspectsOfContact(SelenideElement contact) {
+//        return contact.findAll(".aspect_selector.selected");
+//    }
+
+//    @Step
+//    public static void ensureNoAspectsForContact(SelenideElement contact) {
+//        if (manageContact(contact).getText().equals("Add contact")) {
+//            return;
+//        }
+//        manageContact(contact).click();
+//        aspectsOfContact(contact).shouldHave(textsBegin(STANDART_ASPECTS));
+//        String[] aspectTexts = aspectsOfContact(contact).getTexts();
+//        Boolean[] beUsed = new Boolean[aspectTexts.length];
+//        for (int i = 0; i < aspectTexts.length; i++) {
+//            beUsed[i] = aspectIsUsed(aspectsOfContact(contact).get(i));
+//        }
+//        contact.click();
+//        for (int i = 0; i < aspectTexts.length; i++) {
+//            if (beUsed[i]) {
+//                manageContact(contact).click();
+//                aspectsOfContact(contact).get(i).click();
+//                contact.click();
+//            }
+//        }
+//    }
+
+
+//    @Step
+//    public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
+//        if (diasporaAspects.length == 1) {
+//            if (manageContact(contact).getText().equals(diasporaAspects[0])) {
+//                return;
+//            }
+//        }
+//        manageContact(contact).click();
+//        aspectsOfContact(contact).shouldHave(textsBegin(STANDART_ASPECTS));
+//        String[] aspectTexts = aspectsOfContact(contact).getTexts();
+//        Boolean[] beUsed = new Boolean[aspectTexts.length];
+//        Boolean[] shouldBeUsed = new Boolean[aspectTexts.length];
+//        for (int i = 0; i < aspectTexts.length; i++) {
+//            beUsed[i] = aspectIsUsed(aspectsOfContact(contact).get(i));
+//            shouldBeUsed[i] = FALSE;
+//        }
+//        contact.click();
+//        for (String diasporaAspect : diasporaAspects) {
+//            for (int i = 0; i < aspectTexts.length; i++) {
+//                if (aspectTexts[i].contains(diasporaAspect)) {
+//                    shouldBeUsed[i] = TRUE;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        for (int i = 0; i < beUsed.length; i++) {
+//            if (beUsed[i] != shouldBeUsed[i]) {
+//                manageContact(contact).click();
+//                aspectsOfContact(contact).get(i).click();
+//                contact.click();
+//            }
+//        }
+//    }
+
 
 }

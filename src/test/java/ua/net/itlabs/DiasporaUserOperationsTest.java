@@ -3,17 +3,13 @@ package ua.net.itlabs;
 import core.steps.Relation;
 import datastructures.PodUser;
 import org.junit.Test;
-import pages.Diaspora;
-import pages.Feed;
-import pages.Menu;
-import pages.NavBar;
+import pages.*;
 import ua.net.itlabs.categories.Buggy;
 
 import static com.codeborne.selenide.Condition.appear;
 import static core.helpers.UniqueDataHelper.the;
+import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
-import static pages.Aspects.FRIENDS;
-import static pages.Aspects.WORK;
 
 public class DiasporaUserOperationsTest extends BaseTest{
 
@@ -177,5 +173,18 @@ public class DiasporaUserOperationsTest extends BaseTest{
         Feed.assertPostFrom(SAM_P2, the("public mention"));
         Menu.logOut();
     }
+
+//    @Test
+//    public void testEnsureAspectForContact() {
+//        Diaspora.signInAs(RON_P1);
+//        //Menu.assertLoggedUser(RON_P1);
+//        Menu.search(SAM_P2.fullName);
+//
+//        Contact.ensureNoAspectsForContact();
+//
+//        Contact.ensureAspectsForContact(FRIENDS, WORK);
+//
+//        Contact.ensureAspectsForContact(FRIENDS, FAMILY, ACQUAINTANCES);
+//    }
 
 }
