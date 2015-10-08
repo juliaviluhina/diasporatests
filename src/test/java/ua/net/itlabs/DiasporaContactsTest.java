@@ -162,20 +162,4 @@ public class DiasporaContactsTest extends BaseTest {
 
     }
 
-//    @Test
-//    public void testContacts() {
-//        Menu.openContacts();
-//        Contacts.addAspect(the("Aspect"));
-//        Contacts.selectAspect(the("Aspect"));
-//        Contacts.addLinkedContactForAspect(the("Aspect"), ANA_P1);
-//        Contacts.selectAspect(FRIENDS);//only after this action counter is changed
-//        Contacts.assertCountContactsInAspect(the("Aspect"), 1);
-//
-//        //add post for new aspect
-//        Feed.addAspectPost(the("Aspect"), the("Aspect")+the(" Rob for new aspect"));
-//        Feed.assertNthPostIs(0, ROB_P1, the("Aspect")+the(" Rob for new aspect"));
-//        Menu.logOut();
-//
-//    }
-
 }

@@ -36,4 +36,8 @@ public class NavBar {
         container.should(conditions);
     }
 
+    @Step
+    public static void openMentions(){
+        container.find("[href='/mentions']").click();
+    }
 }

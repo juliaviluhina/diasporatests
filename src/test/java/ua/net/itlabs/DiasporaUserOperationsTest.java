@@ -1,6 +1,7 @@
 package ua.net.itlabs;
 
 import core.steps.Relation;
+import datastructures.PodUser;
 import org.junit.Test;
 import pages.Diaspora;
 import pages.Feed;
@@ -86,7 +87,7 @@ public class DiasporaUserOperationsTest extends BaseTest{
         //check - author of post can delete comments even of another user
         Diaspora.signInAs(SAM_P2);
         Feed.deleteComment(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
-        Feed.assertNoComment(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
+        Feed.assertNoComment(SAM_P2, the("Sam for friends"), BOB_P2, the("Bob comments"));
 
         //delete his own comments for his own post
         Feed.deleteComment(SAM_P2, the("Sam for friends"), SAM_P2, the("Sam comments"));
@@ -159,6 +160,22 @@ public class DiasporaUserOperationsTest extends BaseTest{
         //check in stream - resharing post can be shown
         Feed.assertPostFrom(SAM_P2, the("Public Sam"));
 
+    }
+
+    @Test
+    public void testAddDeleteMentionPost(){
+        Relation.forUser(BOB_P2).notToUsers(SAM_P2).build();
+        Relation.forUser(SAM_P2).toUser(BOB_P2, WORK).doNotLogOut().build();
+        Menu.openStream();
+        Feed.addPublicPostWithMentionAbout(BOB_P2, the("public mention"));
+        Feed.assertNthPostIs(0, SAM_P2, the("public mention"));//this check for wait moment when stream will be loaded
+        Menu.logOut();
+
+        Diaspora.signInAs(BOB_P2);
+        Feed.assertPostFrom(SAM_P2, the("public mention"));
+        NavBar.openMentions();
+        Feed.assertPostFrom(SAM_P2, the("public mention"));
+        Menu.logOut();
     }
 
 }

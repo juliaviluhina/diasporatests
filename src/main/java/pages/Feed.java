@@ -39,6 +39,20 @@ public class Feed {
     }
 
     @Step
+    public static void addPublicPostWithMentionAbout(PodUser podUser, String text) {
+        newPostText.click();
+
+        newPostText.sendKeys(text + " @" + podUser.userName);
+        ElementsCollection dropdownMenuItemsForMention = $$(".mentions-autocomplete-list li");
+        dropdownMenuItemsForMention.filter(exactText(podUser.fullName)).shouldHave(size(1)).get(0).click();
+
+        ensurePublicPostingMode();
+        share.click();
+
+    }
+
+
+    @Step
     public static void addPrivatePost(String text) {
         newPostText.click();
         newPostText.setValue(text);
