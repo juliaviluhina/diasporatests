@@ -83,11 +83,12 @@ public class DiasporaUserOperationsTest extends BaseTest{
         Feed.assertComment(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
         Menu.logOut();
 
-        //check - even author of post can not delete comments f another user
+        //check - author of post can delete comments even of another user
         Diaspora.signInAs(SAM_P2);
-        Feed.assertCommentCanNotBeDeleted(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
+        Feed.deleteComment(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
+        Feed.assertNoComment(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
 
-        //delete comments for his own post
+        //delete his own comments for his own post
         Feed.deleteComment(SAM_P2, the("Sam for friends"), SAM_P2, the("Sam comments"));
         Feed.assertNoComment(SAM_P2, the("Sam for friends"), SAM_P2, the("Sam comments"));
 

@@ -67,6 +67,8 @@ public class DiasporaAspectsTest extends BaseTest {
         //add new aspect
         NavBar.openMyAspects();
         Aspects.add(the("Asp1"));
+        Menu.openStream();
+        NavBar.openMyAspects();
         Aspects.assertAspectInNavBar(the("Asp1"));//this check for wait moment when stream will be loaded
 
         //add limited post in this in aspect
