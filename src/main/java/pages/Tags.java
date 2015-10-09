@@ -61,7 +61,7 @@ public class Tags {
         tags.get(nth).shouldHave(exactText(tagName));
     }
 
-
+    @Step
     public static void deleteAll() {
         clearThe();
         add(the("#stag"));

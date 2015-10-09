@@ -231,7 +231,7 @@ public class Feed {
         setAspect.click();
     }
 
-
+    @Step
     public static void deleteAllPosts(PodUser from) {
         clearThe();
         addPublicPost(the("servicepost"));

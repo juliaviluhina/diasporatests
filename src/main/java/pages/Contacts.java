@@ -107,6 +107,7 @@ public class Contacts {
         return FALSE;
     }
 
+    @Step
     public static void deleteAllUserAspects() {
         clearThe();
         addAspect(the("ServAsp"));
