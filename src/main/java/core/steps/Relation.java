@@ -6,6 +6,9 @@ import pages.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.confirm;
+import static com.codeborne.selenide.Selenide.dismiss;
 import static java.lang.Boolean.*;
 
 public class Relation {

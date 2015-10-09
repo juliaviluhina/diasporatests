@@ -1,17 +1,21 @@
 package pages;
 
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static core.conditions.CustomCollectionCondition.textsBegin;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.lang.System.currentTimeMillis;
+import static pages.Aspects.FRIENDS;
 import static pages.Aspects.STANDART_ASPECTS;
 
 public class Contact {
@@ -79,9 +83,26 @@ public class Contact {
         }
 
         @Step
+        private void openMenuAspects() {
+
+            long startTime = currentTimeMillis();
+            Boolean result = FALSE;
+
+            do {
+                btnManageAspect.click();
+                if (aspects().filter(exactText(FRIENDS)).size() == 1) {
+                    if (aspects().size() >= STANDART_ASPECTS.length) {
+                        result = TRUE;
+                    }
+                }
+            } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
+        }
+
+        @Step
         private void fixStartState() {
-            btnManageAspect.click();
-            aspects().shouldHave(textsBegin(STANDART_ASPECTS));
+//            btnManageAspect.click();
+//            aspects().shouldHave(textsBegin(STANDART_ASPECTS));
+            openMenuAspects();
             aspectTexts = aspects().getTexts();
             selectedAspectTexts = selectedAspects().getTexts();
             beUsed = new Boolean[aspectTexts.length];
@@ -109,7 +130,8 @@ public class Contact {
             fixStartState();
             for (int i = 0; i < aspectTexts.length; i++) {
                 if (beUsed[i]) {
-                    btnManageAspect.click();
+                    //btnManageAspect.click();
+                    openMenuAspects();
                     aspects().get(i).click();
                     aspectsContainer.click();
                 }
@@ -136,7 +158,8 @@ public class Contact {
 
             for (int i = 0; i < beUsed.length; i++) {
                 if (beUsed[i] != shouldBeUsed[i]) {
-                    btnManageAspect.click();
+                    //btnManageAspect.click();
+                    openMenuAspects();
                     aspects().get(i).click();
                     aspectsContainer.click();
                 }

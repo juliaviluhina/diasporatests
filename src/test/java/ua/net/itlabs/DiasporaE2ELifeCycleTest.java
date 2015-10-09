@@ -13,17 +13,142 @@ import static pages.Aspects.ACQUAINTANCES;
 
 public class DiasporaE2ELifeCycleTest extends BaseTest {
 
+//    @Test
+//    public void testUserActivitiesAndAccessForUsersOfDifferentPods() {
+//        //GIVEN - setup relation between users, addition one the same followed tag
+//        String tag = "#ana_bob_rob_sam";
+//        Relation.forUser(ANA_P1).toUser(BOB_P2,ACQUAINTANCES).notToUsers(ROB_P1, SAM_P2).withTags(tag).build();
+//        Relation.forUser(BOB_P2).toUser(ANA_P1,WORK).notToUsers(ROB_P1, SAM_P2).withTags(tag).build();
+//        Relation.forUser(ROB_P1).toUser(SAM_P2, FRIENDS).notToUsers(ANA_P1, BOB_P2).withTags(tag).build();
+//        Relation.forUser(SAM_P2).toUser(ROB_P1, FAMILY).notToUsers(ANA_P1, BOB_P2).withTags(tag).build();
+//
+//        //public post
+//        Diaspora.signInAs(ANA_P1);
+//        Feed.addPublicPost(the("Public Ana"));
+//        Feed.assertNthPostIs(0, ANA_P1, the("Public Ana"));
+//        Menu.logOut();
+//
+//        //like post, indirect check - public post is shown in stream of linked user
+//        Diaspora.signInAs(BOB_P2);
+//        Feed.toggleLike(ANA_P1, the("Public Ana"));
+//        Feed.assertLikes(ANA_P1, the("Public Ana"), 1);
+//
+//        //limited post in right aspect
+//        Feed.addAspectPost(WORK, the("Bob for work"));
+//        //check - for limited post is no possibility for resharing, indirect check - post is addded
+//        Feed.assertPostCanNotBeReshared(BOB_P2, the("Bob for work"));
+//        Menu.logOut();
+//
+//        //like and comment post, indirect check - limited post in right aspect is shown in stream of linked user
+//        Diaspora.signInAs(ANA_P1);
+//        Feed.toggleLike(BOB_P2, the("Bob for work"));
+//        Feed.assertLikes(BOB_P2, the("Bob for work"), 1);
+//        Feed.addComment(BOB_P2, the("Bob for work"), the("Comment from Ana"));
+//        Feed.assertComment(BOB_P2, the("Bob for work"), ANA_P1, the("Comment from Ana"));
+//
+//        //limited post in wrong aspect
+//        Feed.addAspectPost(FAMILY, the("Ana for family"));
+//        Feed.assertNthPostIs(0, ANA_P1, the("Ana for family"));
+//        Menu.logOut();
+//
+//        //check - limited post in wrong aspect is not shown in stream of linked user
+//        Diaspora.signInAs(BOB_P2);
+//        Feed.assertNoPostFrom(ANA_P1, the("Ana for family"));
+//
+//        //comment post, check visibility of other comments
+//        Feed.assertComment(BOB_P2, the("Bob for work"), ANA_P1, the("Comment from Ana"));
+//        Feed.addComment(BOB_P2, the("Bob for work"), the("Comment from Bob"));
+//        Feed.assertComment(BOB_P2, the("Bob for work"), BOB_P2, the("Comment from Bob"));
+//
+//        //public post with tag
+//        Feed.addPublicPost(the(tag + " Public Bob"));
+//        Feed.assertNthPostIs(0, BOB_P2, the(tag + " Public Bob"));
+//        Menu.logOut();
+//
+//        //reshare post, indirect check - public post with tag is shown in stream of linked used
+//        Diaspora.signInAs(ANA_P1);
+//        Feed.reshare(BOB_P2, the(tag + " Public Bob"));
+//        Feed.assertNthPostIs(0, ANA_P1, the(tag + " Public Bob"));
+//        Menu.logOut();
+//
+//        //check - public post is not shown in stream of unlinked user
+//        Diaspora.signInAs(ROB_P1);
+//        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
+//
+//        //like public post on searching stream, indirect check - public post is shown in searching stream of unlinked user
+//        Menu.search(ANA_P1.fullName);
+//        Feed.toggleLike(ANA_P1, the("Public Ana"));
+//        Feed.assertLikes(ANA_P1, the("Public Ana"), 2);
+//
+//        //check - limited post is not shown in stream of unlinked user
+//        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
+//
+//        //check - limited post is not shown in searching stream of unlinked user
+//        Menu.search(BOB_P2.fullName);
+//        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
+//
+//        //comment post in searching stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
+//        Feed.addComment(BOB_P2, the(tag + " Public Bob"), the("Comment from Rob"));
+//        Feed.assertComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+//
+//        //delete comment in stream
+//        Menu.openStream();
+//        Feed.deleteComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+//        Feed.assertNoComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+//
+//        //unlike through MyActivities, indirect check - posts which liked earlier by this user is shown on my activity
+//        NavBar.openMyActivity();
+//        Feed.toggleLike(ANA_P1, the("Public Ana"));
+//        Feed.assertLikes(ANA_P1, the("Public Ana"), 1);
+//        Menu.logOut();
+//
+//        //delete public post
+//        Diaspora.signInAs(ANA_P1);
+//        NavBar.openMyActivity();
+//        Feed.deletePost(ANA_P1, the("Public Ana"));
+//        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
+//
+//        //delete reshared post
+//        NavBar.openStream();
+//        Feed.deletePost(ANA_P1, the(tag + " Public Bob"));
+//        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
+//
+//        //check comment of another user can not be deleted
+//        Feed.assertCommentCanNotBeDeleted(BOB_P2, the("Bob for work"), BOB_P2, the("Comment from Bob"));
+//        Menu.logOut();
+//
+//        //delete limited post in my activity stream
+//        Diaspora.signInAs(BOB_P2);
+//        NavBar.openMyActivity();
+//        Feed.deleteComment(BOB_P2, the("Bob for work"), BOB_P2, the("Comment from Bob"));
+//        Feed.deletePost(BOB_P2, the("Bob for work"));
+//        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
+//        Menu.logOut();
+//
+//        //check post of another user can not be deleted
+//        Diaspora.signInAs(ANA_P1);
+//        Feed.assertPostCanNotBeDeleted(BOB_P2, the(tag + " Public Bob"));
+//
+//        //check - limited post is not shown after deletion
+//        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
+//
+//        //check - after deletion reshared post in resharing post is no old content
+//        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
+//        Menu.logOut();
+//
+//    }
+
     @Test
-    public void testUserActivitiesAndAccessForUsersOfDifferentPods() {
+    public void testUserActivitiesAndAccessWithPublicPostsForUsersOfDifferentPods() {
         //GIVEN - setup relation between users, addition one the same followed tag
         String tag = "#ana_bob_rob_sam";
-        Relation.forUser(ANA_P1).toUser(BOB_P2,ACQUAINTANCES).notToUsers(ROB_P1, SAM_P2).withTags(tag).build();
         Relation.forUser(BOB_P2).toUser(ANA_P1,WORK).notToUsers(ROB_P1, SAM_P2).withTags(tag).build();
         Relation.forUser(ROB_P1).toUser(SAM_P2, FRIENDS).notToUsers(ANA_P1, BOB_P2).withTags(tag).build();
         Relation.forUser(SAM_P2).toUser(ROB_P1, FAMILY).notToUsers(ANA_P1, BOB_P2).withTags(tag).build();
+        Relation.forUser(ANA_P1).toUser(BOB_P2,ACQUAINTANCES).notToUsers(ROB_P1, SAM_P2).withTags(tag).doNotLogOut().build();
 
         //public post
-        Diaspora.signInAs(ANA_P1);
+        Menu.openStream();
         Feed.addPublicPost(the("Public Ana"));
         Feed.assertNthPostIs(0, ANA_P1, the("Public Ana"));
         Menu.logOut();
@@ -32,6 +157,78 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         Diaspora.signInAs(BOB_P2);
         Feed.toggleLike(ANA_P1, the("Public Ana"));
         Feed.assertLikes(ANA_P1, the("Public Ana"), 1);
+
+        //public post with tag
+        Feed.addPublicPost(the(tag + " Public Bob"));
+        Feed.assertNthPostIs(0, BOB_P2, the(tag + " Public Bob"));
+        Menu.logOut();
+
+        //reshare post, indirect check - public post with tag is shown in stream of linked used
+        Diaspora.signInAs(ANA_P1);
+        Feed.reshare(BOB_P2, the(tag + " Public Bob"));
+        Feed.assertNthPostIs(0, ANA_P1, the(tag + " Public Bob"));
+        Menu.logOut();
+
+        //check - public post is not shown in stream of unlinked user
+        Diaspora.signInAs(ROB_P1);
+        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
+
+        //like public post on searching stream, indirect check - public post is shown in searching stream of unlinked user
+        Menu.search(ANA_P1.fullName);
+        Feed.toggleLike(ANA_P1, the("Public Ana"));
+        Feed.assertLikes(ANA_P1, the("Public Ana"), 2);
+
+        Menu.openStream();
+        //comment post in searching stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
+        Feed.addComment(BOB_P2, the(tag + " Public Bob"), the("Comment from Rob"));
+        Feed.assertComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+
+        //delete comment
+        Feed.deleteComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+        Feed.assertNoComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+
+        //unlike through MyActivities, indirect check - posts which liked earlier by this user is shown on my activity
+        NavBar.openMyActivity();
+        Feed.toggleLike(ANA_P1, the("Public Ana"));
+        Feed.assertLikes(ANA_P1, the("Public Ana"), 1);
+        Menu.logOut();
+
+        //delete public post
+        Diaspora.signInAs(ANA_P1);
+        NavBar.openMyActivity();
+        Feed.deletePost(ANA_P1, the("Public Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
+
+        //delete reshared post
+        NavBar.openStream();
+        Feed.deletePost(ANA_P1, the(tag + " Public Bob"));
+        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
+
+        //check post of another user can not be deleted
+        Feed.assertPostCanNotBeDeleted(BOB_P2, the(tag + " Public Bob"));
+
+        //check - after deletion reshared post in resharing post is no old content
+        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
+        Menu.logOut();
+
+    }
+
+    @Test
+    public void testUserActivitiesAndAccessWithLimitedPostsForUsersOfDifferentPods() {
+        //GIVEN - setup relation between users
+        Relation.forUser(BOB_P2).toUser(ANA_P1, WORK).notToUsers(ROB_P1).build();
+        Relation.forUser(ANA_P1).toUser(BOB_P2, ACQUAINTANCES).notToUsers(ROB_P1).doNotLogOut().build();
+
+        //all aspects post
+        Menu.openStream();
+        Feed.addPublicPost(the("All aspects Ana"));
+        Feed.assertNthPostIs(0, ANA_P1, the("All aspects Ana"));
+        Menu.logOut();
+
+        //like post, indirect check - public post is shown in stream of linked user
+        Diaspora.signInAs(BOB_P2);
+        Feed.toggleLike(ANA_P1, the("All aspects Ana"));
+        Feed.assertLikes(ANA_P1, the("All aspects Ana"), 1);
 
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Bob for work"));
@@ -59,62 +256,27 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         Feed.assertComment(BOB_P2, the("Bob for work"), ANA_P1, the("Comment from Ana"));
         Feed.addComment(BOB_P2, the("Bob for work"), the("Comment from Bob"));
         Feed.assertComment(BOB_P2, the("Bob for work"), BOB_P2, the("Comment from Bob"));
-
-        //public post with tag
-        Feed.addPublicPost(the(tag + " Public Bob"));
-        Feed.assertNthPostIs(0, BOB_P2, the(tag + " Public Bob"));
+        //unlike through MyActivities, indirect check - posts which liked earlier by this user is shown on my activity
+        Feed.toggleLike(ANA_P1, the("All aspects Ana"));
+        Feed.assertNoLikes(ANA_P1, the("All aspects Ana"));
         Menu.logOut();
 
-        //reshare post, indirect check - public post with tag is shown in stream of linked used
-        Diaspora.signInAs(ANA_P1);
-        Feed.reshare(BOB_P2, the(tag + " Public Bob"));
-        Feed.assertNthPostIs(0, ANA_P1, the(tag + " Public Bob"));
-        Menu.logOut();
-
-        //check - public post is not shown in stream of unlinked user
+        //checks in stream of unlinked user
         Diaspora.signInAs(ROB_P1);
-        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
-
-        //like public post on searching stream, indirect check - public post is shown in searching stream of unlinked user
-        Menu.search(ANA_P1.fullName);
-        Feed.toggleLike(ANA_P1, the("Public Ana"));
-        Feed.assertLikes(ANA_P1, the("Public Ana"), 2);
-
-        //check - limited post is not shown in stream of unlinked user
-        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
-
         //check - limited post is not shown in searching stream of unlinked user
         Menu.search(BOB_P2.fullName);
         Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
-
-        //comment post in searching stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
-        Feed.addComment(BOB_P2, the(tag + " Public Bob"), the("Comment from Rob"));
-        Feed.assertComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
-
-        //delete comment in stream
-        Menu.openStream();
-        Feed.deleteComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
-        Feed.assertNoComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
-
-        //unlike through MyActivities, indirect check - posts which liked earlier by this user is shown on my activity
-        NavBar.openMyActivity();
-        Feed.toggleLike(ANA_P1, the("Public Ana"));
-        Feed.assertLikes(ANA_P1, the("Public Ana"), 1);
         Menu.logOut();
 
-        //delete public post
+        //delete post
         Diaspora.signInAs(ANA_P1);
         NavBar.openMyActivity();
-        Feed.deletePost(ANA_P1, the("Public Ana"));
-        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
-
-        //delete reshared post
-        NavBar.openStream();
-        Feed.deletePost(ANA_P1, the(tag + " Public Bob"));
-        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
-
+        Feed.deletePost(ANA_P1, the("All aspects Ana"));
+        Feed.assertNoPostFrom(ANA_P1, the("All aspects Ana"));
         //check comment of another user can not be deleted
         Feed.assertCommentCanNotBeDeleted(BOB_P2, the("Bob for work"), BOB_P2, the("Comment from Bob"));
+        //check post of another user can not be deleted
+        Feed.assertPostCanNotBeDeleted(BOB_P2, the("Bob for work"));
         Menu.logOut();
 
         //delete limited post in my activity stream
@@ -125,18 +287,8 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
         Menu.logOut();
 
-        //check post of another user can not be deleted
-        Diaspora.signInAs(ANA_P1);
-        Feed.assertPostCanNotBeDeleted(BOB_P2, the(tag + " Public Bob"));
-
-        //check - limited post is not shown after deletion
-        Feed.assertNoPostFrom(BOB_P2, the("Bob for work"));
-
-        //check - after deletion reshared post in resharing post is no old content
-        Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
-        Menu.logOut();
-
     }
+
 
     @Test
     public void testUserActivitiesAndAccessForUsersOfOnePod() {

@@ -161,6 +161,11 @@ public class Feed {
     }
 
     @Step
+    public static void assertNoLikes(PodUser from, String post) {
+        assertPostFrom(from, post).findAll(".expand_likes").shouldBe(empty);
+    }
+
+    @Step
     public static void assertNthPostIs(int nth, PodUser from, String post) {
         posts.get(nth).shouldHave(textBegin(from.fullName)).shouldHave(text(post));
     }
