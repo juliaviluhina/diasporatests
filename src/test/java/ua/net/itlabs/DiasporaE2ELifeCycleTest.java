@@ -205,6 +205,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         Feed.assertNoPostFrom(ANA_P1, the(tag + " Public Bob"));
 
         //check post of another user can not be deleted
+        Feed.assertPostFrom(BOB_P2, the(tag + " Public Bob"));//without this check second check often do not pass
         Feed.assertPostCanNotBeDeleted(BOB_P2, the(tag + " Public Bob"));
 
         //check - after deletion reshared post in resharing post is no old content

@@ -4,7 +4,7 @@ import datastructures.PodUser;
 
 public class Users {
     //2 set of accounts for parallel testing and devepopment
-    
+
     //accounts from pod1 - https://diaspora.koehn.com
     public static final PodUser ANA_P1 = new PodUser("ana_tjvi", "tjvitjvi", "https://diaspora.koehn.com", "ana.tjvi@gmail.com");
     public static final PodUser ROB_P1 = new PodUser("rob_tjvi", "tjvitjvi", "https://diaspora.koehn.com", "rob.tjvi@gmail.com");

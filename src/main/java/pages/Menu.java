@@ -1,5 +1,6 @@
 package pages;
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
@@ -10,6 +11,11 @@ import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.lang.System.currentTimeMillis;
+import static pages.Aspects.FRIENDS;
+import static pages.Aspects.STANDART_ASPECTS;
 
 public class Menu {
 
@@ -18,9 +24,24 @@ public class Menu {
 
     private static String darkHeaderLocator = "header .dark-header";
 
+    //method added because of problem with opening user menu when stream is not loaded
+    private static void openMenu() {
+
+        long startTime = currentTimeMillis();
+        Boolean result = FALSE;
+
+        do {
+            userMenuHeader.click();
+            if (userMenuItems.filter(exactText("Log out")).size() == 1) {
+                    result = TRUE;
+            }
+        } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
+    }
+
     @Step
     public static void logOut() {
-        userMenuHeader.click();
+        //userMenuHeader.click();
+        openMenu();
         userMenuItems.find(exactText("Log out")).click();
     }
 
@@ -45,7 +66,8 @@ public class Menu {
 
     @Step
     public static void openContacts(){
-        userMenuHeader.click();
+        //userMenuHeader.click();
+        openMenu();
         userMenuItems.find(exactText("Contacts")).click();
     }
 
