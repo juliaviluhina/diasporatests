@@ -2,7 +2,9 @@ package ua.net.itlabs;
 
 import core.steps.Relation;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import pages.*;
+import ua.net.itlabs.categories.Smoke;
 
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
@@ -13,6 +15,7 @@ import static pages.Aspects.ACQUAINTANCES;
 
 public class DiasporaE2ELifeCycleTest extends BaseTest {
 
+    @Category(Smoke.class)
     @Test
     public void testUserActivitiesAndAccessWithPublicPostsForUsersOfDifferentPods() {
         //GIVEN - setup relation between users, addition one the same followed tag

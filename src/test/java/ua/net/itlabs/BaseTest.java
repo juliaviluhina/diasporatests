@@ -23,7 +23,7 @@ import static core.steps.Scenarios.*;
 public class BaseTest {
     @BeforeClass
     public static void clearDataBeforeTests() {
-        Configuration.timeout = 90000;
+        Configuration.timeout = 30000;
         if (System.getProperty("withClearedDataOnStart").equals("true")) {
             //System.out.println("clearing data before tests");
             clearUserData(ANA_P1);
