@@ -3,8 +3,10 @@ package ua.net.itlabs;
 import core.steps.Relation;
 import datastructures.PodUser;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import pages.*;
 import ua.net.itlabs.categories.Buggy;
+import ua.net.itlabs.categories.Smoke;
 
 import static com.codeborne.selenide.Condition.appear;
 import static core.helpers.UniqueDataHelper.the;
@@ -158,6 +160,7 @@ public class DiasporaUserOperationsTest extends BaseTest{
 
     }
 
+    @Category(Smoke.class)
     @Test
     public void testAddDeleteMentionPost(){
         Relation.forUser(BOB_P2).notToUsers(SAM_P2).build();

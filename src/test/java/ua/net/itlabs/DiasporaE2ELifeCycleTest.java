@@ -15,7 +15,7 @@ import static pages.Aspects.ACQUAINTANCES;
 
 public class DiasporaE2ELifeCycleTest extends BaseTest {
 
-    @Category(Smoke.class)
+    //@Category(Smoke.class)
     @Test
     public void testUserActivitiesAndAccessWithPublicPostsForUsersOfDifferentPods() {
         //GIVEN - setup relation between users, addition one the same followed tag
