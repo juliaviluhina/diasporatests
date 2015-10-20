@@ -6,9 +6,11 @@ import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selenide.confirm;
 import static core.conditions.CustomCondition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -65,4 +67,33 @@ public class Conversations {
 
     }
 
+    @Step
+    public static void replyToCurrentConversation(String text) {
+        $("#message_text").setValue(text);
+        $("[value='Reply']").click();
+    }
+
+    @Step
+    public static void assertMessageInCurrentConversation(PodUser from,String text) {
+     ElementsCollection messages = currentConversation.findAll(".stream_element");
+        messages.filter(textBeginAndContain(from.fullName, text)).shouldHave(size(1));
+    }
+
+    @Step
+    public static void hideCurrentConversation() {
+        $(".hide_conversation").click();
+        confirm(null);
+    }
+
+
+    @Step
+    public static void deleteCurrentConversation() {
+        $(".delete_conversation").click();
+        confirm(null);
+    }
+
+    @Step
+    public static void assertNoConversationBySubject(String subject) {
+        inbox.findAll(".conversation").filter(text(subject)).shouldBe(empty);
+    }
 }
