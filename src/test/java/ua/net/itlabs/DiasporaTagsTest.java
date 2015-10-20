@@ -2,8 +2,10 @@ package ua.net.itlabs;
 
 import core.steps.Relation;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import pages.*;
 import ua.net.itlabs.categories.Buggy;
+import ua.net.itlabs.categories.Smoke;
 
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.ANA_P1;
@@ -65,7 +67,7 @@ public class DiasporaTagsTest extends BaseTest {
 
     //for test case #6417
     @Test
-    @Buggy
+    @Category(Buggy.class)
     public void testTagsOrder() {
         //step 1,2 - add tag Y and Z
         Diaspora.signInAs(ANA_P1);

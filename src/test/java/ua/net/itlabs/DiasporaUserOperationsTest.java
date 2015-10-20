@@ -18,14 +18,15 @@ public class DiasporaUserOperationsTest extends BaseTest{
     @Test
     public void testSignInAndLogOut() {
         Diaspora.signInAs(ANA_P1);
-        Menu.assertLoggedUser(ANA_P1);
+        //Menu.assertLoggedUser(ANA_P1);
+        NavBar.assertLoggedUser(ANA_P1);
         Menu.logOut();
         Menu.assertLoggedOut();
     }
 
     //for test case #6416 - Actual result
     @Test
-    @Buggy
+    @Category(Buggy.class)
     public void testSignInForAccountWithoutPosts() {
         Diaspora.signInAs(DAVE_P3);
         NavBar.should(appear);
@@ -160,7 +161,6 @@ public class DiasporaUserOperationsTest extends BaseTest{
 
     }
 
-    @Category(Smoke.class)
     @Test
     public void testAddDeleteMentionPost(){
         Relation.forUser(BOB_P2).notToUsers(SAM_P2).build();
