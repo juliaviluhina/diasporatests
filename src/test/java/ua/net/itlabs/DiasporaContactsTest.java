@@ -15,7 +15,7 @@ import static core.helpers.UniqueDataHelper.the;
 public class DiasporaContactsTest extends BaseTest {
 
     @Test
-    public void addDeleteContactsTest() {
+    public void testAddDeleteContacts() {
         //GIVEN - setup relation between users
         Relation.forUser(ROB_P1).toUser(RON_P1,WORK).build();
         Relation.forUser(RON_P1).toUser(ROB_P1, WORK, FRIENDS).doNotLogOut().build();
@@ -53,7 +53,7 @@ public class DiasporaContactsTest extends BaseTest {
     }
 
     @Test
-    public void manageContactsTest() {
+    public void testManageContacts() {
         //GIVEN - setup relation between users
         Relation.forUser(ANA_P1).notToUsers(RON_P1).build();
         Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();
@@ -95,7 +95,7 @@ public class DiasporaContactsTest extends BaseTest {
     }
 
     @Test
-    public void OperationWithNewAspectTest() {
+    public void testOperationWithNewAspect() {
         //GIVEN - setup relation between users
         Relation.forUser(ANA_P1).toUser(RON_P1, WORK).build();
         Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();

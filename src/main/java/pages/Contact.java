@@ -1,12 +1,14 @@
 package pages;
 
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import static com.codeborne.selenide.Condition.empty;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
@@ -58,6 +60,19 @@ public class Contact {
     @Step
     public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
         new AspectManager(manageContact(contact), contact).ensureAspects(diasporaAspects);
+    }
+
+    @Step
+    public static void sendMessageToContact(String subject, String text) {
+        $("#message_button").click();
+        $("#conversation_subject").setValue(subject);
+        $("#conversation_text").setValue(text);
+        $("[value='Send']").click();
+    }
+
+    @Step
+    public static void assertNoMessaging() {
+        $$("#message_button").shouldBe(CollectionCondition.empty);
     }
 
     private static class AspectManager {

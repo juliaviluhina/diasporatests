@@ -13,7 +13,6 @@ import static ua.net.itlabs.testDatas.Users.RON_P1;
 
 public class DiasporaFeedTest extends BaseTest{
 
-
     @Test
     public void testAccessToPostsFromMutuallyLinkedUser() {
         //GIVEN - setup relation between users in some aspect

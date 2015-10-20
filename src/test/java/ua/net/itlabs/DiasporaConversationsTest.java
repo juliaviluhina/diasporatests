@@ -3,6 +3,7 @@ package ua.net.itlabs;
 
 import core.steps.Relation;
 import org.junit.Test;
+import pages.Contact;
 import pages.Conversations;
 import pages.Diaspora;
 import pages.Menu;
@@ -17,16 +18,18 @@ import static ua.net.itlabs.testDatas.Users.RON_P1;
 public class DiasporaConversationsTest extends BaseTest {
 
     @Test
-    public void testNewConversations(){
+    public void testNewConversation(){
         //GIVEN - setup mutual relation between users in some different aspects
         Relation.forUser(RON_P1).toUser(ANA_P1, WORK).build();
         Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).doNotLogOut().build();
 
+        //add new conversation
         Menu.openConversations();
         Conversations.sendNewConversationTo(RON_P1, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
+        //check - sent message is shown for recipient
         Diaspora.signInAs(RON_P1);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
@@ -47,14 +50,16 @@ public class DiasporaConversationsTest extends BaseTest {
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
+        //reply
         Diaspora.signInAs(RON_P1);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
-        Conversations.assertCurrentConversation(ANA_P1, the("subject"), the("text"));
+        Conversations.assertCurrentConversation(ANA_P1, the("subject"), the("text"));//this check for wait moment when message will be loaded
         Conversations.replyToCurrentConversation(the("reply"));
         Conversations.assertMessageInCurrentConversation(RON_P1, the("reply"));
         Menu.logOut();
 
+        //check - both messages is shown
         Diaspora.signInAs(ANA_P1);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
@@ -63,7 +68,7 @@ public class DiasporaConversationsTest extends BaseTest {
     }
 
     @Test
-    public void testHideAndDeleteConversation(){
+    public void testHideAndDeleteConversations(){
         //GIVEN
         //setup mutual relation between users in some different aspects
         //send new conversation
@@ -103,6 +108,33 @@ public class DiasporaConversationsTest extends BaseTest {
         Conversations.assertMessageInCurrentConversation(ANA_P1, the("text2"));
         Conversations.deleteCurrentConversation();
         Conversations.assertNoConversationBySubject(the("subject2"));
+        Menu.logOut();
+
+    }
+
+    @Test
+    public void testNewConversationFromContactSite(){
+        //GIVEN - setup mutual relation between users in some different aspects
+        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).build();
+        Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).notToUsers(ROB_P1).doNotLogOut().build();
+
+        //send message from contact site to searched mutual user
+        Menu.search(RON_P1.fullName);
+        Contact.sendMessageToContact(the("subject"), the("text"));
+
+        //check - in conversation list message is shown
+        Conversations.assertInInboxBySubject(the("subject"));
+
+        //check - it is not possible to send message to not mutual user
+        Menu.search(ROB_P1.fullName);
+        Contact.assertNoMessaging();
+        Menu.logOut();
+
+        //check - sent message is shown for recipient
+        Diaspora.signInAs(RON_P1);
+        Menu.openConversations();
+        Conversations.selectConversationBySubject(the("subject"));
+        Conversations.assertCurrentConversation(ANA_P1, the("subject"), the("text"));
         Menu.logOut();
 
     }
