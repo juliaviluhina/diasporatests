@@ -29,6 +29,13 @@ public class Tags {
     }
 
     @Step
+    public static void add(String... tagNames) {
+        for (String tagName:tagNames) {
+            add(tagName);
+        }
+    }
+
+    @Step
     public static void delete(String tagName) {
         delete(tags.find(exactText(tagName)));
     }
@@ -56,16 +63,22 @@ public class Tags {
         tags.filter(exactText(tagName)).shouldHave(size(1));
     }
 
+//    @Step
+//    public static void assertNthIs(int nth, String tagName) {
+//        tags.get(nth).shouldHave(exactText(tagName));
+//    }
+
     @Step
-    public static void assertNthIs(int nth, String tagName) {
-        tags.get(nth).shouldHave(exactText(tagName));
+    public static void assertTags(String... tagNames) {
+        tags.shouldHave(exactTexts(tagNames));
     }
 
     @Step
     public static void deleteAll() {
         clearThe();
         add(the("#stag"));
-        assertNthIs(0, the("#stag"));
+        assertExist(the("#stag"));
+        //assertNthIs(0, the("#stag"));
 
         //when tags are more than one page - without this code does not work
         Coordinates coordinates = $("#leftNavBar [href='/followed_tags']").getCoordinates();

@@ -65,30 +65,24 @@ public class DiasporaTagsTest extends BaseTest {
     }
 
 
-    //for test case #6417
+    //after closing test case #6417
     @Test
-    @Category(Buggy.class)
     public void testTagsOrder() {
-        //step 1,2 - add tag Y and Z
+        //GIVEN - empty tag list
         Diaspora.signInAs(ANA_P1);
         NavBar.openTags();
-        Tags.add(the("#Ytag"));
-        Tags.assertExist(the("#Ytag"));
-        Tags.add(the("#Ztag"));
-        Tags.assertExist(the("#Ztag"));
+        Tags.deleteAll();
 
-        //step 3 - check order - like in actual result
-        Tags.assertNthIs(0, the("#Ztag"));
-        Tags.assertNthIs(1, the("#Ytag"));
+        //add tags in not alphabetical order
+        Tags.add(the("#Ytag1"), the("#Ztag"), the("#Ytag2") );
+        //check - after addition tags in alphabetical order
+        Tags.assertTags(the("#Ytag1"), the("#Ytag2"),the("#Ztag") );
 
-        //step 4
+        //check order after logout and sign in
         Menu.logOut();
         Diaspora.signInAs(ANA_P1);
         NavBar.openTags();
-
-        //actual result - tag order is different
-        Tags.assertNthIs(0, the("#Ztag"));
-        Tags.assertNthIs(1, the("#Ytag"));
+        Tags.assertTags(the("#Ytag1"), the("#Ytag2"),the("#Ztag") );
 
     }
 }
