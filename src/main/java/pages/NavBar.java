@@ -2,6 +2,7 @@ package pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -39,5 +40,10 @@ public class NavBar {
     @Step
     public static void openMentions(){
         container.find("[href='/mentions']").click();
+    }
+
+    @Step
+    public static void assertLoggedUser(PodUser user) {
+        $("#home_user_badge").shouldHave(Condition.exactText(user.userName));
     }
 }
