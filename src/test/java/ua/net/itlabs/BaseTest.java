@@ -4,6 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Screenshots;
 import com.codeborne.selenide.impl.ScreenShotLaboratory;
 import com.google.common.io.Files;
+import core.AdditionalAPI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -20,7 +21,7 @@ import static ua.net.itlabs.testDatas.Users.*;
 import static core.steps.Scenarios.*;
 
 
-public class BaseTest {
+public class BaseTest extends AdditionalAPI{
     @BeforeClass
     public static void clearDataBeforeTests() {
         Configuration.timeout = 90000;
@@ -36,7 +37,7 @@ public class BaseTest {
     }
 
     @Before
-    public void ActionsBeforeTest() {
+    public void ActionsBeforeTest()  {
         clearThe();
     }
 
@@ -47,32 +48,6 @@ public class BaseTest {
             screenshot(lastSelenideScreenshot);
         }
         Menu.ensureLoggedOut();
-    }
-
-    @Attachment(type = "image/png")
-    public byte[] screenshot(byte[] dataForScreenshot) {
-        return dataForScreenshot;
-    }
-
-    private byte[] lastSelenideScreenshot() {
-        Field allScreenshotsField = null;
-        try {
-            allScreenshotsField = ScreenShotLaboratory.class.getDeclaredField("allScreenshots");
-            allScreenshotsField.setAccessible(true);
-            List<String> allScreenshots = (List<String>) allScreenshotsField.get(Screenshots.screenshots);
-            int allScreenshotsSize = allScreenshots.size();
-            if (allScreenshotsSize > 0) {
-                return Files.toByteArray(new File(allScreenshots.get(allScreenshotsSize - 1)));
-            }
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
 }

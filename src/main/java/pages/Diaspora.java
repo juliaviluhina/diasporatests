@@ -1,20 +1,25 @@
 package pages;
 
+import core.AdditionalAPI;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import java.io.IOException;
+
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
-public class Diaspora {
+public class Diaspora extends AdditionalAPI {
 
     @Step
     public static void signInAs(PodUser user){
         open(user.podLink+"/users/sign_in");
+        newScreenshot();
         $("#user_username").setValue(user.userName);
         $("#user_password").setValue(user.password);
         $(By.name("commit")).click();
+        newScreenshot();
     }
 
 }

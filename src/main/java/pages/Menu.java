@@ -3,8 +3,11 @@ package pages;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import core.AdditionalAPI;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
+
+import java.io.IOException;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.texts;
@@ -17,7 +20,7 @@ import static java.lang.System.currentTimeMillis;
 import static pages.Aspects.FRIENDS;
 import static pages.Aspects.STANDART_ASPECTS;
 
-public class Menu {
+public class Menu extends AdditionalAPI{
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");//$(".user-menu-more-indicator");
     public static ElementsCollection userMenuItems = $$(".user-menu-item a");
@@ -78,14 +81,17 @@ public class Menu {
 //    }
 
     @Step
-    public static void ensureLoggedOut() {
+    public static void ensureLoggedOut(){
+        newScreenshot();
         if ($$(darkHeaderLocator).size() != 0) {
             logOut();
         }
+        newScreenshot();
     }
 
     @Step
-    public static void assertLoggedOut() {
+    public static void assertLoggedOut(){
+        newScreenshot();
         $$(darkHeaderLocator).shouldBe(empty);
     }
 
