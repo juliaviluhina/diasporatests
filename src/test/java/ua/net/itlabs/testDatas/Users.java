@@ -30,5 +30,5 @@ public class Users {
 //
 //    //account which is not prepared for using
 //    public static final PodUser DAVE_P3 = new PodUser("dave1_tjvi", "tjvitjvi", "https://pod.readme.is", "dave1.tjvi@gmail.com");
-//
+
 }
