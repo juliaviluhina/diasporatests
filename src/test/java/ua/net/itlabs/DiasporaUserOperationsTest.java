@@ -24,13 +24,13 @@ public class DiasporaUserOperationsTest extends BaseTest{
         Menu.assertLoggedOut();
     }
 
-    //for test case #6416 - Actual result
-    @Test
-    @Category(Buggy.class)
-    public void testSignInForAccountWithoutPosts() {
-        Diaspora.signInAs(DAVE_P3);
-        NavBar.should(appear);
-    }
+//    //for test case #6416 - Actual result
+//    @Test
+//    @Category(Buggy.class)
+//    public void testSignInForAccountWithoutPosts() {
+//        Diaspora.signInAs(DAVE_P3);
+//        NavBar.should(appear);
+//    }
 
     @Test
     public void testAddDeletePosts() {

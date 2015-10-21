@@ -14,11 +14,11 @@ import java.util.List;
 public class AdditionalAPI {
 
     @Attachment(type = "image/png")
-    public byte[] screenshot(byte[] dataForScreenshot) {
+    public static byte[] screenshot(byte[] dataForScreenshot) {
         return dataForScreenshot;
     }
 
-    public byte[] lastSelenideScreenshot() {
+    public static byte[] lastSelenideScreenshot() {
         Field allScreenshotsField = null;
         try {
             allScreenshotsField = ScreenShotLaboratory.class.getDeclaredField("allScreenshots");
@@ -39,15 +39,16 @@ public class AdditionalAPI {
         return null;
     }
 
-    @Attachment(type = "image/png")
-    public static byte[] newScreenshot() {
-        File screenshot = Screenshots.getScreenShotAsFile();
+    public static void newScreenshot() {
         try {
-            return Files.toByteArray(screenshot);
+            File fScreenshot = Screenshots.getScreenShotAsFile();
+            byte[] arrScreenshot = Files.toByteArray(fScreenshot);
+            if (arrScreenshot != null) {
+                screenshot(arrScreenshot);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new byte[0];
     }
 
 }
