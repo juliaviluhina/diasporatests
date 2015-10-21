@@ -34,7 +34,6 @@ public class Feed {
 
         ensurePublicPostingMode();
         share.click();
-
     }
 
     @Step
@@ -47,7 +46,6 @@ public class Feed {
 
         ensurePublicPostingMode();
         share.click();
-
     }
 
 
@@ -58,7 +56,6 @@ public class Feed {
 
         ensurePrivatePostingMode();
         share.click();
-
     }
 
     @Step
@@ -68,7 +65,6 @@ public class Feed {
 
         ensureAllAspectsPostingMode();
         share.click();
-
     }
 
     @Step
@@ -85,11 +81,19 @@ public class Feed {
         deletePost(assertPostFrom(from, postText));
     }
 
-    public static void deletePost(SelenideElement post) {
-        Coordinates coordinates = post.getCoordinates();
-        coordinates.inViewPort();
-        post.find(".post-content").hover();
-        post.find(".remove_post").click();
+    @Step
+    public static void hidePost(PodUser from, String postText) {
+        SelenideElement post = assertPostFrom(from, postText);
+        hoverPost(post);
+        post.find(".hide_post").click();
+        confirm(null);
+    }
+
+    @Step
+    public static void ignoreAuthorOfPost(PodUser author, String postText) {
+        SelenideElement post = assertPostFrom(author, postText);
+        hoverPost(post);
+        post.find(".block_user").click();
         confirm(null);
     }
 
@@ -225,10 +229,7 @@ public class Feed {
 
     @Step
     public static void ensureAspectPostingMode(String diasporaAspect) {
-        if (!aspect.getText().contains("All aspects")) {
-            setAspect.click();
-            aspect.find(".all_aspects").click();
-        }
+        ensureAllAspectsPostingMode();
         setAspect.click();
         SelenideElement selectingAspect = aspect.findAll(".aspect_selector").find(text(diasporaAspect));
         selectingAspect.click();
@@ -250,6 +251,18 @@ public class Feed {
         if (countDeleted > 1) {
             deleteAllPosts(from);
         }
+    }
+
+    private static void deletePost(SelenideElement post) {
+        hoverPost(post);
+        post.find(".remove_post").click();
+        confirm(null);
+    }
+
+    private static void hoverPost(SelenideElement post) {
+        Coordinates coordinates = post.getCoordinates();
+        coordinates.inViewPort();
+        post.find(".post-content").hover();
     }
 
 }

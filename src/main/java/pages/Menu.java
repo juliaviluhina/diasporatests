@@ -82,16 +82,16 @@ public class Menu extends AdditionalAPI{
 
     @Step
     public static void ensureLoggedOut(){
-        newScreenshot();
+        //newScreenshot();
         if ($$(darkHeaderLocator).size() != 0) {
             logOut();
         }
-        newScreenshot();
+        //newScreenshot();
     }
 
     @Step
     public static void assertLoggedOut(){
-        newScreenshot();
+        //newScreenshot();
         $$(darkHeaderLocator).shouldBe(empty);
     }
 

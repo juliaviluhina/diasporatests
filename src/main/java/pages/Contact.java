@@ -13,6 +13,7 @@ import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.confirm;
 import static core.conditions.CustomCollectionCondition.textsBegin;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -34,32 +35,14 @@ public class Contact {
     }
 
     @Step
-    public static void ensureSearchedContact(String fullName) {
-        //even id search result site is shown - clicking in avatar load Contact site
-        SelenideElement avatar = $("[alt='" + fullName + "']");
-        avatar.click();
-    }
-
-
-    @Step
-    public static void ensureNoAspectsForContact() {
-        ensureNoAspectsForContact(contactHeader);
+    public static void stopIgnoring() {
+        $(stopIgnoringLocator).click();
     }
 
     @Step
-    public static void ensureNoAspectsForContact(SelenideElement contact) {
-        new AspectManager(manageContact(contact), contact).ensureNoAspects();
-    }
-
-
-    @Step
-    public static void ensureAspectsForContact(String... diasporaAspects) {
-        ensureAspectsForContact(contactHeader, diasporaAspects);
-    }
-
-    @Step
-    public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
-        new AspectManager(manageContact(contact), contact).ensureAspects(diasporaAspects);
+    public static void startIgnoring() {
+        $("#block_user_button").click();
+        confirm(null);
     }
 
     @Step
@@ -74,6 +57,35 @@ public class Contact {
     public static void assertNoMessaging() {
         $$("#message_button").shouldBe(CollectionCondition.empty);
     }
+
+    @Step
+    public static void ensureSearchedContact(String fullName) {
+        //even id search result site is shown - clicking in avatar load Contact site
+        SelenideElement avatar = $("[alt='" + fullName + "']");
+        avatar.click();
+    }
+
+    @Step
+    public static void ensureNoAspectsForContact() {
+        ensureNoAspectsForContact(contactHeader);
+    }
+
+    @Step
+    public static void ensureNoAspectsForContact(SelenideElement contact) {
+        new AspectManager(manageContact(contact), contact).ensureNoAspects();
+    }
+
+    @Step
+    public static void ensureAspectsForContact(String... diasporaAspects) {
+        ensureAspectsForContact(contactHeader, diasporaAspects);
+    }
+
+    @Step
+    public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
+        new AspectManager(manageContact(contact), contact).ensureAspects(diasporaAspects);
+    }
+
+    private static String stopIgnoringLocator = "#unblock_user_button";
 
     private static class AspectManager {
         private SelenideElement btnManageAspect;
@@ -115,8 +127,6 @@ public class Contact {
 
         @Step
         private void fixStartState() {
-//            btnManageAspect.click();
-//            aspects().shouldHave(textsBegin(STANDART_ASPECTS));
             openMenuAspects();
             aspectTexts = aspects().getTexts();
             selectedAspectTexts = selectedAspects().getTexts();
@@ -135,17 +145,24 @@ public class Contact {
             aspectsContainer.click();
         }
 
+        @Step
+        public void ensureNoIgnoreMode() {
+            if ($$(stopIgnoringLocator).size() != 0) {
+                stopIgnoring();
+            }
+        }
 
         @Step
         public void ensureNoAspects() {
+            ensureNoIgnoreMode();
 
             if (btnManageAspect.getText().equals("Add contact")) {
                 return;
             }
+
             fixStartState();
             for (int i = 0; i < aspectTexts.length; i++) {
                 if (beUsed[i]) {
-                    //btnManageAspect.click();
                     openMenuAspects();
                     aspects().get(i).click();
                     aspectsContainer.click();
@@ -155,12 +172,14 @@ public class Contact {
 
         @Step
         public void ensureAspects(String... diasporaAspects) {
+            ensureNoIgnoreMode();
 
             if (diasporaAspects.length == 1) {
                 if (btnManageAspect.getText().equals(diasporaAspects[0])) {
                     return;
                 }
             }
+
             fixStartState();
             for (String diasporaAspect : diasporaAspects) {
                 for (int i = 0; i < aspectTexts.length; i++) {
@@ -173,7 +192,6 @@ public class Contact {
 
             for (int i = 0; i < beUsed.length; i++) {
                 if (beUsed[i] != shouldBeUsed[i]) {
-                    //btnManageAspect.click();
                     openMenuAspects();
                     aspects().get(i).click();
                     aspectsContainer.click();
