@@ -1,4 +1,4 @@
 package ua.net.itlabs.categories;
 
-public interface Smoke extends All{
+public interface Feed extends All{
 }

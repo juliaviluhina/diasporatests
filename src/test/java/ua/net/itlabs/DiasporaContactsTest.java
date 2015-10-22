@@ -3,7 +3,12 @@ package ua.net.itlabs;
 
 import core.steps.Relation;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import pages.*;
+import pages.Aspects;
+import pages.Contacts;
+import pages.Feed;
+import ua.net.itlabs.categories.*;
 
 import static ua.net.itlabs.testDatas.Users.*;
 import static pages.Aspects.FRIENDS;
@@ -12,6 +17,7 @@ import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 import static core.helpers.UniqueDataHelper.the;
 
+@Category(ua.net.itlabs.categories.Contacts.class)
 public class DiasporaContactsTest extends BaseTest {
 
     @Test

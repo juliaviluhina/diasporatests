@@ -3,10 +3,12 @@ package ua.net.itlabs;
 
 import core.steps.Relation;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import pages.Contact;
 import pages.Conversations;
 import pages.Diaspora;
 import pages.Menu;
+import ua.net.itlabs.categories.Smoke;
 
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
@@ -15,6 +17,7 @@ import static ua.net.itlabs.testDatas.Users.EVE_P1;
 import static ua.net.itlabs.testDatas.Users.ROB_P1;
 import static ua.net.itlabs.testDatas.Users.RON_P1;
 
+@Category(ua.net.itlabs.categories.Conversations.class)
 public class DiasporaConversationsTest extends BaseTest {
 
     @Test

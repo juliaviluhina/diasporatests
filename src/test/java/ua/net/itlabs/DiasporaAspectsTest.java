@@ -2,7 +2,12 @@ package ua.net.itlabs;
 
 import core.steps.Relation;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import pages.*;
+import pages.Aspects;
+import pages.Contacts;
+import pages.Feed;
+import ua.net.itlabs.categories.*;
 
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
@@ -10,6 +15,7 @@ import static pages.Aspects.WORK;
 import static ua.net.itlabs.testDatas.Users.*;
 import static ua.net.itlabs.testDatas.Users.ANA_P1;
 
+@Category(ua.net.itlabs.categories.Aspects.class)
 public class DiasporaAspectsTest extends BaseTest {
 
 

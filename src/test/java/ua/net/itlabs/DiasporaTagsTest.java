@@ -4,13 +4,15 @@ import core.steps.Relation;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.*;
-import ua.net.itlabs.categories.Buggy;
-import ua.net.itlabs.categories.Smoke;
+import pages.Feed;
+import pages.Tags;
+import ua.net.itlabs.categories.*;
 
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.ANA_P1;
 import static ua.net.itlabs.testDatas.Users.ROB_P1;
 
+@Category(ua.net.itlabs.categories.Tags.class)
 public class DiasporaTagsTest extends BaseTest {
 
     @Test

@@ -13,7 +13,7 @@ import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
 
-public class DiasporaUserOperationsTest extends BaseTest{
+public class DiasporaBasicOperationsTest extends BaseTest{
 
     @Test
     public void testSignInAndLogOut() {
