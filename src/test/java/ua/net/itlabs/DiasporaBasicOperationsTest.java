@@ -5,6 +5,8 @@ import datastructures.PodUser;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.*;
+import ua.net.itlabs.categories.AdditionalOperations;
+import ua.net.itlabs.categories.BasicOperations;
 import ua.net.itlabs.categories.Buggy;
 import ua.net.itlabs.categories.Smoke;
 
@@ -13,6 +15,7 @@ import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
 
+@Category(BasicOperations.class)
 public class DiasporaBasicOperationsTest extends BaseTest{
 
     @Test
