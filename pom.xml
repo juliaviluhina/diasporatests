@@ -111,9 +111,17 @@
         </profile>
 
         <profile>
-            <id>aspects</id>
+            <id>tags</id>
             <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Aspects</test.includeCategories>
+                <test.includeCategories>ua.net.itlabs.categories.Tags</test.includeCategories>
+                <test.excludeCategories></test.excludeCategories>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>feed</id>
+            <properties>
+                <test.includeCategories>ua.net.itlabs.categories.Feed</test.includeCategories>
                 <test.excludeCategories></test.excludeCategories>
             </properties>
         </profile>
@@ -122,6 +130,14 @@
             <id>basicOperations</id>
             <properties>
                 <test.includeCategories>ua.net.itlabs.categories.BasicOperations</test.includeCategories>
+                <test.excludeCategories></test.excludeCategories>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>aspects</id>
+            <properties>
+                <test.includeCategories>ua.net.itlabs.categories.Aspects</test.includeCategories>
                 <test.excludeCategories></test.excludeCategories>
             </properties>
         </profile>
@@ -143,17 +159,9 @@
         </profile>
 
         <profile>
-            <id>feed</id>
+            <id>additionalOperations</id>
             <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Feed</test.includeCategories>
-                <test.excludeCategories></test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>tags</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Tags</test.includeCategories>
+                <test.includeCategories>ua.net.itlabs.categories.AdditionalOperations</test.includeCategories>
                 <test.excludeCategories></test.excludeCategories>
             </properties>
         </profile>
