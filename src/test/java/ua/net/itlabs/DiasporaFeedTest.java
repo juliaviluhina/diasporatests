@@ -82,16 +82,16 @@ public class DiasporaFeedTest extends BaseTest{
     public void testStreamConsistManage() {
         //GIVEN - setup relation between users in some aspect
         //add posts for aspect with link
+        Relation.forUser(EVE_P1).toUser(RON_P1, ACQUAINTANCES).withTags(the("#tag")).build();
         Relation.forUser(RON_P1).toUser(EVE_P1, FAMILY).doNotLogOut().build();
         Menu.openStream();
         Feed.addPublicPost(the("#tag")+" Public post with followed tag");
         Feed.addAspectPost(FAMILY, the("Ron for Family - linked aspect "));
         Feed.assertNthPostIs(0, RON_P1, the("Ron for Family - linked aspect "));//this check for wait moment when stream will be loaded
         Menu.logOut();
-        Relation.forUser(EVE_P1).toUser(RON_P1, ACQUAINTANCES).withTags(the("#tag")).doNotLogOut().build();
 
         //check - in stream posts from linked user is shown
-        Menu.openStream();
+        Diaspora.signInAs(EVE_P1);
         Feed.assertPostFrom(RON_P1, the("Ron for Family - linked aspect "));
         Feed.assertPostFrom(RON_P1, the("#tag") + " Public post with followed tag");
 

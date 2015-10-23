@@ -2,6 +2,7 @@ package core.steps;
 
 import datastructures.PodUser;
 import pages.*;
+import ru.yandex.qatools.allure.annotations.Step;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,7 @@ public class Relation {
             return this;
         }
 
+        @Step
         public Relation build() {
             return new Relation(this).createRelations();
         }
