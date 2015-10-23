@@ -4,6 +4,7 @@ import core.steps.Relation;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.*;
+import ua.net.itlabs.categories.Federation;
 import ua.net.itlabs.categories.Smoke;
 
 import static core.helpers.UniqueDataHelper.the;
@@ -13,9 +14,10 @@ import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 
-@Category(Smoke.class)
+
 public class DiasporaE2ELifeCycleTest extends BaseTest {
 
+    @Category(Federation.class)
     @Test
     public void testUserActivitiesAndAccessWithPublicPostsForUsersOfDifferentPods() {
         //GIVEN - setup relation between users, addition one the same followed tag
@@ -96,6 +98,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
 
     }
 
+    @Category(Federation.class)
     @Test
     public void testUserActivitiesAndAccessWithLimitedPostsForUsersOfDifferentPods() {
         //GIVEN - setup relation between users
@@ -313,6 +316,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
 //    }
 
 
+    @Category(Smoke.class)
     @Test
     public void testUserActivitiesAndAccessForUsersOfOnePod() {
         //GIVEN - setup relation between users, addition one the same followed tag

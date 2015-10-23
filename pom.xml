@@ -111,6 +111,14 @@
         </profile>
 
         <profile>
+            <id>federation</id>
+            <properties>
+                <test.includeCategories>ua.net.itlabs.categories.Federation</test.includeCategories>
+                <test.excludeCategories></test.excludeCategories>
+            </properties>
+        </profile>
+
+        <profile>
             <id>tags</id>
             <properties>
                 <test.includeCategories>ua.net.itlabs.categories.Tags</test.includeCategories>
@@ -162,6 +170,14 @@
             <id>additionalOperations</id>
             <properties>
                 <test.includeCategories>ua.net.itlabs.categories.AdditionalOperations</test.includeCategories>
+                <test.excludeCategories></test.excludeCategories>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>clearData</id>
+            <properties>
+                <test.includeCategories>ua.net.itlabs.categories.ClearData</test.includeCategories>
                 <test.excludeCategories></test.excludeCategories>
             </properties>
         </profile>
