@@ -44,16 +44,8 @@ public class DiasporaTagsTest extends BaseTest {
         Feed.assertNoPostFrom(ROB_P1, post2);
 
         Menu.openStream();
-        NavBar.openTags();
-
-        Tags.add(the("#tag2"));
-        Tags.filter(the("#tag2"));
-        Feed.assertNoPostFrom(ROB_P1, post1);
-        Feed.assertPostFrom(ROB_P1, post2);
-
-        Menu.openStream();
         Feed.assertPostFrom(ROB_P1, post1);
-        Feed.assertPostFrom(ROB_P1, post2);
+        Feed.assertNoPostFrom(ROB_P1, post2);
 
         NavBar.openTags();
         Tags.delete(the("#tag1"));
@@ -62,7 +54,7 @@ public class DiasporaTagsTest extends BaseTest {
         //in view mode of whole stream posts with followed text are shown
         NavBar.openStream();
         Feed.assertNoPostFrom(ROB_P1, post1);
-        Feed.assertPostFrom(ROB_P1, post2);
+        Feed.assertNoPostFrom(ROB_P1, post2);
 
     }
 
