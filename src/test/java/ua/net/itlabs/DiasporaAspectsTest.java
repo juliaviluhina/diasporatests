@@ -89,6 +89,7 @@ public class DiasporaAspectsTest extends BaseTest {
         //edit aspect
         Aspects.switchToEditMode(the("Asp1"));
         Contacts.rename(the("Asp2"));
+        Contacts.assertAspect(the("Asp2"));//without this check latest checks is unstable incorrect
         Menu.openStream();
         NavBar.openMyAspects();
         Aspects.assertNoAspectInNavBar(the("Asp1"));
