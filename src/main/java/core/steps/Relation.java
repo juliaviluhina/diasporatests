@@ -20,6 +20,7 @@ public class Relation {
     private final List<PodUser> unlinkedUsers;
     private final List<String> followedTags;
     private Boolean doLogOut;
+    private Boolean clearTags;
 
     private static class LinkWithUser {
         public PodUser linkedUser;
@@ -48,6 +49,7 @@ public class Relation {
         private List<PodUser> unlinkedUsers;
         private List<String> followedTags;
         private Boolean doLogOut;
+        private Boolean clearTags;
 
         private Builder(PodUser podUser) {
             this.podUser = podUser;
@@ -56,12 +58,19 @@ public class Relation {
             unlinkedUsers = new ArrayList<PodUser>();
             followedTags = new ArrayList<String>();
             doLogOut = TRUE;
+            clearTags = FALSE;
         }
 
         public Builder doNotLogOut() {
             doLogOut = FALSE;
             return this;
         }
+
+        public Builder clearTags() {
+            clearTags = TRUE;
+            return this;
+        }
+
 
         public Builder toUser(PodUser linkedUser, String... aspects) {
             linkWithUsers.add(new LinkWithUser(linkedUser, aspects));
@@ -96,14 +105,18 @@ public class Relation {
         this.unlinkedUsers = builder.unlinkedUsers;
         this.followedTags = builder.followedTags;
         this.doLogOut = builder.doLogOut;
+        this.clearTags = builder.clearTags;
 
     }
 
     public Relation createRelations() {
         Menu.ensureLoggedOut();
         Diaspora.signInAs(podUser);
-        //Menu.assertLoggedUser(podUser);
         NavBar.assertLoggedUser(podUser);
+        if (clearTags) {
+            NavBar.openTags();
+            Tags.deleteAll();
+        }
         for (LinkWithUser linkWithUser : linkWithUsers) {
             Menu.search(linkWithUser.linkedUser.fullName);
             Contact.ensureAspectsForContact(linkWithUser.aspects);

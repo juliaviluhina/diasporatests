@@ -11,6 +11,7 @@ import ua.net.itlabs.categories.Buggy;
 import ua.net.itlabs.categories.Smoke;
 
 import static com.codeborne.selenide.Condition.appear;
+import static com.codeborne.selenide.Selenide.confirm;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
@@ -27,13 +28,14 @@ public class DiasporaBasicOperationsTest extends BaseTest{
         Menu.assertLoggedOut();
     }
 
-//    //for test case #6416 - Actual result
-//    @Test
-//    @Category(Buggy.class)
-//    public void testSignInForAccountWithoutPosts() {
-//        Diaspora.signInAs(DAVE_P3);
-//        NavBar.should(appear);
-//    }
+    //for test case #6416 - Expected & Actual result
+    @Test
+    public void testSignInForAccountWithoutPosts() {
+        Diaspora.signInAs(DAVE_P3);
+        NavBar.should(appear);
+        Menu.logOut();
+        confirm(null);
+    }
 
     @Test
     public void testAddDeletePosts() {

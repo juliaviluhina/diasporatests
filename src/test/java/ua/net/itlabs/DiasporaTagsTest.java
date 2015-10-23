@@ -71,9 +71,7 @@ public class DiasporaTagsTest extends BaseTest {
     @Test
     public void testTagsOrder() {
         //GIVEN - empty tag list
-        Diaspora.signInAs(ANA_P1);
-        NavBar.openTags();
-        Tags.deleteAll();
+        Relation.forUser(ANA_P1).clearTags().doNotLogOut().build();
 
         //add tags in not alphabetical order
         Tags.add(the("#Ytag1"), the("#Ztag"), the("#Ytag2") );
