@@ -187,6 +187,11 @@ public class Feed {
     }
 
     @Step
+    public static void assertCountPosts(int count) {
+        posts.shouldHave(size(count));
+    }
+
+    @Step
     public static void assertNoPostFrom(PodUser from, String post) {
         posts.filter(textBeginAndContain(from.fullName, post)).shouldBe(empty);
     }

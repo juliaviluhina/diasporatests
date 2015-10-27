@@ -74,11 +74,24 @@ public class Tags {
     }
 
     @Step
+    public static void ensureTag(String tagName) {
+        NavBar.openTags();
+        if (tags.filter(exactText(tagName)).size()>0) {
+            return;
+        }
+        add(tagName);
+    }
+
+    @Step
+    public static void ensureNoTags() {
+        NavBar.openTags();
+        deleteAll();
+    }
+
+    @Step
     public static void deleteAll() {
-        clearThe();
         add(the("#stag"));
         assertExist(the("#stag"));
-        //assertNthIs(0, the("#stag"));
 
         //when tags are more than one page - without this code does not work
         Coordinates coordinates = $("#leftNavBar [href='/followed_tags']").getCoordinates();

@@ -59,7 +59,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         Feed.assertLikes(ANA_P1, the("Public Ana"), 2);
 
         Menu.openStream();
-        //comment post in searching stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
+        //comment post in stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
         Feed.addComment(BOB_P2, the(tag + " Public Bob"), the("Comment from Rob"));
         Feed.assertComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
 
@@ -320,7 +320,6 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
     @Test
     public void testUserActivitiesAndAccessForUsersOfOnePod() {
         //GIVEN - setup relation between users, addition one the same followed tag
-        String tag = "#a_r";
         Relation.forUser(ROB_P1).toUser(ANA_P1, WORK).build();
         Relation.forUser(ANA_P1).toUser(ROB_P1, ACQUAINTANCES).doNotLogOut().build();
 

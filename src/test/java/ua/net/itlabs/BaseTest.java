@@ -21,24 +21,10 @@ import static ua.net.itlabs.testDatas.Users.*;
 import static core.steps.Scenarios.*;
 
 
-public class BaseTest extends AdditionalAPI{
-    @BeforeClass
-    public static void clearDataBeforeTests() {
-        Configuration.timeout = 90000;
-        if (System.getProperty("withClearedDataOnStart").equals("true")) {
-            //System.out.println("clearing data before tests");
-            clearUserData(ANA_P1);
-            clearUserData(ROB_P1);
-            clearUserData(EVE_P1);
-            clearUserData(RON_P1);
-            clearUserData(BOB_P2);
-            clearUserData(SAM_P2);
-        }
-    }
+public abstract class BaseTest extends AdditionalAPI{
 
-    @Before
-    public void ActionsBeforeTest()  {
-        clearThe();
+    public static void setTimeOut() {
+        Configuration.timeout = 90000;
     }
 
     @After

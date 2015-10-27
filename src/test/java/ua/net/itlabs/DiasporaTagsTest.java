@@ -1,13 +1,14 @@
 package ua.net.itlabs;
 
 import core.steps.Relation;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.*;
 import pages.Feed;
 import pages.Tags;
-import ua.net.itlabs.categories.*;
 
+import static core.helpers.UniqueDataHelper.clearThe;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.ANA_P1;
 import static ua.net.itlabs.testDatas.Users.ROB_P1;
@@ -15,56 +16,89 @@ import static ua.net.itlabs.testDatas.Users.ROB_P1;
 @Category(ua.net.itlabs.categories.Tags.class)
 public class DiasporaTagsTest extends BaseTest {
 
-    @Test
-    public void testFollowedTags() {
+    public static String post1;
+    public static String post2;
+
+
+    @BeforeClass
+    public static void buildGivenForTests() {
+        //setup - suitable timeout and clear information about unique values
+        clearThe();
+        setTimeOut();
+
         //GIVEN - setup relation between users, addition one the same followed tag
         //new public posts linked with tags in user account from the same pod
-        String post1 = the("Public post with tag " + the("#tag1") + " : ");
-        String post2 = the("Public post with tag " + the("#tag2") + " : ");
+        post1 = the("Public post with tag " + the("#tag1") + " : ");
+        post2 = the("Public post with tag " + the("#tag2") + " : ");
+
         Relation.forUser(ANA_P1).notToUsers(ROB_P1).build();
         Relation.forUser(ROB_P1).notToUsers(ANA_P1).doNotLogOut().build();
+
         Menu.openStream();
         Feed.addPublicPost(post1);
         Feed.addPublicPost(post2);
         Feed.assertNthPostIs(0,ROB_P1, post2); //this check for wait moment when stream will be loaded
         Menu.logOut();
 
+    }
+
+    @Test
+    public void testAddTag() {
+
         Diaspora.signInAs(ANA_P1);
 
-        //tags is not used and public posts is not shown in stream
+        //tag is not used and public post with tag from unlinked user is not shown in stream
         Feed.assertNoPostFrom(ROB_P1, post1);
-        Feed.assertNoPostFrom(ROB_P1, post2);
 
         NavBar.openTags();
-
         Tags.add(the("#tag1"));
-        //only posts with filtered tag are shown
-        Tags.filter(the("#tag1"));
-        Feed.assertPostFrom(ROB_P1, post1);
-        Feed.assertNoPostFrom(ROB_P1, post2);
 
-        Menu.openStream();
-        Feed.assertPostFrom(ROB_P1, post1);
-        Feed.assertNoPostFrom(ROB_P1, post2);
-
-        NavBar.openTags();
-        Tags.delete(the("#tag1"));
-        Tags.assertNotExist(the("#tag1"));
-
-        //in view mode of whole stream posts with followed text are shown
+        //tag is used and public post with tag from unlinked user is shown in stream
         NavBar.openStream();
-        Feed.assertNoPostFrom(ROB_P1, post1);
-        Feed.assertNoPostFrom(ROB_P1, post2);
+        Feed.assertPostFrom(ROB_P1, post1);
 
     }
 
-
-    //after closing test case #6417
     @Test
-    public void testTagsOrder() {
-        //GIVEN - empty tag list
-        Relation.forUser(ANA_P1).clearTags().doNotLogOut().build();
+    public void testFilterFeedByTag() {
+        //GIVEN additional - tag 2 is followed by Anna
+        Diaspora.signInAs(ANA_P1);
+        Tags.ensureTag(the("#tag2"));
 
+        NavBar.openTags();
+        Tags.filter(the("#tag2"));
+
+        //only posts with filtered tag are shown
+        Feed.assertPostFrom(ROB_P1, post2);
+        Feed.assertCountPosts(1);
+
+    }
+
+    @Test
+    public void testDeleteTag() {
+        //GIVEN additional - tag 1 is followed by Anna
+        Diaspora.signInAs(ANA_P1);
+        Tags.ensureTag(the("#tag2"));
+
+        //tag is used and public post with tag from unlinked user is shown in stream
+        NavBar.openStream();
+        Feed.assertPostFrom(ROB_P1, post2);
+
+        NavBar.openTags();
+        Tags.delete(the("#tag2"));
+
+        //tag is not used and public post with tag from unlinked user is not shown in stream
+        NavBar.openStream();
+        Feed.assertNoPostFrom(ROB_P1, post2);
+    }
+
+    @Test
+    public void testTagsOrderAndSafety() {
+        //GIVEN additional - tag list should be empty
+        Diaspora.signInAs(ANA_P1);
+        Tags.ensureNoTags();
+
+        NavBar.openTags();
         //add tags in not alphabetical order
         Tags.add(the("#Ytag1"), the("#Ztag"), the("#Ytag2") );
         //check - after addition tags in alphabetical order

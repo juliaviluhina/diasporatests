@@ -18,7 +18,6 @@ import static ua.net.itlabs.testDatas.Users.ANA_P1;
 @Category(ua.net.itlabs.categories.Aspects.class)
 public class DiasporaAspectsTest extends BaseTest {
 
-
     @Test
     public void testAspectsFilteringInNavBar() {
         //GIVEN - setup mutual relation between users in some different aspects

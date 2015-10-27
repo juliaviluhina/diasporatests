@@ -15,11 +15,11 @@ public class Diaspora extends AdditionalAPI {
     @Step
     public static void signInAs(PodUser user){
         open(user.podLink+"/users/sign_in");
-        newScreenshot();
+        //newScreenshot();
         $("#user_username").setValue(user.userName);
         $("#user_password").setValue(user.password);
         $(By.name("commit")).click();
-        newScreenshot();
+        //newScreenshot();
     }
 
 }
