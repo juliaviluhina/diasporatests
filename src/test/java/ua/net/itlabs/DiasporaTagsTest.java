@@ -16,9 +16,8 @@ import static ua.net.itlabs.testDatas.Users.ROB_P1;
 @Category(ua.net.itlabs.categories.Tags.class)
 public class DiasporaTagsTest extends BaseTest {
 
-    public static String post1;
-    public static String post2;
-
+    private static String post1;
+    private static String post2;
 
     @BeforeClass
     public static void buildGivenForTests() {
