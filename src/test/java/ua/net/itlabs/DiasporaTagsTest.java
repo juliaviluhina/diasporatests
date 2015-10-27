@@ -26,14 +26,13 @@ public class DiasporaTagsTest extends BaseTest {
         clearThe();
         setTimeOut();
 
-        //GIVEN - setup relation between users, addition one the same followed tag
-        //new public posts linked with tags in user account from the same pod
+        //GIVEN - for all tests of this class
+        //setup relation between users from the same pod
+        //new public posts linked with tags
         post1 = the("Public post with tag " + the("#tag1") + " : ");
         post2 = the("Public post with tag " + the("#tag2") + " : ");
-
         Relation.forUser(ANA_P1).notToUsers(ROB_P1).build();
         Relation.forUser(ROB_P1).notToUsers(ANA_P1).doNotLogOut().build();
-
         Menu.openStream();
         Feed.addPublicPost(post1);
         Feed.addPublicPost(post2);
