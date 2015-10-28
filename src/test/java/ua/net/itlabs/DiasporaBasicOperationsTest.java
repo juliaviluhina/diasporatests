@@ -2,6 +2,7 @@ package ua.net.itlabs;
 
 import core.steps.Relation;
 import datastructures.PodUser;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.*;
@@ -12,6 +13,7 @@ import ua.net.itlabs.categories.Smoke;
 
 import static com.codeborne.selenide.Condition.appear;
 import static com.codeborne.selenide.Selenide.confirm;
+import static core.helpers.UniqueDataHelper.clearThe;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
@@ -19,23 +21,31 @@ import static ua.net.itlabs.testDatas.Users.*;
 @Category(BasicOperations.class)
 public class DiasporaBasicOperationsTest extends BaseTest{
 
-    @Test
-    public void testSignInAndLogOut() {
-        Diaspora.signInAs(ANA_P1);
-        //Menu.assertLoggedUser(ANA_P1);
-        NavBar.assertLoggedUser(ANA_P1);
+        private static String post1;
+        private static String post2;
+
+        @BeforeClass
+        public static void buildGivenForTests() {
+        //setup - suitable timeout and clear information about unique values
+        clearThe();
+        setTimeOut();
+
+        //GIVEN - for all tests of this class
+        //setup relation between users from the same pod
+        //new public posts linked with tags
+        post1 = the("Public post with tag " + the("#tag1") + " : ");
+        post2 = the("Public post with tag " + the("#tag2") + " : ");
+        Relation.forUser(ANA_P1).notToUsers(ROB_P1).build();
+        Relation.forUser(ROB_P1).notToUsers(ANA_P1).doNotLogOut().build();
+        Menu.openStream();
+        Feed.addPublicPost(post1);
+        Feed.addPublicPost(post2);
+        Feed.assertNthPostIs(0,ROB_P1, post2); //this check for wait moment when stream will be loaded
         Menu.logOut();
-        Menu.assertLoggedOut();
+
     }
 
-    //for test case #6416 - Expected & Actual result
-    @Test
-    public void testSignInForAccountWithoutPosts() {
-        Diaspora.signInAs(DAVE_P3);
-        NavBar.should(appear);
-        Menu.logOut();
-        confirm(null);
-    }
+
 
     @Test
     public void testAddDeletePosts() {

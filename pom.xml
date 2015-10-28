@@ -131,6 +131,14 @@
         </profile>
 
         <profile>
+            <id>authentication</id>
+            <properties>
+                <test.includeCategories>ua.net.itlabs.categories.Authentication</test.includeCategories>
+                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
+            </properties>
+        </profile>
+
+        <profile>
             <id>feed</id>
             <properties>
                 <test.includeCategories>ua.net.itlabs.categories.Feed</test.includeCategories>
