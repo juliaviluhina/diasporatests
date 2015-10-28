@@ -46,6 +46,7 @@ public class Menu extends AdditionalAPI{
         //userMenuHeader.click();
         openMenu();
         userMenuItems.find(exactText("Log out")).click();
+        assertLoggedOut();//this check for wait moment when logout will be done - unstable
     }
 
     @Step
@@ -73,12 +74,6 @@ public class Menu extends AdditionalAPI{
         openMenu();
         userMenuItems.find(exactText("Contacts")).click();
     }
-
-//often fail in jenkins
-//    @Step
-//    public static void assertLoggedUser(PodUser user) {
-//        userMenuHeader.find(".user-name").shouldHave(exactText(user.fullName));
-//    }
 
     @Step
     public static void ensureLoggedOut(){
