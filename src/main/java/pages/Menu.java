@@ -31,7 +31,7 @@ public class Menu extends AdditionalAPI {
     @Step
     public static void logOut() {
         openMenu();
-        doMenuAction("Log out");
+        doLogOut();
 //        userMenuItems.find(exactText("Log out")).click();
 //        assertLoggedOut();//this check for wait moment when logout will be done - unstable
 //
@@ -93,7 +93,7 @@ public class Menu extends AdditionalAPI {
     }
 
     //method added because of problem with click on LogOut when stream is not loaded
-    private static void doMenuAction(String name) {
+    private static void doLogOut() {
 
         long startTime = currentTimeMillis();
         Boolean result = FALSE;
