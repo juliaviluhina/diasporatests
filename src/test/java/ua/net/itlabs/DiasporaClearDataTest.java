@@ -1,10 +1,12 @@
 package ua.net.itlabs;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import ua.net.itlabs.categories.AdditionalOperations;
 import ua.net.itlabs.categories.ClearData;
 
+import static core.helpers.UniqueDataHelper.clearThe;
 import static core.steps.Scenarios.clearUserData;
 import static ua.net.itlabs.testDatas.Users.*;
 import static ua.net.itlabs.testDatas.Users.BOB_P2;
@@ -12,6 +14,13 @@ import static ua.net.itlabs.testDatas.Users.SAM_P2;
 
 @Category(ClearData.class)
 public class DiasporaClearDataTest extends BaseTest {
+
+    @BeforeClass
+    public static void buildGivenForTests() {
+        //setup - suitable timeout and clear information about unique values
+        clearThe();
+        setTimeOut();
+    }
 
     @Test
     public void testClearData() {
