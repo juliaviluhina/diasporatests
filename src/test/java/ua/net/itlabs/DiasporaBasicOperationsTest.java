@@ -32,8 +32,8 @@ public class DiasporaBasicOperationsTest extends BaseTest {
         //GIVEN - for all tests of this class
         //setup relation between users from the same pod
         //add public post
-        Relation.forUser(EVE_P1).notToUsers(ANA_P1).build();
-        Relation.forUser(ROB_P1).toUser(ANA_P1, FRIENDS).build();
+        Relation.forUser(EVE_P1).notToUsers(ANA_P1, ROB_P1).build();
+        Relation.forUser(ROB_P1).toUser(ANA_P1, FRIENDS).notToUsers(EVE_P1).build();
         Relation.forUser(ANA_P1).toUser(ROB_P1, FRIENDS).notToUsers(EVE_P1).doNotLogOut().build();
         post = the("Ana public");
         Menu.openStream();
@@ -143,47 +143,53 @@ public class DiasporaBasicOperationsTest extends BaseTest {
         Menu.logOut();
 
     }
-//
-//
-//
-//    @Test
-//    public void testResharingOfPosts() {
-//        //GIVEN - add relations between users and add public and limited post
-//        Relation.forUser(SAM_P2).toUser(BOB_P2, FRIENDS).doNotLogOut().build();
-//        Menu.openStream();
-//        Feed.addAspectPost(FRIENDS, the("Sam for friends"));
-//        Feed.addPublicPost(the("Public Sam"));
-//
-//        //check - limited posts can not be reshared in any case
-//        Feed.assertPostCanNotBeReshared(SAM_P2, the("Sam for friends"));
-//        //check - his own public posts can not be rashared
-//        Feed.assertPostCanNotBeReshared(SAM_P2, the("Public Sam"));
-//        Menu.logOut();
-//
-//        //add relation - for visibility post in stream
-//        Relation.forUser(BOB_P2).toUser(SAM_P2, WORK).doNotLogOut().build();
-//        Menu.openStream();
-//
-//        //check - available limited posts can not be reshared in any case
-//        Feed.assertPostCanNotBeReshared(SAM_P2, the("Sam for friends"));
-//
-//        //reshare post
-//        Feed.reshare(SAM_P2, the("Public Sam"));
-//
-//        //check in stream - reshared post can be shown
-//        Feed.assertPostFrom(BOB_P2, the("Public Sam"));
-//        //check in stream - resharing post can be shown
-//        Feed.assertPostFrom(SAM_P2, the("Public Sam"));
-//        Menu.logOut();
-//
-//        Diaspora.signInAs(SAM_P2);
-//        //check in stream - reshared by another user post can be shown
-//        Feed.assertPostFrom(BOB_P2, the("Public Sam"));
-//        //check in stream - resharing post can be shown
-//        Feed.assertPostFrom(SAM_P2, the("Public Sam"));
-//
-//    }
-//
+
+    @Test
+    public void testResharingOfPosts() {
+
+        //GIVEN additional - add limited and public posts
+        Diaspora.signInAs(ANA_P1);
+        Feed.addAspectPost(FRIENDS, the("Ana about resharing for friends"));
+        Feed.addPublicPost(the("Ana about resharing for public"));
+
+        //check - author can not reshare their own posts
+        Feed.assertPostCanNotBeReshared(ANA_P1, the("Ana about resharing for friends"));
+        Feed.assertPostCanNotBeReshared(ANA_P1, the("Ana about resharing for public"));
+        Menu.logOut();
+
+        //reshare public post
+        Diaspora.signInAs(ROB_P1);
+        Feed.reshare(ANA_P1,the("Ana about resharing for public"));
+        Feed.assertPostFrom(ROB_P1, the("Ana about resharing for public"));
+
+        //check - limited post from another user cannot be reshared
+        Feed.assertPostCanNotBeReshared(ANA_P1, the("Ana about resharing for friends"));
+        Menu.logOut();
+
+        //check - resharing post is visible in contact's stream in unlinked user (resharing post is public)
+        Diaspora.signInAs(EVE_P1);
+        Menu.search(ROB_P1.fullName);
+        Feed.assertPostFrom(ROB_P1, the("Ana about resharing for public"));
+        Menu.logOut();
+
+        //delete original post
+        Diaspora.signInAs(ANA_P1);
+        Feed.deletePost(ANA_P1, the("Ana about resharing for public"));
+        Feed.assertNoPostFrom(ANA_P1, the("Ana about resharing for public"));
+
+        //check - resharing posts do not contain information from original deleted post
+        Menu.openStream();//other posts refresh only after reload stream
+        Feed.assertNoPostFrom(ROB_P1, the("Ana about resharing for public"));
+        Menu.logOut();
+
+        //check - resharing posts do not contain deleted original information
+        Diaspora.signInAs(ROB_P1);
+        Feed.assertNoPostFrom(ANA_P1, the("Ana about resharing for public"));
+        Feed.assertNoPostFrom(ROB_P1, the("Ana about resharing for public"));
+        Menu.logOut();
+
+    }
+
 //    @Test
 //    public void testAddDeleteMentionPost(){
 //        Relation.forUser(BOB_P2).notToUsers(SAM_P2).build();
