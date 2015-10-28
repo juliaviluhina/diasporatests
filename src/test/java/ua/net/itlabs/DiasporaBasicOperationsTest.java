@@ -21,6 +21,8 @@ import static ua.net.itlabs.testDatas.Users.*;
 @Category(BasicOperations.class)
 public class DiasporaBasicOperationsTest extends BaseTest {
 
+    public static String post;
+
     @BeforeClass
     public static void buildGivenForTests() {
         //setup - suitable timeout and clear information about unique values
@@ -29,9 +31,15 @@ public class DiasporaBasicOperationsTest extends BaseTest {
 
         //GIVEN - for all tests of this class
         //setup relation between users from the same pod
+        //add public post
         Relation.forUser(EVE_P1).notToUsers(ANA_P1).build();
-        Relation.forUser(ANA_P1).toUser(ROB_P1, FRIENDS).notToUsers(EVE_P1).build();
         Relation.forUser(ROB_P1).toUser(ANA_P1, FRIENDS).build();
+        Relation.forUser(ANA_P1).toUser(ROB_P1, FRIENDS).notToUsers(EVE_P1).doNotLogOut().build();
+        post = the("Ana public");
+        Menu.openStream();
+        Feed.addPublicPost(post);
+        Feed.assertNthPostIs(0, ANA_P1, post);
+        Menu.logOut();
     }
 
     @Test
@@ -63,35 +71,29 @@ public class DiasporaBasicOperationsTest extends BaseTest {
 
     @Test
     public void testLikeUnlikePost() {
-        //GIVEN additional - add post
-        Diaspora.signInAs(ANA_P1);
-        Feed.addPublicPost(the("Ana public"));
-        Feed.assertNoLikes(ANA_P1, the("Ana public"));
-        Menu.logOut();
-
         //like post by linked user
         Diaspora.signInAs(ROB_P1);
-        Feed.toggleLike(ANA_P1, the("Ana public"));
-        Feed.assertLikes(ANA_P1, the("Ana public"), 1);
+        Feed.toggleLike(ANA_P1, post);
+        Feed.assertLikes(ANA_P1, post, 1);
         Menu.logOut();
 
         //check counter of likes in author's stream
         Diaspora.signInAs(ANA_P1);
-        Feed.assertLikes(ANA_P1, the("Ana public"), 1);
+        Feed.assertLikes(ANA_P1, post, 1);
         Menu.logOut();
 
         //like post by unlinked user in Contact's stream
         Diaspora.signInAs(EVE_P1);
         Menu.search(ANA_P1.fullName);
-        Feed.toggleLike(ANA_P1, the("Ana public"));
-        Feed.assertLikes(ANA_P1, the("Ana public"), 2);
+        Feed.toggleLike(ANA_P1, post);
+        Feed.assertLikes(ANA_P1, post, 2);
         Menu.logOut();
 
         //unlike post by linked user
         Diaspora.signInAs(ROB_P1);
-        Feed.assertLikes(ANA_P1, the("Ana public"), 2);
-        Feed.toggleLike(ANA_P1, the("Ana public"));
-        Feed.assertLikes(ANA_P1, the("Ana public"), 1);
+        Feed.assertLikes(ANA_P1, post, 2);
+        Feed.toggleLike(ANA_P1, post);
+        Feed.assertLikes(ANA_P1, post, 1);
         Menu.logOut();
 
     }
@@ -100,59 +102,44 @@ public class DiasporaBasicOperationsTest extends BaseTest {
     @Test
     public void testAddDeleteCommentsOfPosts() {
 
-        //GIVEN additional - add post
-        Diaspora.signInAs(ANA_P1);
-        Feed.addPublicPost(the("Ana public questionnaire"));
-
-        //add comment for his own post
-        Feed.addComment(ANA_P1, the("Ana public questionnaire"), the("Ana answer"));
-        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
-        Menu.logOut();
-
-        //check added by another user comment cannot be deleted, indirect - visibility added comment in stream of linked user
-        Diaspora.signInAs(ROB_P1);
-        Feed.assertCommentCanNotBeDeleted(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
-
         //add comment for post of another linked user
-        Feed.addComment(ANA_P1, the("Ana public questionnaire"), the("Rob answer"));
-        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Diaspora.signInAs(ROB_P1);
+        Feed.addComment(ANA_P1, post, the("Rob answer"));
+        Feed.assertComment(ANA_P1, post, ROB_P1, the("Rob answer"));
         Menu.logOut();
 
         //add comment for post of another unlinked user in contact's stream
         Diaspora.signInAs(EVE_P1);
         Menu.search(ANA_P1.fullName);
-        Feed.addComment(ANA_P1, the("Ana public questionnaire"), the("Eve answer"));
-        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), EVE_P1, the("Eve answer"));
+        Feed.addComment(ANA_P1, post, the("Eve answer"));
+        Feed.assertComment(ANA_P1, post, EVE_P1, the("Eve answer"));
 
         //check added by another user comments cannot be deleted, indirect - visibility added comment in contact's stream of unlinked user
-        Feed.assertCommentCanNotBeDeleted(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
-        Feed.assertCommentCanNotBeDeleted(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Feed.assertCommentCanNotBeDeleted(ANA_P1, post, ROB_P1, the("Rob answer"));
         Menu.logOut();
 
         //check visibility all comments in author's stream
         Diaspora.signInAs(ANA_P1);
-        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
-        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Feed.assertComment(ANA_P1, post, ROB_P1, the("Rob answer"));
 
         //delete comment of another user for own post
-        Feed.deleteComment(ANA_P1, the("Ana public questionnaire"), EVE_P1, the("Eve answer"));
-        Feed.assertNoComment(ANA_P1, the("Ana public questionnaire"), EVE_P1, the("Eve answer"));
+        Feed.deleteComment(ANA_P1, post, EVE_P1, the("Eve answer"));
+        Feed.assertNoComment(ANA_P1, post, EVE_P1, the("Eve answer"));
         Menu.logOut();
 
         //check - deleted comment is not shown in stream
         Diaspora.signInAs(ROB_P1);
-        Feed.assertNoComment(ANA_P1, the("Ana public questionnaire"), EVE_P1, the("Eve answer"));
-        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
+        Feed.assertNoComment(ANA_P1, post, EVE_P1, the("Eve answer"));
 
         //delete own comment for post of another user
-        Feed.deleteComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
-        Feed.assertNoComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Feed.deleteComment(ANA_P1, post, ROB_P1, the("Rob answer"));
+        Feed.assertNoComment(ANA_P1, post, ROB_P1, the("Rob answer"));
         Menu.logOut();
 
         //check comments visibility in author's stream
         Diaspora.signInAs(ANA_P1);
-        Feed.assertNoComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
-        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
+        Feed.assertNoComment(ANA_P1, post, ROB_P1, the("Rob answer"));
+        Feed.assertNoComment(ANA_P1, post, EVE_P1, the("Eve answer"));
         Menu.logOut();
 
     }
