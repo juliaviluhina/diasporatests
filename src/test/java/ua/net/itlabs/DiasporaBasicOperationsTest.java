@@ -19,18 +19,19 @@ import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
 
 @Category(BasicOperations.class)
-public class DiasporaBasicOperationsTest extends BaseTest{
+public class DiasporaBasicOperationsTest extends BaseTest {
 
-        @BeforeClass
-        public static void buildGivenForTests() {
+    @BeforeClass
+    public static void buildGivenForTests() {
         //setup - suitable timeout and clear information about unique values
         clearThe();
         setTimeOut();
 
         //GIVEN - for all tests of this class
         //setup relation between users from the same pod
+        Relation.forUser(EVE_P1).notToUsers(ANA_P1).build();
         Relation.forUser(ANA_P1).toUser(ROB_P1, FRIENDS).notToUsers(EVE_P1).build();
-        Relation.forUser(ROB_P1).toUser(ANA_P1, FRIENDS).notToUsers(EVE_P1).build();
+        Relation.forUser(ROB_P1).toUser(ANA_P1, FRIENDS).build();
     }
 
     @Test
@@ -38,7 +39,7 @@ public class DiasporaBasicOperationsTest extends BaseTest{
         //GIVEN additional - add post for deletion
         Diaspora.signInAs(ANA_P1);
         Feed.addAspectPost(FRIENDS, the("Ana for friends"));
-        Feed.assertPostFrom(ANA_P1, the("Ana for friends") );
+        Feed.assertPostFrom(ANA_P1, the("Ana for friends"));
         Menu.logOut();
 
         //check - posts of another user can not be deleted
@@ -96,40 +97,65 @@ public class DiasporaBasicOperationsTest extends BaseTest{
     }
 
 
-//    @Test
-//    public void testAddDeleteCommentsOfPosts() {
-//
-//        //GIVEN - add relations between users and add post
-//        Relation.forUser(SAM_P2).toUser(BOB_P2, FRIENDS).doNotLogOut().build();
-//        Menu.openStream();
-//        Feed.addAspectPost(FRIENDS, the("Sam for friends"));
-//
-//        //add comment for his own post
-//        Feed.addComment(SAM_P2, the("Sam for friends"), the("Sam comments"));
-//        Menu.logOut();
-//
-//        //add relation - for visibility post in stream
-//        Relation.forUser(BOB_P2).toUser(SAM_P2, WORK).doNotLogOut().build();
-//        Menu.openStream();
-//
-//        //check - comments of another users can not be deleted
-//        Feed.assertCommentCanNotBeDeleted(SAM_P2, the("Sam for friends"),SAM_P2, the("Sam comments"));
-//
-//        //add comment for post of another user
-//        Feed.addComment(SAM_P2, the("Sam for friends"), the("Bob comments"));
-//        Feed.assertComment(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
-//        Menu.logOut();
-//
-//        //check - author of post can delete comments even of another user
-//        Diaspora.signInAs(SAM_P2);
-//        Feed.deleteComment(SAM_P2, the("Sam for friends"),BOB_P2, the("Bob comments"));
-//        Feed.assertNoComment(SAM_P2, the("Sam for friends"), BOB_P2, the("Bob comments"));
-//
-//        //delete his own comments for his own post
-//        Feed.deleteComment(SAM_P2, the("Sam for friends"), SAM_P2, the("Sam comments"));
-//        Feed.assertNoComment(SAM_P2, the("Sam for friends"), SAM_P2, the("Sam comments"));
-//
-//    }
+    @Test
+    public void testAddDeleteCommentsOfPosts() {
+
+        //GIVEN additional - add post
+        Diaspora.signInAs(ANA_P1);
+        Feed.addPublicPost(the("Ana public questionnaire"));
+
+        //add comment for his own post
+        Feed.addComment(ANA_P1, the("Ana public questionnaire"), the("Ana answer"));
+        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
+        Menu.logOut();
+
+        //check added by another user comment cannot be deleted, indirect - visibility added comment in stream of linked user
+        Diaspora.signInAs(ROB_P1);
+        Feed.assertCommentCanNotBeDeleted(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
+
+        //add comment for post of another linked user
+        Feed.addComment(ANA_P1, the("Ana public questionnaire"), the("Rob answer"));
+        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Menu.logOut();
+
+        //add comment for post of another unlinked user in contact's stream
+        Diaspora.signInAs(EVE_P1);
+        Menu.search(ANA_P1.fullName);
+        Feed.addComment(ANA_P1, the("Ana public questionnaire"), the("Eve answer"));
+        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), EVE_P1, the("Eve answer"));
+
+        //check added by another user comments cannot be deleted, indirect - visibility added comment in contact's stream of unlinked user
+        Feed.assertCommentCanNotBeDeleted(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
+        Feed.assertCommentCanNotBeDeleted(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Menu.logOut();
+
+        //check visibility all comments in author's stream
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
+        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+
+        //delete comment of another user for own post
+        Feed.deleteComment(ANA_P1, the("Ana public questionnaire"), EVE_P1, the("Eve answer"));
+        Feed.assertNoComment(ANA_P1, the("Ana public questionnaire"), EVE_P1, the("Eve answer"));
+        Menu.logOut();
+
+        //check - deleted comment is not shown in stream
+        Diaspora.signInAs(ROB_P1);
+        Feed.assertNoComment(ANA_P1, the("Ana public questionnaire"), EVE_P1, the("Eve answer"));
+        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
+
+        //delete own comment for post of another user
+        Feed.deleteComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Feed.assertNoComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Menu.logOut();
+
+        //check comments visibility in author's stream
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertNoComment(ANA_P1, the("Ana public questionnaire"), ROB_P1, the("Rob answer"));
+        Feed.assertComment(ANA_P1, the("Ana public questionnaire"), ANA_P1, the("Ana answer"));
+        Menu.logOut();
+
+    }
 //
 //
 //
