@@ -57,7 +57,7 @@ public class DiasporaAspectsTest extends BaseTest {
 
         //check - post in this aspect is available for linked user (check in contact
         Diaspora.signInAs(ANA_P1);
-        Menu.search(ANA_P1.fullName);
+        Menu.search(RON_P1.fullName);
         Feed.assertPostFrom(RON_P1, the("Ron for new aspect"));
         Menu.logOut();
 

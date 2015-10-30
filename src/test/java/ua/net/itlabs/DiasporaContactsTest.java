@@ -25,13 +25,13 @@ public class DiasporaContactsTest extends BaseTest {
     @BeforeClass
     public static void buildGivenForTests() {
         //setup - suitable timeout and clear information about unique values
-        clearThe();
         setTimeOut();
   }
 
     @Test
     public void testAddContacts() {
         //GIVEN - setup relation between users
+        clearThe();
         Relation.forUser(ROB_P1).toUser(RON_P1, WORK).build();
         Relation.forUser(RON_P1).toUser(ROB_P1, WORK).doNotLogOut().build();
 
@@ -63,6 +63,7 @@ public class DiasporaContactsTest extends BaseTest {
     @Test
     public void testDeleteContacts() {
         //GIVEN - setup relation between users
+        clearThe();
         Relation.forUser(ROB_P1).toUser(RON_P1, WORK).build();
         Relation.forUser(RON_P1).toUser(ROB_P1, FRIENDS).doNotLogOut().build();
 
@@ -94,6 +95,7 @@ public class DiasporaContactsTest extends BaseTest {
     @Test
     public void testManageContacts() {
         //GIVEN - setup relation between users
+        clearThe();
         Relation.forUser(ANA_P1).notToUsers(RON_P1).build();
         Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();
 
