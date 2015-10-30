@@ -24,13 +24,13 @@ public class DiasporaContactsTest extends BaseTest {
 
     @BeforeClass
     public static void buildGivenForTests() {
-        //setup - suitable timeout and clear information about unique values
+        //setup - suitable timeout
         setTimeOut();
   }
 
     @Test
     public void testAddContacts() {
-        //GIVEN - setup relation between users
+        //GIVEN - setup relation between users and clear information about unique values
         clearThe();
         Relation.forUser(ROB_P1).toUser(RON_P1, WORK).build();
         Relation.forUser(RON_P1).toUser(ROB_P1, WORK).doNotLogOut().build();
@@ -62,7 +62,7 @@ public class DiasporaContactsTest extends BaseTest {
 
     @Test
     public void testDeleteContacts() {
-        //GIVEN - setup relation between users
+        //GIVEN - setup relation between users and clear information about unique values
         clearThe();
         Relation.forUser(ROB_P1).toUser(RON_P1, WORK).build();
         Relation.forUser(RON_P1).toUser(ROB_P1, FRIENDS).doNotLogOut().build();
@@ -94,7 +94,7 @@ public class DiasporaContactsTest extends BaseTest {
 
     @Test
     public void testManageContacts() {
-        //GIVEN - setup relation between users
+        //GIVEN - setup relation between users and clear information about unique values
         clearThe();
         Relation.forUser(ANA_P1).notToUsers(RON_P1).build();
         Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();
@@ -126,6 +126,86 @@ public class DiasporaContactsTest extends BaseTest {
         Feed.assertNoPostFrom(RON_P1, the("Ron for work after manage contacts"));
         Feed.assertPostFrom(RON_P1, the("Ron for family after manage contacts"));
         Menu.logOut();
+    }
+
+
+    @Test
+    public void testAddAspectInContacts() {
+        //GIVEN - setup relation between users and clear information about unique values
+        clearThe();
+        Relation.forUser(ANA_P1).toUser(RON_P1, WORK).build();
+        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();
+
+        //add new aspect on contacts site
+        Menu.openContacts();
+        Contacts.addAspect(the("Asp1"));
+        Contacts.selectAspect(the("Asp1"));
+        Contacts.assertCountContactsInAspect(the("Asp1"),0);
+
+        //add link with this aspect
+        Contacts.addLinkedContactForAspect(the("Asp1"), ANA_P1);
+        Contacts.selectAspect(the("Asp1"));//only after this action counter is changed
+        Contacts.assertCountContactsInAspect(the("Asp1"), 1);
+
+        //add post with this aspect
+        Menu.openStream();
+        Feed.addAspectPost(the("Asp1"), the("Asp1") + " Post for new Aspect from Ron");
+        Feed.assertNthPostIs(0, RON_P1, the("Asp1") + " Post for new Aspect from Ron" );//this check for wait moment when stream will be loaded
+        Menu.logOut();
+
+        //check post visibility in stream of linked in new aspect contact
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertPostFrom(RON_P1, the("Asp1") + " Post for new Aspect from Ron");
+        Menu.logOut();
+
+    }
+
+    @Test
+    public void testRenameAspectInContacts() {
+        //GIVEN - clear information about unique values, add aspect
+        clearThe();
+        Diaspora.signInAs(RON_P1);
+        Menu.openContacts();
+        Contacts.addAspect(the("Asp1"));
+
+        //rename current aspect
+        Contacts.selectAspect(the("Asp1"));
+        Contacts.rename(the("Asp2"));
+
+        //check changes in aspects in contacts site
+        Contacts.assertNoAspect(the("Asp1"));
+        Contacts.assertAspect(the("Asp2"));
+
+        //check changes in aspects in manage aspect button for new post
+        Menu.openStream();
+        Feed.assertNoAspectForNewPost(the("Asp1"));
+        Feed.assertAspectForNewPost(the("Asp2"));
+
+        Menu.logOut();
+
+    }
+
+    @Test
+    public void testDeleteAspectInContacts() {
+        //GIVEN - clear information about unique values, setup relation between users, add aspect
+        clearThe();
+        Diaspora.signInAs(RON_P1);
+        Menu.openContacts();
+        Contacts.addAspect(the("Asp1"));
+
+        //delete added aspect
+        Contacts.selectAspect(the("Asp1"));
+        Contacts.deleteAspect();
+
+        //check changes in aspects in contacts site
+        Contacts.assertNoAspect(the("Asp1"));
+
+        //check changes in aspects in manage aspect button for new post
+        Menu.openStream();
+        Feed.assertNoAspectForNewPost(the("Asp1"));
+
+        Menu.logOut();
+
     }
 
 }

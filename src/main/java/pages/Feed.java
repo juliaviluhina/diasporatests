@@ -127,6 +127,26 @@ public class Feed {
     }
 
     @Step
+    public static void assertAspectForNewPost(String aspectName) {
+        newPostText.click();
+
+        setAspect.click();
+        aspect.findAll(".aspect_selector").find(text(aspectName)).shouldBe(visible);
+
+        newPostText.click();
+    }
+
+    @Step
+    public static void assertNoAspectForNewPost(String aspectName) {
+        newPostText.click();
+
+        setAspect.click();
+        aspect.findAll(".aspect_selector").filter(text(aspectName)).shouldBe(empty);
+
+        newPostText.click();
+    }
+
+    @Step
     public static void assertComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
         commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1));
     }
