@@ -1,5 +1,6 @@
 package ua.net.itlabs;
 
+import core.steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -14,6 +15,7 @@ import static com.codeborne.selenide.Selenide.confirm;
 import static core.helpers.UniqueDataHelper.clearThe;
 import static ua.net.itlabs.testDatas.Users.ANA_P1;
 import static ua.net.itlabs.testDatas.Users.DAVE_P3;
+import static ua.net.itlabs.testDatas.Users.ROB_P1;
 
 @Category(Authentication.class)
 public class DiasporaAuthenticationTest extends BaseTest {
@@ -28,18 +30,10 @@ public class DiasporaAuthenticationTest extends BaseTest {
     @Test
     public void testSignInAndLogOut() {
         Diaspora.signInAs(ANA_P1);
-        //Menu.assertLoggedUser(ANA_P1);
         NavBar.assertLoggedUser(ANA_P1);
         Menu.logOut();
         Menu.assertLoggedOut();
+        Relation.forUser(ROB_P1).doNotLogOut().build();
     }
 
-//    //for test case #6416 - Expected & Actual result
-//    @Test
-//    public void testSignInForAccountWithoutPosts() {
-//        Diaspora.signInAs(DAVE_P3);
-//        NavBar.should(appear);
-//        Menu.logOut();
-//        confirm(null);
-//    }
 }

@@ -18,6 +18,76 @@ import static ua.net.itlabs.testDatas.Users.ANA_P1;
 @Category(ua.net.itlabs.categories.Aspects.class)
 public class DiasporaAspectsTest extends BaseTest {
 
+    //from contacts
+    @Test
+    public void testOperationWithNewAspect() {
+        //GIVEN - setup relation between users
+        Relation.forUser(ANA_P1).toUser(RON_P1, WORK).build();
+        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();
+
+        //add new aspect on contacts site
+        Menu.openContacts();
+        Contacts.addAspect(the("Asp1"));
+        Contacts.selectAspect(the("Asp1"));
+        Contacts.assertCountContactsInAspect(the("Asp1"),0);
+
+        //add link with this aspect
+        Contacts.addLinkedContactForAspect(the("Asp1"), ANA_P1);
+        Contacts.selectAspect(the("Asp1"));//only after this action counter is changed
+        Contacts.assertCountContactsInAspect(the("Asp1"), 1);
+
+        //add post with this aspect
+        Menu.openStream();
+        Feed.addAspectPost(the("Asp1"), the("Asp1") + " Post for new Aspect from Ron");
+        Feed.assertNthPostIs(0, RON_P1, the("Asp1") + " Post for new Aspect from Ron" );//this check for wait moment when stream will be loaded
+        Menu.logOut();
+
+        //check post visibility in stream of linked in new aspect contact
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertPostFrom(RON_P1, the("Asp1") + " Post for new Aspect from Ron");
+        Menu.logOut();
+
+        //rename aspect on contacts site
+        Diaspora.signInAs(RON_P1);
+        Menu.openContacts();
+        Contacts.selectAspect(the("Asp1"));
+        Contacts.rename(the("Asp2"));
+
+        //check changes in aspects in contacts site
+        Contacts.assertAspect(the("Asp2"));
+        Contacts.assertNoAspect(the("Asp1"));
+
+        //add new post for renamed aspect
+        Menu.openStream();
+        Feed.addAspectPost(the("Asp2"), the("Asp2") + " Post for renamed Aspect from Ron");
+        Feed.assertNthPostIs(0, RON_P1, the("Asp2") + " Post for renamed Aspect from Ron");
+        Menu.logOut();
+
+        //check post visibility in stream of linked in new aspect contact
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertPostFrom(RON_P1, the("Asp1") + " Post for new Aspect from Ron");
+        Feed.assertPostFrom(RON_P1, the("Asp2") + " Post for renamed Aspect from Ron");
+        Menu.logOut();
+
+        //delete added aspect
+        Diaspora.signInAs(RON_P1);
+        Menu.openContacts();
+        Contacts.selectAspect(the("Asp2"));
+        Contacts.deleteAspect();
+
+        //check - is no aspect in contact site after deletion
+        Contacts.assertNoAspect(the("Asp2"));
+        Menu.logOut();
+
+        //check post visibility in stream of linked contact (post limited in deleted aspect and earlier was available)
+        Diaspora.signInAs(ANA_P1);
+        Feed.assertPostFrom(RON_P1, the("Asp1") + " Post for new Aspect from Ron");
+        Feed.assertPostFrom(RON_P1, the("Asp2") + " Post for renamed Aspect from Ron");
+        Menu.logOut();
+
+    }
+
+
     @Test
     public void testAspectsFilteringInNavBar() {
         //GIVEN - setup mutual relation between users in some different aspects

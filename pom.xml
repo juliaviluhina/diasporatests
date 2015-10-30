@@ -139,14 +139,6 @@
         </profile>
 
         <profile>
-            <id>feed</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Feed</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
             <id>basicOperations</id>
             <properties>
                 <test.includeCategories>ua.net.itlabs.categories.BasicOperations</test.includeCategories>

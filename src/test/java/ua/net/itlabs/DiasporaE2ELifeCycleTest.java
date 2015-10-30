@@ -46,8 +46,6 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
 
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Rob for work"));
-        //check - for limited post is no possibility for resharing, indirect check - post is added
-        //Feed.assertPostCanNotBeReshared(ROB_P1, the("Rob for work"));
         Menu.logOut();
 
         //comment post, indirect check - limited post in right aspect is shown in stream of linked user
