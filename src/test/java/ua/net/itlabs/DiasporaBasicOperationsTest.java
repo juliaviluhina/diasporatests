@@ -29,7 +29,6 @@ public class DiasporaBasicOperationsTest extends BaseTest {
 
         //GIVEN - for all tests of this class
         //setup relation between users from the same pod
-        //add public post
         Relation.forUser(EVE_P1).notToUsers(ANA_P1, ROB_P1).build();
         Relation.forUser(ROB_P1).toUser(ANA_P1, FRIENDS).notToUsers(EVE_P1).build();
         Relation.forUser(ANA_P1).toUser(ROB_P1, FRIENDS).notToUsers(EVE_P1).build();
