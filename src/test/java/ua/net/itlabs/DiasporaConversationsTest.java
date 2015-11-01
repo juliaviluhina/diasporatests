@@ -2,6 +2,8 @@ package ua.net.itlabs;
 
 
 import core.steps.Relation;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.Contact;
@@ -10,6 +12,7 @@ import pages.Diaspora;
 import pages.Menu;
 import ua.net.itlabs.categories.Smoke;
 
+import static core.helpers.UniqueDataHelper.clearThe;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.ANA_P1;
@@ -19,12 +22,26 @@ import static ua.net.itlabs.testDatas.Users.RON_P1;
 
 @Category(ua.net.itlabs.categories.Conversations.class)
 public class DiasporaConversationsTest extends BaseTest {
+    @BeforeClass
+    public static void buildGivenForTests() {
+        //setup - suitable timeout
+        setTimeOut();
+
+        //GIVEN - setup mutual relation between users in some different aspects
+        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).build();
+        Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).build();
+    }
+
+    @Before
+    public void setupForTest() {
+        //clear information about unique values
+        clearThe();
+    }
 
     @Test
     public void testNewConversation(){
-        //GIVEN - setup mutual relation between users in some different aspects
-        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).build();
-        Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).doNotLogOut().build();
+
+        Diaspora.signInAs(ANA_P1);
 
         //add new conversation
         Menu.openConversations();
@@ -43,11 +60,8 @@ public class DiasporaConversationsTest extends BaseTest {
 
     @Test
     public void testReply(){
-        //GIVEN
-        //setup mutual relation between users in some different aspects
-        //send new conversation
-        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).build();
-        Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).doNotLogOut().build();
+        //GIVEN additional - add conversation
+        Diaspora.signInAs(ANA_P1);
         Menu.openConversations();
         Conversations.sendNewConversationTo(RON_P1, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
@@ -72,11 +86,8 @@ public class DiasporaConversationsTest extends BaseTest {
 
     @Test
     public void testHideAndDeleteConversations(){
-        //GIVEN
-        //setup mutual relation between users in some different aspects
-        //send new conversation
-        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).build();
-        Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).doNotLogOut().build();
+        //GIVEN additional - add conversation
+        Diaspora.signInAs(ANA_P1);
         Menu.openConversations();
         Conversations.sendNewConversationTo(RON_P1, the("subject1"), the("text1"));
         Conversations.sendNewConversationTo(RON_P1, the("subject2"), the("text2"));
@@ -117,9 +128,7 @@ public class DiasporaConversationsTest extends BaseTest {
 
     @Test
     public void testNewConversationFromContactSite(){
-        //GIVEN - setup mutual relation between users in some different aspects
-        Relation.forUser(RON_P1).toUser(ANA_P1, WORK).build();
-        Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).notToUsers(ROB_P1).doNotLogOut().build();
+        Diaspora.signInAs(ANA_P1);
 
         //send message from contact site to searched mutual user
         Menu.search(RON_P1.fullName);
