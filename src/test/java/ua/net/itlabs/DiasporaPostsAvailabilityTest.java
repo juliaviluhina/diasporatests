@@ -40,12 +40,13 @@ public class DiasporaPostsAvailabilityTest extends BaseTest {
         //add public post
         Diaspora.signInAs(ANA_P1);
         Feed.addPublicPost(the("Public Ana"));
-        Feed.assertNthPostIs(0,ANA_P1, the("Public Ana"));
+        Feed.assertNthPostIs(0, ANA_P1, the("Public Ana"));
         Menu.logOut();
 
         //check - public post without tag for unlinked user is not available in Stream
         Diaspora.signInAs(EVE_P1);
         Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
+
         //check - public post without tag for unlinked user is available in Contact Stream
         Menu.search(ANA_P1.fullName);
         Feed.assertPostFrom(ANA_P1, the("Public Ana"));
@@ -62,7 +63,7 @@ public class DiasporaPostsAvailabilityTest extends BaseTest {
         //add private post
         Diaspora.signInAs(ANA_P1);
         Feed.addPrivatePost(the("Private Ana"));
-        Feed.assertNthPostIs(0,ANA_P1, the("Private Ana"));
+        Feed.assertNthPostIs(0, ANA_P1, the("Private Ana"));
         Menu.logOut();
 
         //check - private post for unlinked user is not available even in Contact's Stream
@@ -82,11 +83,11 @@ public class DiasporaPostsAvailabilityTest extends BaseTest {
         //add limited posts
         Diaspora.signInAs(ANA_P1);
         Feed.addAllAspectsPost(the("Ana for All aspects"));
-        Feed.assertNthPostIs(0,ANA_P1, the("Ana for All aspects"));
+        Feed.assertNthPostIs(0, ANA_P1, the("Ana for All aspects"));
         Feed.addAspectPost(FRIENDS, the("Ana for Friends"));
-        Feed.assertNthPostIs(0,ANA_P1, the("Ana for Friends"));
+        Feed.assertNthPostIs(0, ANA_P1, the("Ana for Friends"));
         Feed.addAspectPost(ACQUAINTANCES, the("Ana for Acquaintances"));
-        Feed.assertNthPostIs(0,ANA_P1, the("Ana for Acquaintances"));
+        Feed.assertNthPostIs(0, ANA_P1, the("Ana for Acquaintances"));
         Menu.logOut();
 
         //check - limited post for unlinked user is not available even in Contact's Stream

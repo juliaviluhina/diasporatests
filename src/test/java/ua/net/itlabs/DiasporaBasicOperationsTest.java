@@ -165,7 +165,7 @@ public class DiasporaBasicOperationsTest extends BaseTest {
 
         //reshare public post
         Diaspora.signInAs(ROB_P1);
-        Feed.reshare(ANA_P1,the("Ana about resharing for public"));
+        Feed.reshare(ANA_P1, the("Ana about resharing for public"));
         Feed.assertPostFrom(ROB_P1, the("Ana about resharing for public"));
 
         //check - limited post from another user cannot be reshared
@@ -197,7 +197,7 @@ public class DiasporaBasicOperationsTest extends BaseTest {
     }
 
     @Test
-    public void testAddMentionPost(){
+    public void testAddMentionPost() {
         //add post with mention about linked user
         Diaspora.signInAs(ANA_P1);
         Feed.addPublicPostWithMentionAbout(ROB_P1, the("public mention"));

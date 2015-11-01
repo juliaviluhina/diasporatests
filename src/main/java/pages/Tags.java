@@ -30,7 +30,7 @@ public class Tags {
 
     @Step
     public static void add(String... tagNames) {
-        for (String tagName:tagNames) {
+        for (String tagName : tagNames) {
             add(tagName);
         }
     }
@@ -76,7 +76,7 @@ public class Tags {
     @Step
     public static void ensureTag(String tagName) {
         NavBar.openTags();
-        if (tags.filter(exactText(tagName)).size()>0) {
+        if (tags.filter(exactText(tagName)).size() > 0) {
             return;
         }
         add(tagName);

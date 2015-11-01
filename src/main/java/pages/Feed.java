@@ -238,7 +238,7 @@ public class Feed {
         ElementsCollection aspects = aspect.findAll(".aspect_selector");
         aspects.get(0).click();
         String[] selectedAspectstext = aspects.filter(cssClass("selected")).getTexts();
-        for (String selectedAspectTest:selectedAspectstext) {
+        for (String selectedAspectTest : selectedAspectstext) {
             aspects.find(exactText(selectedAspectTest)).click();
         }
     }

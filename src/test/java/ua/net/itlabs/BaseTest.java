@@ -21,7 +21,7 @@ import static ua.net.itlabs.testDatas.Users.*;
 import static core.steps.Scenarios.*;
 
 
-public abstract class BaseTest extends AdditionalAPI{
+public abstract class BaseTest extends AdditionalAPI {
 
     public static void setTimeOut() {
         Configuration.timeout = 90000;

@@ -1,4 +1,4 @@
 package ua.net.itlabs.categories;
 
-public interface AdditionalOperations {
+public interface AdditionalOperations extends All {
 }

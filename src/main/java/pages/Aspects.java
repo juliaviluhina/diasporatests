@@ -39,7 +39,7 @@ public class Aspects {
     }
 
     @Step
-    public static void switchToEditMode(String aspect){
+    public static void switchToEditMode(String aspect) {
         SelenideElement currentAspect = aspectContainersNavBar.find(text(aspect));
         Coordinates coordinates = aspectsNavBar.find(text(aspect)).getCoordinates();
         coordinates.inViewPort();

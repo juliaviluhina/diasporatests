@@ -46,6 +46,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
 
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Rob for work"));
+        Feed.assertNthPostIs(0, ROB_P1, the("Rob for work"));
         Menu.logOut();
 
         //comment post, indirect check - limited post in right aspect is shown in stream of linked user
@@ -82,7 +83,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
 
         //check post of another user can not be deleted
         NavBar.openStream();
-        Feed.assertPostCanNotBeDeleted(ROB_P1,  the("Rob for work"));
+        Feed.assertPostCanNotBeDeleted(ROB_P1, the("Rob for work"));
 
         //delete comment
         Feed.deleteComment(ROB_P1, the("Rob for work"), ANA_P1, the("Comment from Ana"));

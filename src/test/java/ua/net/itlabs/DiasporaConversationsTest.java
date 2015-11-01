@@ -41,11 +41,10 @@ public class DiasporaConversationsTest extends BaseTest {
     }
 
     @Test
-    public void testNewConversation(){
-
-        Diaspora.signInAs(ANA_P1);
+    public void testNewConversation() {
 
         //add new conversation
+        Diaspora.signInAs(ANA_P1);
         Menu.openConversations();
         Conversations.sendNewConversationTo(RON_P1, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
@@ -61,7 +60,8 @@ public class DiasporaConversationsTest extends BaseTest {
     }
 
     @Test
-    public void testReply(){
+    public void testReply() {
+
         //GIVEN additional - add conversation
         Diaspora.signInAs(ANA_P1);
         Menu.openConversations();
@@ -87,7 +87,8 @@ public class DiasporaConversationsTest extends BaseTest {
     }
 
     @Test
-    public void testHideAndDeleteConversations(){
+    public void testHideAndDeleteConversations() {
+
         //GIVEN additional - add conversation
         Diaspora.signInAs(ANA_P1);
         Menu.openConversations();
@@ -102,9 +103,9 @@ public class DiasporaConversationsTest extends BaseTest {
         Conversations.assertNoConversationBySubject(the("subject1"));
         Menu.logOut();
 
+        //hidden conversation from another user can be deleted
         Diaspora.signInAs(RON_P1);
         Menu.openConversations();
-        //hidden conversation from another user can be deleted
         Conversations.selectConversationBySubject(the("subject1"));
         Conversations.assertCurrentConversation(ANA_P1, the("subject1"), the("text1"));
         Conversations.deleteCurrentConversation();
@@ -117,9 +118,9 @@ public class DiasporaConversationsTest extends BaseTest {
         Conversations.assertNoConversationBySubject(the("subject2"));
         Menu.logOut();
 
+        //hidden own conversation by another user can be deleted
         Diaspora.signInAs(ANA_P1);
         Menu.openConversations();
-        //hidden own conversation by another user can be deleted
         Conversations.selectConversationBySubject(the("subject2"));
         Conversations.assertMessageInCurrentConversation(ANA_P1, the("text2"));
         Conversations.deleteCurrentConversation();
@@ -129,10 +130,10 @@ public class DiasporaConversationsTest extends BaseTest {
     }
 
     @Test
-    public void testNewConversationFromContactSite(){
-        Diaspora.signInAs(ANA_P1);
+    public void testNewConversationFromContactSite() {
 
         //send message from contact site to searched mutual user
+        Diaspora.signInAs(ANA_P1);
         Menu.search(RON_P1.fullName);
         Contact.sendMessageToContact(the("subject"), the("text"));
 

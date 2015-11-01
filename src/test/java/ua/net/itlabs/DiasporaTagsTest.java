@@ -21,6 +21,7 @@ public class DiasporaTagsTest extends BaseTest {
 
     @BeforeClass
     public static void buildGivenForTests() {
+
         //setup - suitable timeout and clear information about unique values
         clearThe();
         setTimeOut();
@@ -35,7 +36,7 @@ public class DiasporaTagsTest extends BaseTest {
         Menu.openStream();
         Feed.addPublicPost(post1);
         Feed.addPublicPost(post2);
-        Feed.assertNthPostIs(0,ROB_P1, post2); //this check for wait moment when stream will be loaded
+        Feed.assertNthPostIs(0, ROB_P1, post2); //this check for wait moment when stream will be loaded
         Menu.logOut();
 
     }
@@ -43,9 +44,8 @@ public class DiasporaTagsTest extends BaseTest {
     @Test
     public void testAddTag() {
 
-        Diaspora.signInAs(ANA_P1);
-
         //tag is not used and public post with tag from unlinked user is not shown in stream
+        Diaspora.signInAs(ANA_P1);
         Feed.assertNoPostFrom(ROB_P1, post1);
 
         NavBar.openTags();
@@ -59,6 +59,7 @@ public class DiasporaTagsTest extends BaseTest {
 
     @Test
     public void testFilterFeedByTag() {
+
         //GIVEN additional - tag 2 is followed by Anna
         Diaspora.signInAs(ANA_P1);
         Tags.ensureTag(the("#tag2"));
@@ -74,6 +75,7 @@ public class DiasporaTagsTest extends BaseTest {
 
     @Test
     public void testDeleteTag() {
+
         //GIVEN additional - tag 1 is followed by Anna
         Diaspora.signInAs(ANA_P1);
         Tags.ensureTag(the("#tag2"));
@@ -88,25 +90,27 @@ public class DiasporaTagsTest extends BaseTest {
         //tag is not used and public post with tag from unlinked user is not shown in stream
         NavBar.openStream();
         Feed.assertNoPostFrom(ROB_P1, post2);
+
     }
 
     @Test
     public void testTagsOrderAndSafety() {
+
         //GIVEN additional - tag list should be empty
         Diaspora.signInAs(ANA_P1);
         Tags.ensureNoTags();
 
         NavBar.openTags();
         //add tags in not alphabetical order
-        Tags.add(the("#Ytag1"), the("#Ztag"), the("#Ytag2") );
+        Tags.add(the("#Ytag1"), the("#Ztag"), the("#Ytag2"));
         //check - after addition tags in alphabetical order
-        Tags.assertTags(the("#Ytag1"), the("#Ytag2"),the("#Ztag") );
+        Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
 
         //check order after logout and sign in
         Menu.logOut();
         Diaspora.signInAs(ANA_P1);
         NavBar.openTags();
-        Tags.assertTags(the("#Ytag1"), the("#Ytag2"),the("#Ztag") );
+        Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
 
     }
 }

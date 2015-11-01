@@ -13,7 +13,7 @@ public class PodUser {
         this.password = password;
         this.podLink = podLink;
         this.email = email;
-        fullName = userName+"@"+podLink.replaceFirst("https://","");
+        fullName = userName + "@" + podLink.replaceFirst("https://", "");
     }
 
     public String toString() {

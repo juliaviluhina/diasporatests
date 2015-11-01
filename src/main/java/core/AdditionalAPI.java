@@ -42,7 +42,9 @@ public class AdditionalAPI {
     public static void newScreenshot() {
         try {
             File fScreenshot = Screenshots.getScreenShotAsFile();
-            if (fScreenshot == null) { return; }
+            if (fScreenshot == null) {
+                return;
+            }
             screenshot(Files.toByteArray(fScreenshot));
         } catch (IOException e) {
             e.printStackTrace();

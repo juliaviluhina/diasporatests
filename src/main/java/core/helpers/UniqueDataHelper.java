@@ -7,7 +7,7 @@ import static java.lang.System.currentTimeMillis;
 
 public class UniqueDataHelper {
 
-    private static Map<String, String> dataContainer = new HashMap<String, String>();;
+    private static Map<String, String> dataContainer = new HashMap<String, String>();
 
     public static String the(String name) {
         if (!dataContainer.containsKey(name)) {
@@ -16,7 +16,7 @@ public class UniqueDataHelper {
         return dataContainer.get(name);
     }
 
-    public static void clearThe(){
+    public static void clearThe() {
         dataContainer.clear();
     }
 

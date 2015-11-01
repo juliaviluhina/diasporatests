@@ -1,6 +1,7 @@
 package ua.net.itlabs;
 
 import core.steps.Relation;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -26,10 +27,14 @@ public class DiasporaAspectsTest extends BaseTest {
         setTimeOut();
     }
 
-    @Test
-    public void testAddAspectInNavBar() {
+    @Before
+    public void setupForTest() {
         //clear information about unique values
         clearThe();
+    }
+
+    @Test
+    public void testAddAspectInNavBar() {
 
         //add new aspect
         Diaspora.signInAs(RON_P1);
@@ -64,8 +69,6 @@ public class DiasporaAspectsTest extends BaseTest {
 
     @Test
     public void testSwitchToEditModeInNavBar() {
-        //clear information about unique values
-        clearThe();
 
         //switch to edit mode, indirect check -
         Diaspora.signInAs(RON_P1);
@@ -79,12 +82,10 @@ public class DiasporaAspectsTest extends BaseTest {
 
     @Test
     public void testFilterAspectsInNavBar() {
-        //clear information about unique values
-        clearThe();
 
         //GIVEN - setup relation and add limited in aspect posts
-        Relation.forUser(ANA_P1).toUser(RON_P1,WORK).build();
-        Relation.forUser(RON_P1).toUser(ANA_P1,FRIENDS).doNotLogOut().build();
+        Relation.forUser(ANA_P1).toUser(RON_P1, WORK).build();
+        Relation.forUser(RON_P1).toUser(ANA_P1, FRIENDS).doNotLogOut().build();
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Ron for new friends"));
         Feed.addAspectPost(FAMILY, the("Ron for new family"));

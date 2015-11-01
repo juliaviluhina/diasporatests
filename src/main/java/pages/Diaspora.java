@@ -13,8 +13,8 @@ import static com.codeborne.selenide.Selenide.open;
 public class Diaspora extends AdditionalAPI {
 
     @Step
-    public static void signInAs(PodUser user){
-        open(user.podLink+"/users/sign_in");
+    public static void signInAs(PodUser user) {
+        open(user.podLink + "/users/sign_in");
         //newScreenshot();
         $("#user_username").setValue(user.userName);
         $("#user_password").setValue(user.password);

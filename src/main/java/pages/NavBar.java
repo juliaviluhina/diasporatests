@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class NavBar {
 
-    private static SelenideElement container =  $("#leftNavBar");
+    private static SelenideElement container = $("#leftNavBar");
 
     @Step
     public static void openTags() {
@@ -17,17 +17,17 @@ public class NavBar {
     }
 
     @Step
-    public static void openStream(){
+    public static void openStream() {
         container.find("[href='/stream']").click();
     }
 
     @Step
-    public static void openMyActivity(){
+    public static void openMyActivity() {
         container.find("[href='/activity']").click();
     }
 
     @Step
-    public static void openMyAspects(){
+    public static void openMyAspects() {
         container.find("[href='/aspects']").click();
         container.find("[href='/aspects']").click();
     }
@@ -38,7 +38,7 @@ public class NavBar {
     }
 
     @Step
-    public static void openMentions(){
+    public static void openMentions() {
         container.find("[href='/mentions']").click();
     }
 

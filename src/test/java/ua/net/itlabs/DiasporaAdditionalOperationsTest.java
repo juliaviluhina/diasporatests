@@ -21,19 +21,19 @@ import static ua.net.itlabs.testDatas.Users.ANA_P1;
 
 
 @Category(AdditionalOperations.class)
-public class DiasporaAdditionalOperationsTest extends BaseTest{
+public class DiasporaAdditionalOperationsTest extends BaseTest {
+
     @BeforeClass
     public static void buildGivenForTests() {
         //setup - suitable timeout
         setTimeOut();
-   }
+    }
 
     @Before
     public void setupForTest() {
         //clear information about unique values
         clearThe();
     }
-
 
     @Test
     public void testHidePosts() {
@@ -110,7 +110,7 @@ public class DiasporaAdditionalOperationsTest extends BaseTest{
         //stop ignoring
         Contact.stopIgnoring();
 
-         //check - in contact site post is shown
+        //check - in contact site post is shown
         Feed.assertPostFrom(RON_P1, the("Ron for public"));
         Menu.logOut();
     }

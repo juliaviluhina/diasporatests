@@ -87,7 +87,7 @@ public class Contact {
 
     @Step
     public static void ensureNoIgnoreMode(SelenideElement contact) {
-        new AspectManager(manageContact(contact), contact ).ensureNoIgnoreMode();
+        new AspectManager(manageContact(contact), contact).ensureNoIgnoreMode();
     }
 
     @Step

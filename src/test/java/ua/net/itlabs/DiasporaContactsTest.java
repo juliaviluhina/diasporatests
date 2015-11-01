@@ -2,6 +2,7 @@ package ua.net.itlabs;
 
 
 import core.steps.Relation;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -26,19 +27,24 @@ public class DiasporaContactsTest extends BaseTest {
     public static void buildGivenForTests() {
         //setup - suitable timeout
         setTimeOut();
-  }
+    }
+
+    @Before
+    public void setupForTest() {
+        //clear information about unique values
+        clearThe();
+    }
 
     @Test
     public void testAddContacts() {
-        //GIVEN - setup relation between users and clear information about unique values
-        clearThe();
+        //GIVEN - setup relation between users
         Relation.forUser(ROB_P1).toUser(RON_P1, WORK).build();
         Relation.forUser(RON_P1).toUser(ROB_P1, WORK).doNotLogOut().build();
 
         //add posts in not used aspects before managing contacts
         Menu.openStream();
         Feed.addAspectPost(FAMILY, the("Ron for family before manage contacts"));
-        Feed.assertNthPostIs(0,RON_P1, the("Ron for family before manage contacts"));//this check for wait moment when stream will be loaded
+        Feed.assertNthPostIs(0, RON_P1, the("Ron for family before manage contacts"));//this check for wait moment when stream will be loaded
 
         //add contacts in this aspect
         Menu.openContacts();
@@ -47,7 +53,7 @@ public class DiasporaContactsTest extends BaseTest {
         //add post in this aspect
         Menu.openStream();
         Feed.addAspectPost(FAMILY, the("Ron for family after manage contacts"));
-        Feed.assertNthPostIs(0,RON_P1, the("Ron for family after manage contacts"));//this check for wait moment when stream will be loaded
+        Feed.assertNthPostIs(0, RON_P1, the("Ron for family after manage contacts"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
         //check stream linked in this aspect user
@@ -62,15 +68,14 @@ public class DiasporaContactsTest extends BaseTest {
 
     @Test
     public void testDeleteContacts() {
-        //GIVEN - setup relation between users and clear information about unique values
-        clearThe();
+        //GIVEN - setup relation between users
         Relation.forUser(ROB_P1).toUser(RON_P1, WORK).build();
         Relation.forUser(RON_P1).toUser(ROB_P1, FRIENDS).doNotLogOut().build();
 
         //add posts in used aspects before managing contacts
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Ron for friends before manage contacts"));
-        Feed.assertNthPostIs(0,RON_P1, the("Ron for friends before manage contacts"));//this check for wait moment when stream will be loaded
+        Feed.assertNthPostIs(0, RON_P1, the("Ron for friends before manage contacts"));//this check for wait moment when stream will be loaded
 
         //manage contacts - delete contact in aspect
         Menu.openContacts();
@@ -79,7 +84,7 @@ public class DiasporaContactsTest extends BaseTest {
         //add posts in deleted aspect after managing contacts
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Ron for friends after manage contacts"));
-        Feed.assertNthPostIs(0,RON_P1, the("Ron for friends after manage contacts"));//this check for wait moment when stream will be loaded
+        Feed.assertNthPostIs(0, RON_P1, the("Ron for friends after manage contacts"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
         //check stream linked in this aspect user
@@ -94,8 +99,7 @@ public class DiasporaContactsTest extends BaseTest {
 
     @Test
     public void testManageContacts() {
-        //GIVEN - setup relation between users and clear information about unique values
-        clearThe();
+        //GIVEN - setup relation between users
         Relation.forUser(ANA_P1).notToUsers(RON_P1).build();
         Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();
 
@@ -108,7 +112,7 @@ public class DiasporaContactsTest extends BaseTest {
         Menu.openStream();
         Feed.addAspectPost(WORK, the("Ron for work after manage contacts"));
         Feed.addAspectPost(FAMILY, the("Ron for family after manage contacts"));
-        Feed.assertNthPostIs(0,RON_P1, the("Ron for family after manage contacts"));//this check for wait moment when stream will be loaded
+        Feed.assertNthPostIs(0, RON_P1, the("Ron for family after manage contacts"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
         //check - in stream available post from unlinked user is not shown
@@ -131,8 +135,7 @@ public class DiasporaContactsTest extends BaseTest {
 
     @Test
     public void testAddAspectInContacts() {
-        //GIVEN - setup relation between users and clear information about unique values
-        clearThe();
+        //GIVEN - setup relation between users
         Relation.forUser(ANA_P1).toUser(RON_P1, WORK).build();
         Relation.forUser(RON_P1).toUser(ANA_P1, WORK).doNotLogOut().build();
 
@@ -140,7 +143,7 @@ public class DiasporaContactsTest extends BaseTest {
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
         Contacts.selectAspect(the("Asp1"));
-        Contacts.assertCountContactsInAspect(the("Asp1"),0);
+        Contacts.assertCountContactsInAspect(the("Asp1"), 0);
 
         //add link with this aspect
         Contacts.addLinkedContactForAspect(the("Asp1"), ANA_P1);
@@ -150,7 +153,7 @@ public class DiasporaContactsTest extends BaseTest {
         //add post with this aspect
         Menu.openStream();
         Feed.addAspectPost(the("Asp1"), the("Asp1") + " Post for new Aspect from Ron");
-        Feed.assertNthPostIs(0, RON_P1, the("Asp1") + " Post for new Aspect from Ron" );//this check for wait moment when stream will be loaded
+        Feed.assertNthPostIs(0, RON_P1, the("Asp1") + " Post for new Aspect from Ron");//this check for wait moment when stream will be loaded
         Menu.logOut();
 
         //check post visibility in stream of linked in new aspect contact
@@ -162,8 +165,7 @@ public class DiasporaContactsTest extends BaseTest {
 
     @Test
     public void testRenameAspectInContacts() {
-        //GIVEN - clear information about unique values, add aspect
-        clearThe();
+        //GIVEN - add aspect
         Diaspora.signInAs(RON_P1);
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
@@ -187,8 +189,7 @@ public class DiasporaContactsTest extends BaseTest {
 
     @Test
     public void testDeleteAspectInContacts() {
-        //GIVEN - clear information about unique values, setup relation between users, add aspect
-        clearThe();
+        //GIVEN - setup relation between users, add aspect
         Diaspora.signInAs(RON_P1);
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));

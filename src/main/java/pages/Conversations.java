@@ -56,7 +56,7 @@ public class Conversations {
     }
 
     @Step
-    public static void assertCurrentConversation(PodUser from,String subject, String text) {
+    public static void assertCurrentConversation(PodUser from, String subject, String text) {
 
         SelenideElement currentSubject = currentConversation.find(".conversation_participants h3");
         currentSubject.shouldHave(exactText(subject));
@@ -74,8 +74,8 @@ public class Conversations {
     }
 
     @Step
-    public static void assertMessageInCurrentConversation(PodUser from,String text) {
-     ElementsCollection messages = currentConversation.findAll(".stream_element");
+    public static void assertMessageInCurrentConversation(PodUser from, String text) {
+        ElementsCollection messages = currentConversation.findAll(".stream_element");
         messages.filter(textBeginAndContain(from.fullName, text)).shouldHave(size(1));
     }
 

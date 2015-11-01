@@ -94,7 +94,7 @@ public class Contacts {
     }
 
     @Step
-    public static void ensureAspectsForContact(PodUser podUser, String ... aspects) {
+    public static void ensureAspectsForContact(PodUser podUser, String... aspects) {
         Contact.ensureAspectsForContact(contact(podUser), aspects);
     }
 

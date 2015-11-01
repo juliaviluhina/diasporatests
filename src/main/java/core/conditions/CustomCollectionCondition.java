@@ -10,9 +10,9 @@ import java.util.List;
 
 public class CustomCollectionCondition {
 
-    public static CollectionCondition textsBegin(String... expectedTexts){
+    public static CollectionCondition textsBegin(String... expectedTexts) {
 
-        return new Texts(expectedTexts){
+        return new Texts(expectedTexts) {
             public boolean apply(List<WebElement> elements) {
                 if (elements.size() < this.expectedTexts.length) {
                     return false;
