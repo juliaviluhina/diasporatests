@@ -30,7 +30,8 @@ public class DiasporaConversationsTest extends BaseTest {
 
         //GIVEN - setup mutual relation between users in some different aspects
         Relation.forUser(RON_P1).toUser(ANA_P1, WORK).build();
-        Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).build();
+        Relation.forUser(ANA_P1).toUser(RON_P1, FRIENDS).notToUsers(ROB_P1).build();
+        Relation.forUser(ROB_P1).notToUsers(ANA_P1).build();
     }
 
     @Before
