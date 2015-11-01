@@ -85,6 +85,16 @@ public class Contact {
         new AspectManager(manageContact(contact), contact).ensureAspects(diasporaAspects);
     }
 
+    @Step
+    public static void ensureNoIgnoreMode(SelenideElement contact) {
+        new AspectManager(manageContact(contact), contact ).ensureNoIgnoreMode();
+    }
+
+    @Step
+    public static void ensureNoIgnoreMode() {
+        ensureNoIgnoreMode(contactHeader);
+    }
+
     private static String stopIgnoringLocator = "#unblock_user_button";
 
     private static class AspectManager {

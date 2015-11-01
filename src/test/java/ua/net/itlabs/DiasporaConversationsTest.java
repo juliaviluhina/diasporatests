@@ -22,6 +22,7 @@ import static ua.net.itlabs.testDatas.Users.RON_P1;
 
 @Category(ua.net.itlabs.categories.Conversations.class)
 public class DiasporaConversationsTest extends BaseTest {
+
     @BeforeClass
     public static void buildGivenForTests() {
         //setup - suitable timeout
