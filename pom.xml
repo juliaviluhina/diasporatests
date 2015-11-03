@@ -91,6 +91,14 @@
     <profiles>
 
         <profile>
+            <id>all</id>
+            <properties>
+                <test.includeCategories>ua.net.itlabs.categories.All</test.includeCategories>
+                <test.excludeCategories></test.excludeCategories>
+            </properties>
+        </profile>
+
+        <profile>
             <id>buggy</id>
             <properties>
                 <test.includeCategories>ua.net.itlabs.categories.Buggy</test.includeCategories>
