@@ -10,16 +10,14 @@ import java.io.IOException;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
-public class Diaspora extends AdditionalAPI {
+public class Diaspora {
 
     @Step
     public static void signInAs(PodUser user) {
         open(user.podLink + "/users/sign_in");
-        //newScreenshot();
         $("#user_username").setValue(user.userName);
         $("#user_password").setValue(user.password);
         $(By.name("commit")).click();
-        //newScreenshot();
     }
 
 }

@@ -5,94 +5,87 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.*;
-import ua.net.itlabs.categories.Federation;
-import ua.net.itlabs.categories.Smoke;
 
-import static core.helpers.UniqueDataHelper.clearThe;
+import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
-import static pages.Aspects.FRIENDS;
-import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 
-
-@Category(Smoke.class)
+@Category(ua.net.itlabs.categories.Smoke.class)
 public class DiasporaE2ELifeCycleTest extends BaseTest {
 
     @BeforeClass
     public static void buildGivenForTests() {
-        //setup - suitable timeout and clear information about unique values
-        clearThe();
-        setTimeOut();
+        clearUniqueData();
     }
 
     @Test
     public void testUserActivitiesAndAccessForUsersOfOnePod() {
         //GIVEN - setup relation between users, addition one the same followed tag
-        Relation.forUser(ROB_P1).toUser(ANA_P1, WORK).build();
-        Relation.forUser(ANA_P1).toUser(ROB_P1, ACQUAINTANCES).doNotLogOut().build();
+        Relation.forUser(Pod1.rob).toUser(Pod1.ana, WORK).build();
+        Relation.forUser(Pod1.ana).toUser(Pod1.rob, ACQUAINTANCES).doNotLogOut().build();
 
         //public post
         Menu.openStream();
         Feed.addPublicPost(the("Public Ana"));
-        Feed.assertNthPostIs(0, ANA_P1, the("Public Ana"));
+        Feed.assertNthPostIs(0, Pod1.ana, the("Public Ana"));
         Menu.logOut();
 
         //like post, indirect check - public post is shown in stream of linked user
-        Diaspora.signInAs(ROB_P1);
-        Feed.toggleLike(ANA_P1, the("Public Ana"));
-        Feed.assertLikes(ANA_P1, the("Public Ana"), 1);
+        Diaspora.signInAs(Pod1.rob);
+        Feed.toggleLike(Pod1.ana, the("Public Ana"));
+        Feed.assertLikes(Pod1.ana, the("Public Ana"), 1);
 
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Rob for work"));
-        Feed.assertNthPostIs(0, ROB_P1, the("Rob for work"));
+        Feed.assertNthPostIs(0, Pod1.rob, the("Rob for work"));
         Menu.logOut();
 
         //comment post, indirect check - limited post in right aspect is shown in stream of linked user
-        Diaspora.signInAs(ANA_P1);
-        Feed.addComment(ROB_P1, the("Rob for work"), the("Comment from Ana"));
-        Feed.assertComment(ROB_P1, the("Rob for work"), ANA_P1, the("Comment from Ana"));
+        Diaspora.signInAs(Pod1.ana);
+        Feed.addComment(Pod1.rob, the("Rob for work"), the("Comment from Ana"));
+        Feed.assertComment(Pod1.rob, the("Rob for work"), Pod1.ana, the("Comment from Ana"));
 
         //check - for limited post is no possibility for resharing, indirect check - post is added
-        Feed.assertPostCanNotBeReshared(ROB_P1, the("Rob for work"));
+        Feed.assertPostCanNotBeReshared(Pod1.rob, the("Rob for work"));
         Menu.logOut();
 
 
         //check visibility of comments
-        Diaspora.signInAs(ROB_P1);
-        Feed.assertComment(ROB_P1, the("Rob for work"), ANA_P1, the("Comment from Ana"));
+        Diaspora.signInAs(Pod1.rob);
+        Feed.assertComment(Pod1.rob, the("Rob for work"), Pod1.ana, the("Comment from Ana"));
 
         //reshare public post
-        Feed.reshare(ANA_P1, the("Public Ana"));
-        Feed.assertPostFrom(ROB_P1, the("Public Ana"));
+        Feed.reshare(Pod1.ana, the("Public Ana"));
+        Feed.assertPostFrom(Pod1.rob, the("Public Ana"));
 
         //unlike post
-        Feed.toggleLike(ANA_P1, the("Public Ana"));
-        Feed.assertNoLikes(ANA_P1, the("Public Ana"));
+        Feed.toggleLike(Pod1.ana, the("Public Ana"));
+        Feed.assertNoLikes(Pod1.ana, the("Public Ana"));
         Menu.logOut();
 
         //check visibility of reshared post
-        Diaspora.signInAs(ANA_P1);
-        Feed.assertPostFrom(ROB_P1, the("Public Ana"));
+        Diaspora.signInAs(Pod1.ana);
+        Feed.assertPostFrom(Pod1.rob, the("Public Ana"));
 
         //delete post
         NavBar.openMyActivity();
-        Feed.deletePost(ANA_P1, the("Public Ana"));
-        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
+        Feed.deletePost(Pod1.ana, the("Public Ana"));
+        Feed.assertNoPostFrom(Pod1.ana, the("Public Ana"));
 
         //check post of another user can not be deleted
         NavBar.openStream();
-        Feed.assertPostCanNotBeDeleted(ROB_P1, the("Rob for work"));
+        Feed.assertPostCanNotBeDeleted(Pod1.rob, the("Rob for work"));
 
         //delete comment
-        Feed.deleteComment(ROB_P1, the("Rob for work"), ANA_P1, the("Comment from Ana"));
+        Feed.deleteComment(Pod1.rob, the("Rob for work"), Pod1.ana, the("Comment from Ana"));
         Menu.logOut();
 
 
-        Diaspora.signInAs(ROB_P1);
+        Diaspora.signInAs(Pod1.rob);
         //check - deleted post is not shown
-        Feed.assertNoPostFrom(ANA_P1, the("Public Ana"));
+        Feed.assertNoPostFrom(Pod1.ana, the("Public Ana"));
         Menu.logOut();
 
     }

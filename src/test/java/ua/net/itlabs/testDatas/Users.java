@@ -3,32 +3,95 @@ package ua.net.itlabs.testDatas;
 import datastructures.PodUser;
 
 public class Users {
-    //2 set of accounts for parallel testing and devepopment
 
-    //accounts from pod1 - https://diaspora.koehn.com
-    public static final PodUser ANA_P1 = new PodUser("ana_tjvi", "tjvitjvi", "https://diaspora.koehn.com", "ana.tjvi@gmail.com");
-    public static final PodUser ROB_P1 = new PodUser("rob_tjvi", "tjvitjvi", "https://diaspora.koehn.com", "rob.tjvi@gmail.com");
-    public static final PodUser EVE_P1 = new PodUser("eve_tjvi", "tjvitjvi", "https://diaspora.koehn.com", "eve.tjvi@gmail.com");
-    public static final PodUser RON_P1 = new PodUser("ron_tjvi", "tjvitjvi", "https://diaspora.koehn.com", "ron.tjvi@gmail.com");
+    protected static class Pod {
 
-    //accounts from pod2 - https://nerdpol.ch
-    public static final PodUser BOB_P2 = new PodUser("bob_tjvi", "tjvitjvi", "https://nerdpol.ch", "bob.tjvi@gmail.com");
-    public static final PodUser SAM_P2 = new PodUser("sam_tjvi", "tjvitjvi", "https://nerdpol.ch", "sam.tjvi@gmail.com");
+        public static String podLink;
 
-    //account which is not prepared for using
-    public static final PodUser DAVE_P3 = new PodUser("dave_tjvi", "tjvitjvi", "https://diasporabrazil.org", "dave.tjvi@gmail.com");
+        public static PodUser newUser(String userName, String password, String email) {
+            return new PodUser(userName, password, podLink, email);
+        }
 
-//    //accounts from pod1 - https://diaspora.koehn.com
-//    public static final PodUser ANA_P1 = new PodUser("ana1_tjvi", "tjvitjvi", "https://framasphere.org", "hur12328@adiaw.com");
-//    public static final PodUser ROB_P1 = new PodUser("rob1_tjvi", "tjvitjvi", "https://framasphere.org", "epc27203@adiaw.com");
-//    public static final PodUser EVE_P1 = new PodUser("eve1_tjvi", "tjvitjvi", "https://framasphere.org", "tsw00991@adiaw.com");
-//    public static final PodUser RON_P1 = new PodUser("ron1_tjvi", "tjvitjvi", "https://framasphere.org", "smj41103@adiaw.com");
-//
-//    //accounts from pod2 - https://nerdpol.ch
-//    public static final PodUser BOB_P2 = new PodUser("bob1_tjvi", "tjvitjvi", "https://pod.geraspora.de", "fwl11173@adiaw.com");
-//    public static final PodUser SAM_P2 = new PodUser("sam1_tjvi", "tjvitjvi", "https://pod.geraspora.de", "zdd05833@adiaw.com");
-//
-//    //account which is not prepared for using
-//    public static final PodUser DAVE_P3 = new PodUser("dave1_tjvi", "tjvitjvi", "https://pod.readme.is", "dave1.tjvi@gmail.com");
+    }
+
+    public static class Pod1 extends Pod {
+
+        public static PodUser ana;
+        public static PodUser rob;
+        public static PodUser eve;
+        public static PodUser ron;
+
+        static {
+
+            if (isFirstDataSet()) {
+
+                podLink = "https://diaspora.koehn.com";
+                ana = newUser("ana_tjvi", "tjvitjvi", "ana.tjvi@gmail.com");
+                rob = newUser("rob_tjvi", "tjvitjvi", "rob.tjvi@gmail.com");
+                eve = newUser("eve_tjvi", "tjvitjvi", "eve.tjvi@gmail.com");
+                ron = newUser("ron_tjvi", "tjvitjvi", "ron.tjvi@gmail.com");
+
+            } else {
+
+                podLink = "https://framasphere.org";
+                ana = newUser("ana1_tjvi", "tjvitjvi", "hur12328@adiaw.com");
+                rob = newUser("rob1_tjvi", "tjvitjvi", "epc27203@adiaw.com");
+                eve = newUser("eve1_tjvi", "tjvitjvi", "tsw00991@adiaw.com");
+                ron = newUser("ron1_tjvi", "tjvitjvi", "smj41103@adiaw.com");
+
+            }
+
+        }
+
+    }
+
+    public static class Pod2 extends Pod {
+        public static PodUser bob;
+        public static PodUser sam;
+
+        static {
+
+            if (isFirstDataSet()) {
+
+                podLink = "https://nerdpol.ch";
+                bob = newUser("bob_tjvi", "tjvitjvi", "bob.tjvi@gmail.com");
+                sam = newUser("sam_tjvi", "tjvitjvi", "sam.tjvi@gmail.com");
+
+            } else {
+
+                podLink = "https://pod.geraspora.de";
+                bob = newUser("bob1_tjvi", "tjvitjvi", "fwl11173@adiaw.com");
+                sam = newUser("sam1_tjvi", "tjvitjvi", "zdd05833@adiaw.com");
+
+            }
+
+        }
+
+    }
+
+    public static class Pod3 extends Pod {
+        public static PodUser dave;
+
+        static {
+
+            if (isFirstDataSet()) {
+
+                podLink = "https://diasporabrazil.org";
+                dave = newUser("dave_tjvi", "tjvitjvi", "dave.tjvi@gmail.com");
+
+            } else {
+
+                podLink = "https://pod.readme.is";
+                dave = newUser("dave1_tjvi", "tjvitjvi", "dave1.tjvi@gmail.com");
+
+            }
+
+        }
+
+    }
+
+    public static Boolean isFirstDataSet() {
+        return (System.getProperty("dataset").equals("set1"));
+    }
 
 }

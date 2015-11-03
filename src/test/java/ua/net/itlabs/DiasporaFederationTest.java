@@ -3,59 +3,51 @@ package ua.net.itlabs;
 import core.steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import pages.Diaspora;
 import pages.Feed;
 import pages.Menu;
-import pages.NavBar;
-import ua.net.itlabs.categories.Federation;
 
-import static core.helpers.UniqueDataHelper.clearThe;
+import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
-import static ua.net.itlabs.testDatas.Users.ANA_P1;
-import static ua.net.itlabs.testDatas.Users.BOB_P2;
 
-@Category(Federation.class)
 public class DiasporaFederationTest extends BaseTest {
 
     private static String tag;
 
     @BeforeClass
     public static void buildGivenForTests() {
-        //setup - suitable timeout and clear information about unique values
-        clearThe();
-        setTimeOut();
+        clearUniqueData();
 
         //GIVEN - setup relation between users, addition one the same followed tag
         tag = "#ana_bob_rob_sam";
-        Relation.forUser(ANA_P1).toUser(BOB_P2, ACQUAINTANCES).notToUsers(ROB_P1, SAM_P2).build();
-        Relation.forUser(ROB_P1).toUser(SAM_P2, FRIENDS).notToUsers(ANA_P1, BOB_P2).withTags(tag).build();
-        Relation.forUser(SAM_P2).toUser(ROB_P1, FAMILY).notToUsers(ANA_P1, BOB_P2).build();
-        Relation.forUser(BOB_P2).toUser(ANA_P1, WORK).notToUsers(ROB_P1, SAM_P2).withTags(tag).build();
+        Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod1.rob, Pod2.sam).build();
+        Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod1.ana, Pod2.bob).withTags(tag).build();
+        Relation.forUser(Pod2.sam).toUser(Pod1.rob, FAMILY).notToUsers(Pod1.ana, Pod2.bob).build();
+        Relation.forUser(Pod2.bob).toUser(Pod1.ana, WORK).notToUsers(Pod1.rob, Pod2.sam).withTags(tag).build();
     }
 
     @Test
     public void testAvailabilityPublicPostForUnlinkedUsersOfDifferentPods() {
 
         //public post with tag
-        Diaspora.signInAs(BOB_P2);
+        Diaspora.signInAs(Pod2.bob);
         Feed.addPublicPost(the(tag + " Public Bob"));
-        Feed.assertNthPostIs(0, BOB_P2, the(tag + " Public Bob"));
+        Feed.assertNthPostIs(0, Pod2.bob, the(tag + " Public Bob"));
         Menu.logOut();
 
         //check - public post is not shown in stream of unlinked user
-        Diaspora.signInAs(ROB_P1);
+        Diaspora.signInAs(Pod1.rob);
 
         //comment post in stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
-        Feed.addComment(BOB_P2, the(tag + " Public Bob"), the("Comment from Rob"));
-        Feed.assertComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+        Feed.addComment(Pod2.bob, the(tag + " Public Bob"), the("Comment from Rob"));
+        Feed.assertComment(Pod2.bob, the(tag + " Public Bob"), Pod1.rob, the("Comment from Rob"));
         Menu.logOut();
 
         //check visibility comment from unlinked user from another pod
-        Diaspora.signInAs(BOB_P2);
-        Feed.assertComment(BOB_P2, the(tag + " Public Bob"), ROB_P1, the("Comment from Rob"));
+        Diaspora.signInAs(Pod2.bob);
+        Feed.assertComment(Pod2.bob, the(tag + " Public Bob"), Pod1.rob, the("Comment from Rob"));
 
     }
 
@@ -63,22 +55,22 @@ public class DiasporaFederationTest extends BaseTest {
     public void testAvailabilityLimitedPostForLinkedUsersOfDifferentPods() {
 
         //post in right aspect
-        Diaspora.signInAs(BOB_P2);
+        Diaspora.signInAs(Pod2.bob);
         Feed.addAspectPost(WORK, the("Bob for work"));
-        Feed.assertNthPostIs(0, BOB_P2, the("Bob for work"));
+        Feed.assertNthPostIs(0, Pod2.bob, the("Bob for work"));
         Menu.logOut();
 
         //check - public post is not shown in stream of unlinked user
-        Diaspora.signInAs(ANA_P1);
+        Diaspora.signInAs(Pod1.ana);
 
         //comment post in stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
-        Feed.addComment(BOB_P2, the("Bob for work"), the("Comment from Ana"));
-        Feed.assertComment(BOB_P2, the("Bob for work"), ANA_P1, the("Comment from Ana"));
+        Feed.addComment(Pod2.bob, the("Bob for work"), the("Comment from Ana"));
+        Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
         Menu.logOut();
 
         //check visibility comment from linked user from another pod
-        Diaspora.signInAs(BOB_P2);
-        Feed.assertComment(BOB_P2, the("Bob for work"), ANA_P1, the("Comment from Ana"));
+        Diaspora.signInAs(Pod2.bob);
+        Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
 
     }
 

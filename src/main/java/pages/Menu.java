@@ -21,7 +21,7 @@ import static java.lang.System.currentTimeMillis;
 import static pages.Aspects.FRIENDS;
 import static pages.Aspects.STANDART_ASPECTS;
 
-public class Menu extends AdditionalAPI {
+public class Menu{
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");//$(".user-menu-more-indicator");
     public static ElementsCollection userMenuItems = $$(".user-menu-item a");
@@ -32,9 +32,6 @@ public class Menu extends AdditionalAPI {
     public static void logOut() {
         openMenu();
         doLogOut();
-//        userMenuItems.find(exactText("Log out")).click();
-//        assertLoggedOut();//this check for wait moment when logout will be done - unstable
-//
     }
 
     @Step
@@ -65,16 +62,13 @@ public class Menu extends AdditionalAPI {
 
     @Step
     public static void ensureLoggedOut() {
-        //newScreenshot();
         if ($$(darkHeaderLocator).size() != 0) {
             logOut();
         }
-        //newScreenshot();
     }
 
     @Step
     public static void assertLoggedOut() {
-        //newScreenshot();
         $$(darkHeaderLocator).shouldBe(empty);
     }
 

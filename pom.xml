@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <test.includeCategories></test.includeCategories>
         <test.excludeCategories></test.excludeCategories>
+        <dataset>set1</dataset>
     </properties>
 
     <dependencies>
@@ -59,7 +60,12 @@
                     <groups>${test.includeCategories}</groups>
                     <excludedGroups>${test.excludeCategories}</excludedGroups>
 
+                    <systemPropertyVariables>
+                        <dataset>${dataset}</dataset>
+                    </systemPropertyVariables>
+
                 </configuration>
+
                 <dependencies>
                     <dependency>
                         <groupId>org.aspectj</groupId>
@@ -91,106 +97,10 @@
     <profiles>
 
         <profile>
-            <id>all</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.All</test.includeCategories>
-                <test.excludeCategories></test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>buggy</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Buggy</test.includeCategories>
-                <test.excludeCategories></test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
             <id>smoke</id>
             <properties>
                 <test.includeCategories>ua.net.itlabs.categories.Smoke</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>federation</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Federation</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>tags</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Tags</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>availability</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Availability</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>authentication</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Authentication</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>basicOperations</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.BasicOperations</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>aspects</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Aspects</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>contacts</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Contacts</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>conversations</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.Conversations</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>additionalOperations</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.AdditionalOperations</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>clearData</id>
-            <properties>
-                <test.includeCategories>ua.net.itlabs.categories.ClearData</test.includeCategories>
-                <test.excludeCategories>ua.net.itlabs.categories.Buggy</test.excludeCategories>
+                <test.excludeCategories></test.excludeCategories>
             </properties>
         </profile>
 

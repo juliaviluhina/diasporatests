@@ -2,7 +2,6 @@ package pages;
 
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
@@ -16,7 +15,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.conditions.CustomCondition.textEnd;
 import static java.lang.Boolean.*;
-import static core.helpers.UniqueDataHelper.clearThe;
+import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.STANDART_ASPECTS;
 import static pages.Contact.contact;
@@ -109,7 +108,7 @@ public class Contacts {
 
     @Step
     public static void deleteAllUserAspects() {
-        clearThe();
+        clearUniqueData();
         addAspect(the("ServAsp"));
         int countDeleted = 0;
         aspects.filter(textEnd("\n" + the("ServAsp"))).shouldBe(size(1));

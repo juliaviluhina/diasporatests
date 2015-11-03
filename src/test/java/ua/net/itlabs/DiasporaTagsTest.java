@@ -3,17 +3,14 @@ package ua.net.itlabs;
 import core.steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import pages.*;
 import pages.Feed;
 import pages.Tags;
 
-import static core.helpers.UniqueDataHelper.clearThe;
+import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
-import static ua.net.itlabs.testDatas.Users.ANA_P1;
-import static ua.net.itlabs.testDatas.Users.ROB_P1;
+import static ua.net.itlabs.testDatas.Users.*;
 
-@Category(ua.net.itlabs.categories.Tags.class)
 public class DiasporaTagsTest extends BaseTest {
 
     private static String post1;
@@ -22,21 +19,19 @@ public class DiasporaTagsTest extends BaseTest {
     @BeforeClass
     public static void buildGivenForTests() {
 
-        //setup - suitable timeout and clear information about unique values
-        clearThe();
-        setTimeOut();
+        clearUniqueData();
 
         //GIVEN - for all tests of this class
         //setup relation between users from the same pod
         //new public posts linked with tags
         post1 = the("Public post with tag " + the("#tag1") + " : ");
         post2 = the("Public post with tag " + the("#tag2") + " : ");
-        Relation.forUser(ANA_P1).notToUsers(ROB_P1).build();
-        Relation.forUser(ROB_P1).notToUsers(ANA_P1).doNotLogOut().build();
+        Relation.forUser(Pod1.ana).notToUsers(Pod1.rob).build();
+        Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).doNotLogOut().build();
         Menu.openStream();
         Feed.addPublicPost(post1);
         Feed.addPublicPost(post2);
-        Feed.assertNthPostIs(0, ROB_P1, post2); //this check for wait moment when stream will be loaded
+        Feed.assertNthPostIs(0, Pod1.rob, post2); //this check for wait moment when stream will be loaded
         Menu.logOut();
 
     }
@@ -45,15 +40,15 @@ public class DiasporaTagsTest extends BaseTest {
     public void testAddTag() {
 
         //tag is not used and public post with tag from unlinked user is not shown in stream
-        Diaspora.signInAs(ANA_P1);
-        Feed.assertNoPostFrom(ROB_P1, post1);
+        Diaspora.signInAs(Pod1.ana);
+        Feed.assertNoPostFrom(Pod1.rob, post1);
 
         NavBar.openTags();
         Tags.add(the("#tag1"));
 
         //tag is used and public post with tag from unlinked user is shown in stream
         NavBar.openStream();
-        Feed.assertPostFrom(ROB_P1, post1);
+        Feed.assertPostFrom(Pod1.rob, post1);
 
     }
 
@@ -61,14 +56,14 @@ public class DiasporaTagsTest extends BaseTest {
     public void testFilterFeedByTag() {
 
         //GIVEN additional - tag 2 is followed by Anna
-        Diaspora.signInAs(ANA_P1);
+        Diaspora.signInAs(Pod1.ana);
         Tags.ensureTag(the("#tag2"));
 
         NavBar.openTags();
         Tags.filter(the("#tag2"));
 
         //only posts with filtered tag are shown
-        Feed.assertPostFrom(ROB_P1, post2);
+        Feed.assertPostFrom(Pod1.rob, post2);
         Feed.assertCountPosts(1);
 
     }
@@ -77,19 +72,19 @@ public class DiasporaTagsTest extends BaseTest {
     public void testDeleteTag() {
 
         //GIVEN additional - tag 1 is followed by Anna
-        Diaspora.signInAs(ANA_P1);
+        Diaspora.signInAs(Pod1.ana);
         Tags.ensureTag(the("#tag2"));
 
         //tag is used and public post with tag from unlinked user is shown in stream
         NavBar.openStream();
-        Feed.assertPostFrom(ROB_P1, post2);
+        Feed.assertPostFrom(Pod1.rob, post2);
 
         NavBar.openTags();
         Tags.delete(the("#tag2"));
 
         //tag is not used and public post with tag from unlinked user is not shown in stream
         NavBar.openStream();
-        Feed.assertNoPostFrom(ROB_P1, post2);
+        Feed.assertNoPostFrom(Pod1.rob, post2);
 
     }
 
@@ -97,7 +92,7 @@ public class DiasporaTagsTest extends BaseTest {
     public void testTagsOrderAndSafety() {
 
         //GIVEN additional - tag list should be empty
-        Diaspora.signInAs(ANA_P1);
+        Diaspora.signInAs(Pod1.ana);
         Tags.ensureNoTags();
 
         NavBar.openTags();
@@ -108,7 +103,7 @@ public class DiasporaTagsTest extends BaseTest {
 
         //check order after logout and sign in
         Menu.logOut();
-        Diaspora.signInAs(ANA_P1);
+        Diaspora.signInAs(Pod1.ana);
         NavBar.openTags();
         Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
 

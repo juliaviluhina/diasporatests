@@ -14,7 +14,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
-import static core.helpers.UniqueDataHelper.clearThe;
+import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static core.conditions.CustomCondition.*;
 
@@ -264,7 +264,7 @@ public class Feed {
 
     @Step
     public static void deleteAllPosts(PodUser from) {
-        clearThe();
+        clearUniqueData();
         addPublicPost(the("servicepost"));
         assertNthPostIs(0, from, the("servicepost"));
         int countDeleted = 0;
