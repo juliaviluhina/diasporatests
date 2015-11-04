@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -40,21 +41,19 @@ public class Aspects {
 
     @Step
     public static void switchToEditMode(String aspect) {
-        SelenideElement currentAspect = aspectContainersNavBar.find(text(aspect));
-        Coordinates coordinates = aspectsNavBar.find(text(aspect)).getCoordinates();
-        coordinates.inViewPort();
+        SelenideElement currentAspect = aspectContainersNavBar.find(exactText(aspect));
         currentAspect.hover();
         currentAspect.find(".modify_aspect").click();
     }
 
     @Step
     public static void assertAspectInNavBar(String aspect) {
-        aspectsNavBar.filter(text(aspect)).shouldHave(size(1));
+        aspectsNavBar.find(text(aspect)).shouldBe(visible);
     }
 
     @Step
     public static void assertNoAspectInNavBar(String aspect) {
-        aspectsNavBar.filter(text(aspect)).shouldHave(size(0));
+        aspectsNavBar.filter(text(aspect)).shouldBe(empty);
     }
 
     @Step

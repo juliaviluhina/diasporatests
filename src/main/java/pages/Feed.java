@@ -20,7 +20,7 @@ import static core.conditions.CustomCondition.*;
 
 public class Feed {
 
-    protected static SelenideElement aspect = $(".aspect_dropdown");
+    private static SelenideElement aspect = $(".aspect_dropdown");
     public static SelenideElement newPostText = $("#status_message_fake_text");
     public static SelenideElement setAspect = $(".aspect_dropdown .btn");
     public static SelenideElement share = $("#submit");
@@ -42,7 +42,7 @@ public class Feed {
 
         newPostText.sendKeys(text + " @" + podUser.userName);
         ElementsCollection dropdownMenuItemsForMention = $$(".mentions-autocomplete-list li");
-        dropdownMenuItemsForMention.filter(exactText(podUser.fullName)).shouldHave(size(1)).get(0).click();
+        dropdownMenuItemsForMention.find(exactText(podUser.fullName)).click();
 
         ensurePublicPostingMode();
         share.click();
@@ -78,51 +78,53 @@ public class Feed {
 
     @Step
     public static void deletePost(PodUser from, String postText) {
-        deletePost(assertPostFrom(from, postText));
+        deletePost(post(from, postText));
     }
 
     @Step
     public static void hidePost(PodUser from, String postText) {
-        SelenideElement post = assertPostFrom(from, postText);
-        hoverPost(post);
+        SelenideElement post = post(from, postText);
+        post.scrollTo();
+        post.hover();
         post.find(".hide_post").click();
         confirm(null);
     }
 
     @Step
     public static void ignoreAuthorOfPost(PodUser author, String postText) {
-        SelenideElement post = assertPostFrom(author, postText);
-        hoverPost(post);
+        SelenideElement post = post(author, postText);
+        post.scrollTo();
+        post.hover();
         post.find(".block_user").click();
         confirm(null);
     }
 
     @Step
     public static void toggleLike(PodUser from, String post) {
-        assertPostFrom(from, post).find(".like").click();
+        post(from, post).find(".like").click();
     }
 
     @Step
-    public static void addComment(PodUser from, String post, String comment) {
-        SelenideElement currentPost = assertPostFrom(from, post);
-        currentPost.find(".focus_comment_textarea").click();
-        currentPost.find(".comment_box").setValue(comment);
-        currentPost.find(".new_comment").find(By.name("commit")).click();
+    public static void addComment(PodUser from, String postText, String comment) {
+        SelenideElement post = post(from, postText);
+        post.find(".focus_comment_textarea").click();
+        post.find(".comment_box").setValue(comment);
+        post.find(".new_comment").find(By.name("commit")).click();
     }
 
     @Step
     public static void reshare(PodUser from, String post) {
-        assertPostFrom(from, post).find(".reshare").click();
+        post(from, post).find(".reshare").click();
         confirm(null);
     }
 
     @Step
-    public static void deleteComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        SelenideElement currentComment = commentsByFilter(fromPost, post, fromComment, comment).get(0);
-        Coordinates coordinates = currentComment.getCoordinates();
-        coordinates.inViewPort();
-        currentComment.hover();
-        currentComment.find(".delete").click();
+    public static void deleteComment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
+        SelenideElement post = post(fromPost, postText);
+        post.scrollTo();
+        SelenideElement comment = comment(post, fromComment, commentText);
+        comment.hover();
+        comment.find(".delete").click();
         confirm(null);
     }
 
@@ -148,30 +150,29 @@ public class Feed {
 
     @Step
     public static void assertComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1));
+        comment(fromPost, post, fromComment, comment).shouldBe(visible);
     }
 
     @Step
-    public static void assertCommentCanNotBeDeleted(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        SelenideElement currentComment = commentsByFilter(fromPost, post, fromComment, comment).shouldHave(size(1)).get(0);
-        Coordinates coordinates = currentComment.getCoordinates();
-        coordinates.inViewPort();
-        currentComment.hover();
-        currentComment.findAll(".delete").shouldBe(empty);
+    public static void assertCommentCanNotBeDeleted(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
+        SelenideElement post = post(fromPost, postText);
+        post.scrollTo();
+        SelenideElement comment = comment(post, fromComment, commentText);
+        comment.hover();
+        comment.find(".delete").shouldNotBe(present);
     }
 
     @Step
-    public static void assertPostCanNotBeDeleted(PodUser fromPost, String post) {
-        SelenideElement currentPost = assertPostFrom(fromPost, post);
-        Coordinates coordinates = currentPost.getCoordinates();
-        coordinates.inViewPort();
-        currentPost.find(".post-content").hover();
-        currentPost.findAll(".remove_post").shouldBe(empty);
+    public static void assertPostCanNotBeDeleted(PodUser fromPost, String postText) {
+        SelenideElement post = post(fromPost, postText);
+        post.scrollTo();
+        post.hover();
+        post.findAll(".remove_post").shouldBe(empty);
     }
 
     @Step
     public static void assertNoComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        commentsByFilter(fromPost, post, fromComment, comment).shouldBe(empty);
+        comment(fromPost, post, fromComment, comment).shouldNotBe(present);
     }
 
     @Step
@@ -181,12 +182,12 @@ public class Feed {
 
     @Step
     public static void assertLikes(PodUser from, String post, int countLikes) {
-        assertPostFrom(from, post).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
+        post(from, post).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
     }
 
     @Step
     public static void assertNoLikes(PodUser from, String post) {
-        assertPostFrom(from, post).findAll(".expand_likes").shouldBe(empty);
+        post(from, post).findAll(".expand_likes").shouldBe(empty);
     }
 
     @Step
@@ -195,15 +196,8 @@ public class Feed {
     }
 
     @Step
-    protected static ElementsCollection commentsByFilter(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        SelenideElement currentPost = assertPostFrom(fromPost, post);
-        ElementsCollection comments = currentPost.findAll(".comment");
-        return comments.filter(textBeginAndContain(fromComment.fullName, comment));
-    }
-
-    @Step
-    public static SelenideElement assertPostFrom(PodUser from, String post) {
-        return posts.filter(textBeginAndContain(from.fullName, post)).shouldHave(size(1)).get(0);
+    public static void assertPostFrom(PodUser from, String postText) {
+        post(from,postText).shouldBe(visible);
     }
 
     @Step
@@ -214,6 +208,29 @@ public class Feed {
     @Step
     public static void assertNoPostFrom(PodUser from, String post) {
         posts.filter(textBeginAndContain(from.fullName, post)).shouldBe(empty);
+    }
+
+    @Step
+    private static SelenideElement comment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
+        return comment( post(fromPost, postText), fromComment, commentText);
+    }
+
+    @Step
+    private static SelenideElement comment(SelenideElement post, PodUser fromComment, String comment) {
+        return post.findAll(".comment").find(textBeginAndContain(fromComment.fullName, comment));
+    }
+
+    @Step
+    private static SelenideElement post(PodUser from, String post) {
+        return posts.find(textBeginAndContain(from.fullName, post));
+    }
+
+    @Step
+    private static void deletePost(SelenideElement post) {
+        post.scrollTo();
+        post.hover();
+        post.find(".remove_post").click();
+        confirm(null);
     }
 
     @Step
@@ -276,18 +293,6 @@ public class Feed {
         if (countDeleted > 1) {
             deleteAllPosts(from);
         }
-    }
-
-    private static void deletePost(SelenideElement post) {
-        hoverPost(post);
-        post.find(".remove_post").click();
-        confirm(null);
-    }
-
-    private static void hoverPost(SelenideElement post) {
-        Coordinates coordinates = post.getCoordinates();
-        coordinates.inViewPort();
-        post.find(".post-content").hover();
     }
 
 }

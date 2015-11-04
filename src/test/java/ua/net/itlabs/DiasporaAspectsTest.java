@@ -2,7 +2,6 @@ package ua.net.itlabs;
 
 import core.steps.Relation;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pages.*;
 import pages.Aspects;
@@ -124,6 +123,17 @@ public class DiasporaAspectsTest extends BaseTest {
         Feed.assertPostFrom(Pod1.ron, the("Ron for new friends"));
         Feed.assertPostFrom(Pod1.ron, the("Ron for new family"));
 
+    }
+
+    @Test
+    public void test(){
+        Diaspora.signInAs(Pod1.ana);
+        Feed.addPublicPost(the("post"));
+        Feed.addComment(Pod1.ana, the("post"),the("comment1 "));
+        Feed.addComment(Pod1.ana, the("post"),the("comment2 "));
+        Feed.addComment(Pod1.ana, the("post"),the("comment3 "));
+        Feed.deleteComment(Pod1.ana, the("post"), Pod1.ana, the("comment2 "));
+        Feed.deletePost(Pod1.ana, the("post"));
     }
 
 }

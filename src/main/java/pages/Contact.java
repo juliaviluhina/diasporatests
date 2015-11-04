@@ -27,7 +27,7 @@ public class Contact {
     public static String manageContactLocator = ".btn.dropdown-toggle";
 
     public static SelenideElement contact(PodUser podUser) {
-        return $$(".stream_element").filter(text(podUser.fullName)).get(0);
+        return $$(".stream_element").find(text(podUser.fullName));
     }
 
     protected static SelenideElement manageContact(SelenideElement contact) {
@@ -61,6 +61,7 @@ public class Contact {
     @Step
     public static void ensureSearchedContact(String fullName) {
         //even id search result site is shown - clicking in avatar load Contact site
+        //purpose fot this ensure - after search 2 variants site can be loaded, for test contact site is needed
         SelenideElement avatar = $("[alt='" + fullName + "']");
         avatar.click();
     }

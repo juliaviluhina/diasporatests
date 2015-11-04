@@ -8,8 +8,7 @@ import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.conditions.CustomCondition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -45,13 +44,13 @@ public class Conversations {
 
     @Step
     public static void assertInInboxBySubject(String subject) {
-        inbox.findAll(".subject").filter(exactText(subject)).shouldHave(size(1));
+        inbox.findAll(".subject").find(exactText(subject)).shouldBe(visible);
     }
 
     @Step
     public static void selectConversationBySubject(String subject) {
-        SelenideElement conversation = inbox.findAll(".conversation").filter(text(subject)).get(0);
-        conversation.hover();
+        SelenideElement conversation = inbox.findAll(".conversation").find(text(subject));
+        //conversation.hover();
         conversation.click();
     }
 
@@ -76,7 +75,7 @@ public class Conversations {
     @Step
     public static void assertMessageInCurrentConversation(PodUser from, String text) {
         ElementsCollection messages = currentConversation.findAll(".stream_element");
-        messages.filter(textBeginAndContain(from.fullName, text)).shouldHave(size(1));
+        messages.find(textBeginAndContain(from.fullName, text)).shouldBe(visible);
     }
 
     @Step
@@ -94,6 +93,6 @@ public class Conversations {
 
     @Step
     public static void assertNoConversationBySubject(String subject) {
-        inbox.findAll(".conversation").filter(text(subject)).shouldBe(empty);
+        inbox.findAll(".conversation").find(text(subject)).shouldNotBe(present);
     }
 }

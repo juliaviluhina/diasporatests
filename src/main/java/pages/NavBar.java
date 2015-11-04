@@ -10,6 +10,7 @@ import static com.codeborne.selenide.Selenide.$;
 public class NavBar {
 
     private static SelenideElement container = $("#leftNavBar");
+    public static SelenideElement aspectsHeader = container.find("[href='/aspects']");
 
     @Step
     public static void openTags() {
@@ -28,8 +29,7 @@ public class NavBar {
 
     @Step
     public static void openMyAspects() {
-        container.find("[href='/aspects']").click();
-        container.find("[href='/aspects']").click();
+        aspectsHeader.click();
     }
 
     @Step

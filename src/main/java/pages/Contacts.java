@@ -2,14 +2,14 @@ package pages;
 
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
@@ -37,9 +37,9 @@ public class Contacts {
     }
 
     @Step
-    public static void selectAspect(String aspect) {
-        aspects.filter(textEnd("\n" + aspect)).get(0).click();
-        $(".header #aspect_name").shouldHave(exactText(aspect));
+    public static void selectAspect(String aspectName) {
+        aspect(aspectName).click();
+        $(".header #aspect_name").shouldHave(exactText(aspectName));
     }
 
     @Step
@@ -73,28 +73,33 @@ public class Contacts {
     }
 
     @Step
-    public static int countContactsInAspect(String aspect) {
-        return Integer.parseInt(aspects.filter(textEnd("\n" + aspect)).get(0).find(".badge").getText());
+    public static int countContactsInAspect(String aspectName) {
+        return Integer.parseInt(aspect(aspectName).find(".badge").getText());
     }
 
     @Step
-    public static void assertCountContactsInAspect(String aspect, int countContacts) {
-        aspects.filter(textEnd("\n" + aspect)).get(0).find(".badge").shouldHave(exactText(Integer.toString(countContacts)));
+    public static void assertCountContactsInAspect(String aspectName, int countContacts) {
+        aspect(aspectName).find(".badge").shouldHave(exactText(Integer.toString(countContacts)));
     }
 
     @Step
-    public static void assertAspect(String aspect) {
-        aspects.filter(textEnd("\n" + aspect)).shouldHave(size(1));
+    public static void assertAspect(String aspectName) {
+        aspect(aspectName).shouldBe(visible);
     }
 
     @Step
-    public static void assertNoAspect(String aspect) {
-        aspects.filter(textEnd("\n" + aspect)).shouldBe(empty);
+    public static void assertNoAspect(String aspectName) {
+        aspect(aspectName).shouldNotBe(present);
     }
 
     @Step
     public static void ensureAspectsForContact(PodUser podUser, String... aspects) {
         Contact.ensureAspectsForContact(contact(podUser), aspects);
+    }
+
+    @Step
+    private static SelenideElement aspect(String aspect) {
+        return aspects.find(textEnd("\n" + aspect));
     }
 
     private static Boolean isStandartAspect(String aspect) {
