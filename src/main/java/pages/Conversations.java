@@ -50,7 +50,6 @@ public class Conversations {
     @Step
     public static void selectConversationBySubject(String subject) {
         SelenideElement conversation = inbox.findAll(".conversation").find(text(subject));
-        //conversation.hover();
         conversation.click();
     }
 

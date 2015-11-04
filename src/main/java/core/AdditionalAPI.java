@@ -1,6 +1,7 @@
 package core;
 
 import com.codeborne.selenide.Screenshots;
+import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.impl.ScreenShotLaboratory;
 import com.google.common.io.Files;
 import ru.yandex.qatools.allure.annotations.Attachment;
@@ -37,6 +38,12 @@ public class AdditionalAPI {
         }
 
         return null;
+    }
+
+    public static void hover(SelenideElement element) {
+        //element.scrollTo(); scrollTo work not always. especially unstable for tags
+        element.getCoordinates().inViewPort();
+        element.hover();
     }
 
 }

@@ -20,4 +20,7 @@ public class UniqueDataHelper {
         dataContainer.clear();
     }
 
+    public static void deleteUniqueValue(String name) {
+        dataContainer.remove(name);
+    }
 }

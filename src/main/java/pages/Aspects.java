@@ -2,14 +2,13 @@ package pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.interactions.internal.Coordinates;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
-import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static core.AdditionalAPI.hover;
 
 public class Aspects {
 
@@ -42,7 +41,7 @@ public class Aspects {
     @Step
     public static void switchToEditMode(String aspect) {
         SelenideElement currentAspect = aspectContainersNavBar.find(exactText(aspect));
-        currentAspect.hover();
+        hover(currentAspect);
         currentAspect.find(".modify_aspect").click();
     }
 

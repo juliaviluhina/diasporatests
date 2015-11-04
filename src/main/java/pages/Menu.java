@@ -55,7 +55,6 @@ public class Menu{
 
     @Step
     public static void openContacts() {
-        //userMenuHeader.click();
         openMenu();
         userMenuItems.find(exactText("Contacts")).click();
     }
@@ -85,20 +84,5 @@ public class Menu{
             }
         } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
     }
-
-//    //method added because of problem with click on LogOut when stream is not loaded
-//    private static void doLogOut() {
-//
-//        long startTime = currentTimeMillis();
-//        Boolean result = FALSE;
-//
-//        do {
-//            userMenuItems.find(exactText("Log out")).click();
-//            if (!accountHeader.is(present)) {
-//                result = TRUE;
-//            }
-//        } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
-//    }
-
 
 }

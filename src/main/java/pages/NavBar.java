@@ -11,10 +11,11 @@ public class NavBar {
 
     private static SelenideElement container = $("#leftNavBar");
     public static SelenideElement aspectsHeader = container.find("[href='/aspects']");
+    public static SelenideElement followedTagsHeader = container.find("[href='/followed_tags']");
 
     @Step
     public static void openTags() {
-        container.find("[href='/followed_tags']").click();
+        followedTagsHeader.click();
     }
 
     @Step

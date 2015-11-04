@@ -1,5 +1,7 @@
 package pages;
 
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.interactions.internal.Coordinates;
@@ -9,15 +11,17 @@ import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 
 import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static core.AdditionalAPI.hover;
 import static core.conditions.CustomCondition.textBegin;
+import static core.helpers.UniqueDataHelper.deleteUniqueValue;
 import static core.helpers.UniqueDataHelper.the;
 
 public class Tags {
 
     public static SelenideElement newTag = $("#tags");
-    public static ElementsCollection tags = $$("#tags_list .selectable");
+    public static ElementsCollection tags = $$("#tags_list  [data-template='tag_following']");
 
     @Step
     public static void add(String tagName) {
@@ -39,10 +43,8 @@ public class Tags {
     }
 
     public static void delete(SelenideElement tag) {
-        Coordinates coordinates = tag.getCoordinates();
-        coordinates.inViewPort();
-        tag.hover();
-        $("#unfollow_" + tag.getText().substring(1)).click();
+        hover(tag);
+        tag.find(".delete_tag_following").click();
         confirm(null);
     }
 
@@ -53,18 +55,13 @@ public class Tags {
 
     @Step
     public static void assertNotExist(String tagName) {
-        tags.filter(exactText(tagName)).shouldBe(empty);
+        tags.find(exactText(tagName)).shouldNotBe(present);
     }
 
     @Step
     public static void assertExist(String tagName) {
-        tags.filter(exactText(tagName)).shouldHave(size(1));
+        tags.find(exactText(tagName)).shouldBe(visible);
     }
-
-//    @Step
-//    public static void assertNthIs(int nth, String tagName) {
-//        tags.get(nth).shouldHave(exactText(tagName));
-//    }
 
     @Step
     public static void assertTags(String... tagNames) {
@@ -74,7 +71,7 @@ public class Tags {
     @Step
     public static void ensureTag(String tagName) {
         NavBar.openTags();
-        if (tags.filter(exactText(tagName)).size() > 0) {
+        if (tags.find(exactText(tagName)).is(visible)) {
             return;
         }
         add(tagName);
@@ -92,18 +89,21 @@ public class Tags {
         assertExist(the("#stag"));
 
         //when tags are more than one page - without this code does not work
-        Coordinates coordinates = $("#leftNavBar [href='/followed_tags']").getCoordinates();
-        coordinates.inViewPort();
+        NavBar.openTags();
 
         ElementsCollection userTags = tags.filter(textBegin("#"));
+        userTags.find(exactText(the("#stag"))).shouldBe(visible); //for wait - tags collection is loaded
         int countDeleted = 0;
+
         for (SelenideElement userTag : userTags) {
             delete(userTag);
             countDeleted++;
         }
 
         if (countDeleted > 1) {
+            deleteUniqueValue(the("#stag"));
             deleteAll();
         }
+
     }
 }

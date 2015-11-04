@@ -14,6 +14,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
+import static core.AdditionalAPI.hover;
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static core.conditions.CustomCondition.*;
@@ -84,8 +85,7 @@ public class Feed {
     @Step
     public static void hidePost(PodUser from, String postText) {
         SelenideElement post = post(from, postText);
-        post.scrollTo();
-        post.hover();
+        hover(post);
         post.find(".hide_post").click();
         confirm(null);
     }
@@ -93,8 +93,7 @@ public class Feed {
     @Step
     public static void ignoreAuthorOfPost(PodUser author, String postText) {
         SelenideElement post = post(author, postText);
-        post.scrollTo();
-        post.hover();
+        hover(post);
         post.find(".block_user").click();
         confirm(null);
     }
@@ -121,9 +120,8 @@ public class Feed {
     @Step
     public static void deleteComment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
         SelenideElement post = post(fromPost, postText);
-        post.scrollTo();
         SelenideElement comment = comment(post, fromComment, commentText);
-        comment.hover();
+        hover(comment);
         comment.find(".delete").click();
         confirm(null);
     }
@@ -156,17 +154,15 @@ public class Feed {
     @Step
     public static void assertCommentCanNotBeDeleted(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
         SelenideElement post = post(fromPost, postText);
-        post.scrollTo();
         SelenideElement comment = comment(post, fromComment, commentText);
-        comment.hover();
+        hover(comment);
         comment.find(".delete").shouldNotBe(present);
     }
 
     @Step
     public static void assertPostCanNotBeDeleted(PodUser fromPost, String postText) {
         SelenideElement post = post(fromPost, postText);
-        post.scrollTo();
-        post.hover();
+        hover(post);
         post.findAll(".remove_post").shouldBe(empty);
     }
 
@@ -227,8 +223,7 @@ public class Feed {
 
     @Step
     private static void deletePost(SelenideElement post) {
-        post.scrollTo();
-        post.hover();
+        hover(post);
         post.find(".remove_post").click();
         confirm(null);
     }
