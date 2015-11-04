@@ -12,6 +12,7 @@ import java.io.IOException;
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.present;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
@@ -25,13 +26,12 @@ public class Menu{
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");//$(".user-menu-more-indicator");
     public static ElementsCollection userMenuItems = $$(".user-menu-item a");
-
-    private static String darkHeaderLocator = "header .dark-header";
+    private static SelenideElement accountHeader = $("header .dark-header");
 
     @Step
     public static void logOut() {
         openMenu();
-        doLogOut();
+        userMenuItems.find(exactText("Log out")).click();
     }
 
     @Step
@@ -62,14 +62,14 @@ public class Menu{
 
     @Step
     public static void ensureLoggedOut() {
-        if ($$(darkHeaderLocator).size() != 0) {
+        if (accountHeader.is(present)) {
             logOut();
         }
     }
 
     @Step
     public static void assertLoggedOut() {
-        $$(darkHeaderLocator).shouldBe(empty);
+        accountHeader.shouldNotBe(present);
     }
 
     //method added because of problem with opening user menu when stream is not loaded
@@ -86,19 +86,19 @@ public class Menu{
         } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
     }
 
-    //method added because of problem with click on LogOut when stream is not loaded
-    private static void doLogOut() {
-
-        long startTime = currentTimeMillis();
-        Boolean result = FALSE;
-
-        do {
-            userMenuItems.find(exactText("Log out")).click();
-            if ($$(darkHeaderLocator).size() == 0) {
-                result = TRUE;
-            }
-        } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
-    }
+//    //method added because of problem with click on LogOut when stream is not loaded
+//    private static void doLogOut() {
+//
+//        long startTime = currentTimeMillis();
+//        Boolean result = FALSE;
+//
+//        do {
+//            userMenuItems.find(exactText("Log out")).click();
+//            if (!accountHeader.is(present)) {
+//                result = TRUE;
+//            }
+//        } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
+//    }
 
 
 }
