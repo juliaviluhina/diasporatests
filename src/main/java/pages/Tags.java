@@ -83,7 +83,6 @@ public class Tags {
     @Step
     public static void deleteAll() {
         add(the("#stag"));
-        assertExist(the("#stag"));
 
         //when tags are more than one page - without this code does not work
         NavBar.openTags();
