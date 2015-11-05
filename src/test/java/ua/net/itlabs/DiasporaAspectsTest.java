@@ -125,15 +125,4 @@ public class DiasporaAspectsTest extends BaseTest {
 
     }
 
-    @Test
-    public void test(){
-        Diaspora.signInAs(Pod1.ana);
-        Feed.addPublicPost(the("post"));
-        Feed.addComment(Pod1.ana, the("post"),the("comment1 "));
-        Feed.addComment(Pod1.ana, the("post"),the("comment2 "));
-        Feed.addComment(Pod1.ana, the("post"),the("comment3 "));
-        Feed.deleteComment(Pod1.ana, the("post"), Pod1.ana, the("comment2 "));
-        Feed.deletePost(Pod1.ana, the("post"));
-    }
-
 }

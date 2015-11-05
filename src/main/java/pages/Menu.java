@@ -12,11 +12,11 @@ import java.io.IOException;
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.CollectionCondition.texts;
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.present;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
+import static core.conditions.CustomCondition.textBegin;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.currentTimeMillis;
@@ -36,12 +36,12 @@ public class Menu{
     }
 
     @Step
-    public static void search(String text) {
-        $("#q").setValue(text);
-        $$(".ac_results").shouldHave(exactTexts(text));
+    public static void search(String searchText) {
+        $("#q").setValue(searchText);
+        $$(".ac_results").find(text(searchText)).shouldBe(visible);
         $("#q").pressEnter();
 
-        Contact.ensureSearchedContact(text);
+        Contact.ensureSearchedContact(searchText);
     }
 
     @Step
