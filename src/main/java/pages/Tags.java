@@ -39,12 +39,8 @@ public class Tags {
 
     @Step
     public static void delete(String tagName) {
-        delete(tags.find(exactText(tagName)));
-    }
-
-    public static void delete(SelenideElement tag) {
-        hover(tag);
-        tag.find(".delete_tag_following").click();
+        hover(tags.find(exactText(tagName)));
+        $("#unfollow_" + tagName.substring(1)).click();
         confirm(null);
     }
 
@@ -83,6 +79,7 @@ public class Tags {
         deleteAll();
     }
 
+
     @Step
     public static void deleteAll() {
         add(the("#stag"));
@@ -106,4 +103,12 @@ public class Tags {
         }
 
     }
+
+    @Step
+    private static void delete(SelenideElement tag) {
+        hover(tag);
+        tag.find(".delete_tag_following").click();
+        confirm(null);
+    }
+
 }

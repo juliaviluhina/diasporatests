@@ -10,6 +10,7 @@ import ru.yandex.qatools.allure.annotations.Step;
 import java.io.IOException;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
+import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.present;
@@ -37,7 +38,7 @@ public class Menu{
     @Step
     public static void search(String text) {
         $("#q").setValue(text);
-        $$(".ac_results").shouldHave(texts(text));
+        $$(".ac_results").shouldHave(exactTexts(text));
         $("#q").pressEnter();
 
         Contact.ensureSearchedContact(text);

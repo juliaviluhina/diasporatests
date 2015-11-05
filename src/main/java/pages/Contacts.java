@@ -14,6 +14,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.conditions.CustomCondition.textEnd;
+import static core.helpers.UniqueDataHelper.deleteUniqueValue;
 import static java.lang.Boolean.*;
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
@@ -131,6 +132,7 @@ public class Contacts {
             countDeleted++;
         }
         if (countDeleted > 1) {
+            deleteUniqueValue(the("ServAsp"));
             deleteAllUserAspects();
         }
     }

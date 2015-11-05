@@ -16,6 +16,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.AdditionalAPI.hover;
 import static core.helpers.UniqueDataHelper.clearUniqueData;
+import static core.helpers.UniqueDataHelper.deleteUniqueValue;
 import static core.helpers.UniqueDataHelper.the;
 import static core.conditions.CustomCondition.*;
 
@@ -286,6 +287,7 @@ public class Feed {
             countDeleted++;
         }
         if (countDeleted > 1) {
+            deleteUniqueValue(the("servicepost"));
             deleteAllPosts(from);
         }
     }
