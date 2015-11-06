@@ -194,7 +194,7 @@ public class Feed {
 
     @Step
     public static void assertPostFrom(PodUser from, String postText) {
-        post(from,postText).shouldBe(visible);
+        post(from, postText).shouldBe(visible);
     }
 
     @Step
@@ -209,7 +209,7 @@ public class Feed {
 
     @Step
     private static SelenideElement comment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
-        return comment( post(fromPost, postText), fromComment, commentText);
+        return comment(post(fromPost, postText), fromComment, commentText);
     }
 
     @Step

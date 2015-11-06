@@ -46,6 +46,7 @@ public class Users {
     }
 
     public static class Pod2 extends Pod {
+
         public static PodUser bob;
         public static PodUser sam;
 
@@ -70,6 +71,7 @@ public class Users {
     }
 
     public static class Pod3 extends Pod {
+
         public static PodUser dave;
 
         static {

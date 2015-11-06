@@ -3,6 +3,7 @@ package ua.net.itlabs;
 import com.codeborne.selenide.Configuration;
 import org.junit.After;
 import pages.*;
+
 import java.io.IOException;
 
 import static core.AdditionalAPI.*;

@@ -23,7 +23,7 @@ import static java.lang.System.currentTimeMillis;
 import static pages.Aspects.FRIENDS;
 import static pages.Aspects.STANDART_ASPECTS;
 
-public class Menu{
+public class Menu {
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");//$(".user-menu-more-indicator");
     public static ElementsCollection userMenuItems = $$(".user-menu-item a");
