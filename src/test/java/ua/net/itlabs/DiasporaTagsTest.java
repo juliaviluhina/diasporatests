@@ -64,7 +64,7 @@ public class DiasporaTagsTest extends BaseTest {
 
         //only posts with filtered tag are shown
         Feed.assertPostFrom(Pod1.rob, post2);
-        Feed.assertCountPosts(1);
+        Feed.assertNoPostFrom(Pod1.rob, post1);
 
     }
 

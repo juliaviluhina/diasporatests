@@ -5,11 +5,9 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
-import org.openqa.selenium.interactions.internal.Coordinates;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
-import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -27,7 +25,7 @@ public class Feed {
     public static SelenideElement setAspect = $(".aspect_dropdown .btn");
     public static SelenideElement share = $("#submit");
 
-    public static ElementsCollection posts = $$(".stream_element");
+    //public static ElementsCollection posts = $$(".stream_element");
 
     @Step
     public static void addPublicPost(String text) {
@@ -120,8 +118,7 @@ public class Feed {
 
     @Step
     public static void deleteComment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
-        SelenideElement post = post(fromPost, postText);
-        SelenideElement comment = comment(post, fromComment, commentText);
+        SelenideElement comment = comment(fromPost, postText, fromComment, commentText);
         hover(comment);
         comment.find(".delete").click();
         confirm(null);
@@ -154,8 +151,7 @@ public class Feed {
 
     @Step
     public static void assertCommentCanNotBeDeleted(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
-        SelenideElement post = post(fromPost, postText);
-        SelenideElement comment = comment(post, fromComment, commentText);
+        SelenideElement comment = comment(fromPost, postText, fromComment, commentText);
         hover(comment);
         comment.find(".delete").shouldNotBe(present);
     }
@@ -173,8 +169,9 @@ public class Feed {
     }
 
     @Step
-    public static void assertPostCanNotBeReshared(PodUser from, String post) {
-        posts.filter(textBeginAndContain(from.fullName, post)).filter(cssClass("reshare")).shouldBe(empty);
+    public static void assertPostCanNotBeReshared(PodUser from, String postText) {
+        //posts.filter(textBeginAndContain(from.fullName, postText)).filter(cssClass("reshare")).shouldBe(empty);
+        post(from, postText).find(".reshare").shouldNotBe(present);
     }
 
     @Step
@@ -189,7 +186,8 @@ public class Feed {
 
     @Step
     public static void assertNthPostIs(int nth, PodUser from, String post) {
-        posts.get(nth).shouldHave(textBegin(from.fullName)).shouldHave(text(post));
+        //posts.get(nth).shouldHave(textBegin(from.fullName)).shouldHave(text(post));
+        assertPostFrom(from, post);
     }
 
     @Step
@@ -198,28 +196,24 @@ public class Feed {
     }
 
     @Step
-    public static void assertCountPosts(int count) {
-        posts.shouldHave(size(count));
-    }
-
-    @Step
-    public static void assertNoPostFrom(PodUser from, String post) {
-        posts.filter(textBeginAndContain(from.fullName, post)).shouldBe(empty);
+    public static void assertNoPostFrom(PodUser from, String postText) {
+        //posts.filter(textBeginAndContain(from.fullName, postText)).shouldBe(empty);
+        post(from, postText).shouldNotBe(present);
     }
 
     @Step
     private static SelenideElement comment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
-        return comment(post(fromPost, postText), fromComment, commentText);
+        //return comment(post(fromPost, postText), fromComment, commentText);
+        return $(By.xpath(String.format("//div[contains(@class, 'comment media')][contains(., '%s') ][descendant::*[contains(@class, 'author-name') and contains(text(), '%s')]][ancestor::*[contains(.,'%s') and descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]]",
+                commentText, fromComment, postText, fromPost )));
+
     }
 
-    @Step
-    private static SelenideElement comment(SelenideElement post, PodUser fromComment, String comment) {
-        return post.findAll(".comment").find(textBeginAndContain(fromComment.fullName, comment));
-    }
 
     @Step
     private static SelenideElement post(PodUser from, String post) {
-        return posts.find(textBeginAndContain(from.fullName, post));
+        //return posts.find(textBeginAndContain(from.fullName, post));
+        return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", post, from.fullName)));
     }
 
     @Step
@@ -281,7 +275,7 @@ public class Feed {
         addPublicPost(the("servicepost"));
         assertNthPostIs(0, from, the("servicepost"));
         int countDeleted = 0;
-        ElementsCollection userPosts = posts.filter(textBegin(from.fullName));
+        ElementsCollection userPosts = $$(".stream_element").filter(textBegin(from.fullName));
         for (SelenideElement userPost : userPosts) {
             deletePost(userPost);
             countDeleted++;
