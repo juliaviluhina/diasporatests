@@ -4,24 +4,18 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import core.AdditionalAPI;
-import datastructures.PodUser;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import java.io.IOException;
-
-import static com.codeborne.selenide.CollectionCondition.empty;
-import static com.codeborne.selenide.CollectionCondition.exactTexts;
-import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static com.codeborne.selenide.Selenide.open;
-import static core.conditions.CustomCondition.textBegin;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.currentTimeMillis;
-import static pages.Aspects.FRIENDS;
-import static pages.Aspects.STANDART_ASPECTS;
+import static core.AdditionalAPI.*;
 
 public class Menu {
 
@@ -74,16 +68,28 @@ public class Menu {
 
     //method added because of problem with opening user menu when stream is not loaded
     private static void openMenu() {
+        assertThat(userMenuOpened());
+    }
 
-        long startTime = currentTimeMillis();
-        Boolean result = FALSE;
 
-        do {
-            userMenuHeader.click();
-            if (userMenuItems.filter(exactText("Log out")).size() == 1) {
-                result = TRUE;
+    private static ExpectedCondition<Boolean> userMenuOpened() {
+        return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
+
+            public Boolean apply(WebDriver webDriver) {
+                userMenuHeader.click();
+
+                if (! userMenuItems.find(exactText("Log out")).is(visible)){
+                    return FALSE;
+                }
+                return TRUE;
             }
-        } while ((!result) || (startTime + Configuration.timeout < currentTimeMillis()));
+
+            @Override
+            public String toString() {
+                return "Error opening user menu";
+            }
+
+        });
     }
 
 }

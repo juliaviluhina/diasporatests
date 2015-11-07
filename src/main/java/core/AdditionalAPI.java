@@ -1,15 +1,24 @@
 package core;
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Screenshots;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.impl.ScreenShotLaboratory;
 import com.google.common.io.Files;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.yandex.qatools.allure.annotations.Attachment;
+import com.google.common.base.Function;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
+
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 
 public class AdditionalAPI {
@@ -38,6 +47,32 @@ public class AdditionalAPI {
         }
 
         return null;
+    }
+
+    protected static <V> V waitUntil(Function<? super WebDriver, V> condition, int timeout){
+        return (new WebDriverWait(getWebDriver(), timeout)).until(condition);
+    }
+
+    public static <V> V assertThat(Function<? super WebDriver, V> condition){
+        return waitUntil(condition, (int) (Configuration.timeout/1000));
+    }
+
+    public static <V> ExpectedCondition<V> elementExceptionsCatcher(final Function<? super WebDriver, V> condition){
+        return new ExpectedCondition<V>() {
+            public V apply(WebDriver input) {
+                try {
+                    return condition.apply(input);
+                } catch (StaleElementReferenceException e) {
+                    return null;
+                } catch (ElementNotVisibleException e){
+                    return null;
+                }
+            }
+
+            public String toString(){
+                return condition.toString();
+            }
+        };
     }
 
     public static void scrollToAndHover(SelenideElement element) {

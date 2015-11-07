@@ -19,7 +19,7 @@ public class Users {
         public static PodUser ana;
         public static PodUser rob;
         public static PodUser eve;
-        //public static PodUser ron; //currently user of this pod is not used in tests
+        //public static PodUser ron; //currently this user of is not used in tests, it can be used
 
         static {
 
