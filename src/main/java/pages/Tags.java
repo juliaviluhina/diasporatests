@@ -1,19 +1,14 @@
 package pages;
 
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.interactions.internal.Coordinates;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 
-import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static core.AdditionalAPI.hover;
+import static core.AdditionalAPI.scrollToAndHover;
 import static core.conditions.CustomCondition.textBegin;
 import static core.helpers.UniqueDataHelper.deleteUniqueValue;
 import static core.helpers.UniqueDataHelper.the;
@@ -39,7 +34,7 @@ public class Tags {
 
     @Step
     public static void delete(String tagName) {
-        hover(tags.find(exactText(tagName)));
+        scrollToAndHover(tags.find(exactText(tagName)));
         $("#unfollow_" + tagName.substring(1)).click();
         confirm(null);
     }
@@ -105,7 +100,7 @@ public class Tags {
 
     @Step
     private static void delete(SelenideElement tag) {
-        hover(tag);
+        scrollToAndHover(tag);
         tag.find(".delete_tag_following").click();
         confirm(null);
     }

@@ -40,8 +40,8 @@ public class AdditionalAPI {
         return null;
     }
 
-    public static void hover(SelenideElement element) {
-        //element.scrollTo(); scrollTo work not always. especially unstable for tags
+    public static void scrollToAndHover(SelenideElement element) {
+        //element.scrollTo(); scrollTo works not always. especially unstable for tags
         element.getCoordinates().inViewPort();
         element.hover();
     }

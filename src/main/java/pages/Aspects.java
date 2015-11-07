@@ -8,7 +8,7 @@ import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static core.AdditionalAPI.hover;
+import static core.AdditionalAPI.scrollToAndHover;
 
 public class Aspects {
 
@@ -41,7 +41,7 @@ public class Aspects {
     @Step
     public static void switchToEditMode(String aspect) {
         SelenideElement currentAspect = aspectContainersNavBar.find(exactText(aspect));
-        hover(currentAspect);
+        scrollToAndHover(currentAspect);
         currentAspect.find(".modify_aspect").click();
     }
 

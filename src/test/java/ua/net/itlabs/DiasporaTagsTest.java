@@ -31,7 +31,7 @@ public class DiasporaTagsTest extends BaseTest {
         Menu.openStream();
         Feed.addPublicPost(post1);
         Feed.addPublicPost(post2);
-        Feed.assertNthPostIs(0, Pod1.rob, post2); //this check for wait moment when stream will be loaded
+        Feed.assertPostFrom(Pod1.rob, post2); //this check for wait moment when stream will be loaded
         Menu.logOut();
 
     }

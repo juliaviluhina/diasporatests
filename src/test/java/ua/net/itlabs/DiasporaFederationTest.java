@@ -34,7 +34,7 @@ public class DiasporaFederationTest extends BaseTest {
         //public post with tag
         Diaspora.signInAs(Pod2.bob);
         Feed.addPublicPost(the(tag + " Public Bob"));
-        Feed.assertNthPostIs(0, Pod2.bob, the(tag + " Public Bob"));
+        Feed.assertPostFrom(Pod2.bob, the(tag + " Public Bob"));
         Menu.logOut();
 
         //check - public post is not shown in stream of unlinked user
@@ -57,7 +57,7 @@ public class DiasporaFederationTest extends BaseTest {
         //post in right aspect
         Diaspora.signInAs(Pod2.bob);
         Feed.addAspectPost(WORK, the("Bob for work"));
-        Feed.assertNthPostIs(0, Pod2.bob, the("Bob for work"));
+        Feed.assertPostFrom(Pod2.bob, the("Bob for work"));
         Menu.logOut();
 
         //check - public post is not shown in stream of unlinked user

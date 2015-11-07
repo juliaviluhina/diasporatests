@@ -20,7 +20,6 @@ public class DiasporaClearDataTest extends BaseTest {
         clearUserData(Pod1.ana);
         clearUserData(Pod1.rob);
         clearUserData(Pod1.eve);
-        clearUserData(Pod1.ron);
         clearUserData(Pod2.bob);
         clearUserData(Pod2.sam);
     }

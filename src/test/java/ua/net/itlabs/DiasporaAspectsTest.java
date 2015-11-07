@@ -25,7 +25,7 @@ public class DiasporaAspectsTest extends BaseTest {
     public void testAddAspectInNavBar() {
 
         //add new aspect
-        Diaspora.signInAs(Pod1.ron);
+        Diaspora.signInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.add(the("Asp1"));
         Menu.openStream();
@@ -38,19 +38,19 @@ public class DiasporaAspectsTest extends BaseTest {
 
         //add limited post in this in aspect, indirect check - new aspect can be used for limited post
         Menu.openStream();
-        Feed.addAspectPost(the("Asp1"), the("Ron for new aspect"));
-        Feed.assertNthPostIs(0, Pod1.ron, the("Ron for new aspect"));
+        Feed.addAspectPost(the("Asp1"), the("Rob for new aspect"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new aspect"));
 
         //filtering - only new aspect is enabled
         NavBar.openMyAspects();
         Aspects.toggleAspect(the("Asp1"));
-        Feed.assertPostFrom(Pod1.ron, the("Ron for new aspect"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new aspect"));
         Menu.logOut();
 
         //check - post in this aspect is available for linked user (check in contact
         Diaspora.signInAs(Pod1.ana);
-        Menu.search(Pod1.ron.fullName);
-        Feed.assertPostFrom(Pod1.ron, the("Ron for new aspect"));
+        Menu.search(Pod1.rob.fullName);
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new aspect"));
         Menu.logOut();
 
     }
@@ -59,7 +59,7 @@ public class DiasporaAspectsTest extends BaseTest {
     public void testSwitchToEditModeInNavBar() {
 
         //switch to edit mode, indirect check -
-        Diaspora.signInAs(Pod1.ron);
+        Diaspora.signInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.switchToEditMode(FRIENDS);
 
@@ -72,19 +72,19 @@ public class DiasporaAspectsTest extends BaseTest {
     public void testFilterAspectsInNavBar() {
 
         //GIVEN - setup relation and add limited in aspect posts
-        Relation.forUser(Pod1.ana).toUser(Pod1.ron, WORK).build();
-        Relation.forUser(Pod1.ron).toUser(Pod1.ana, FRIENDS).doNotLogOut().build();
+        Relation.forUser(Pod1.ana).toUser(Pod1.rob, WORK).build();
+        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).doNotLogOut().build();
         Menu.openStream();
-        Feed.addAspectPost(FRIENDS, the("Ron for new friends"));
-        Feed.addAspectPost(FAMILY, the("Ron for new family"));
-        Feed.assertNthPostIs(0, Pod1.ron, the("Ron for new family"));
+        Feed.addAspectPost(FRIENDS, the("Rob for new friends"));
+        Feed.addAspectPost(FAMILY, the("Rob for new family"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new family"));
         Menu.logOut();
         Diaspora.signInAs(Pod1.ana);
         Feed.addAspectPost(WORK, the("Ana for work"));
-        Feed.assertNthPostIs(0, Pod1.ana, the("Ana for work"));
+        Feed.assertPostFrom(Pod1.ana, the("Ana for work"));
         Menu.logOut();
 
-        Diaspora.signInAs(Pod1.ron);
+        Diaspora.signInAs(Pod1.rob);
 
         //deselect all aspects
         NavBar.openMyAspects();
@@ -93,8 +93,8 @@ public class DiasporaAspectsTest extends BaseTest {
 
         //check - when in filter is not any aspect - all posts is shown
         Feed.assertPostFrom(Pod1.ana, the("Ana for work"));
-        Feed.assertPostFrom(Pod1.ron, the("Ron for new friends"));
-        Feed.assertPostFrom(Pod1.ron, the("Ron for new family"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new friends"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new family"));
 
         //change filter - select to filter two aspects
         Aspects.toggleAspect(ACQUAINTANCES);
@@ -103,16 +103,16 @@ public class DiasporaAspectsTest extends BaseTest {
         //check - only author's posts for aspects
         // and posts of linked in this aspects users is shown
         Feed.assertPostFrom(Pod1.ana, the("Ana for work"));
-        Feed.assertPostFrom(Pod1.ron, the("Ron for new friends"));
-        Feed.assertNoPostFrom(Pod1.ron, the("Ron for new family"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new friends"));
+        Feed.assertNoPostFrom(Pod1.rob, the("Rob for new family"));
 
         //change filter - deselect from filter aspect
         Aspects.toggleAspect(FRIENDS);
 
         //check posts visibility according to filter
         Feed.assertNoPostFrom(Pod1.ana, the("Ana for work"));
-        Feed.assertNoPostFrom(Pod1.ron, the("Ron for new friends"));
-        Feed.assertNoPostFrom(Pod1.ron, the("Ron for new family"));
+        Feed.assertNoPostFrom(Pod1.rob, the("Rob for new friends"));
+        Feed.assertNoPostFrom(Pod1.rob, the("Rob for new family"));
 
         //select all aspects
         Aspects.toggleAll();
@@ -120,8 +120,8 @@ public class DiasporaAspectsTest extends BaseTest {
 
         //check - when in filter is all aspects - all posts is shown
         Feed.assertPostFrom(Pod1.ana, the("Ana for work"));
-        Feed.assertPostFrom(Pod1.ron, the("Ron for new friends"));
-        Feed.assertPostFrom(Pod1.ron, the("Ron for new family"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new friends"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for new family"));
 
     }
 

@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
-import static core.AdditionalAPI.hover;
+import static core.AdditionalAPI.scrollToAndHover;
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.deleteUniqueValue;
 import static core.helpers.UniqueDataHelper.the;
@@ -25,6 +25,7 @@ public class Feed {
     public static SelenideElement setAspect = $(".aspect_dropdown .btn");
     public static SelenideElement share = $("#submit");
 
+    // optimized speed via using xpath - see post() and comment()
     //public static ElementsCollection posts = $$(".stream_element");
 
     @Step
@@ -84,7 +85,7 @@ public class Feed {
     @Step
     public static void hidePost(PodUser from, String postText) {
         SelenideElement post = post(from, postText);
-        hover(post);
+        scrollToAndHover(post);
         post.find(".hide_post").click();
         confirm(null);
     }
@@ -92,7 +93,7 @@ public class Feed {
     @Step
     public static void ignoreAuthorOfPost(PodUser author, String postText) {
         SelenideElement post = post(author, postText);
-        hover(post);
+        scrollToAndHover(post);
         post.find(".block_user").click();
         confirm(null);
     }
@@ -119,7 +120,7 @@ public class Feed {
     @Step
     public static void deleteComment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
         SelenideElement comment = comment(fromPost, postText, fromComment, commentText);
-        hover(comment);
+        scrollToAndHover(comment);
         comment.find(".delete").click();
         confirm(null);
     }
@@ -152,14 +153,14 @@ public class Feed {
     @Step
     public static void assertCommentCanNotBeDeleted(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
         SelenideElement comment = comment(fromPost, postText, fromComment, commentText);
-        hover(comment);
+        scrollToAndHover(comment);
         comment.find(".delete").shouldNotBe(present);
     }
 
     @Step
     public static void assertPostCanNotBeDeleted(PodUser fromPost, String postText) {
         SelenideElement post = post(fromPost, postText);
-        hover(post);
+        scrollToAndHover(post);
         post.findAll(".remove_post").shouldBe(empty);
     }
 
@@ -185,12 +186,6 @@ public class Feed {
     }
 
     @Step
-    public static void assertNthPostIs(int nth, PodUser from, String post) {
-        //posts.get(nth).shouldHave(textBegin(from.fullName)).shouldHave(text(post));
-        assertPostFrom(from, post);
-    }
-
-    @Step
     public static void assertPostFrom(PodUser from, String postText) {
         post(from, postText).shouldBe(visible);
     }
@@ -203,6 +198,8 @@ public class Feed {
 
     @Step
     private static SelenideElement comment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
+        // optimized speed via using ugly but efficient xpath
+        // waiting for fix in Selenide, to switch back to "readable" solution
         //return comment(post(fromPost, postText), fromComment, commentText);
         return $(By.xpath(String.format("//div[contains(@class, 'comment media')][contains(., '%s') ][descendant::*[contains(@class, 'author-name') and contains(text(), '%s')]][ancestor::*[contains(.,'%s') and descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]]",
                 commentText, fromComment, postText, fromPost )));
@@ -212,13 +209,15 @@ public class Feed {
 
     @Step
     private static SelenideElement post(PodUser from, String post) {
+        // optimized speed via using ugly but efficient xpath
+        // waiting for fix in Selenide, to switch back to "readable" solution
         //return posts.find(textBeginAndContain(from.fullName, post));
         return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", post, from.fullName)));
     }
 
     @Step
     private static void deletePost(SelenideElement post) {
-        hover(post);
+        scrollToAndHover(post);
         post.find(".remove_post").click();
         confirm(null);
     }
@@ -273,7 +272,7 @@ public class Feed {
     public static void deleteAllPosts(PodUser from) {
         clearUniqueData();
         addPublicPost(the("servicepost"));
-        assertNthPostIs(0, from, the("servicepost"));
+        assertPostFrom(from, the("servicepost"));
         int countDeleted = 0;
         ElementsCollection userPosts = $$(".stream_element").filter(textBegin(from.fullName));
         for (SelenideElement userPost : userPosts) {

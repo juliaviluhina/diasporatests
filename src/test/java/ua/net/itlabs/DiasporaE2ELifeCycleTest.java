@@ -29,7 +29,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
         //public post
         Menu.openStream();
         Feed.addPublicPost(the("Public Ana"));
-        Feed.assertNthPostIs(0, Pod1.ana, the("Public Ana"));
+        Feed.assertPostFrom(Pod1.ana, the("Public Ana"));
         Menu.logOut();
 
         //like post, indirect check - public post is shown in stream of linked user
@@ -39,7 +39,7 @@ public class DiasporaE2ELifeCycleTest extends BaseTest {
 
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Rob for work"));
-        Feed.assertNthPostIs(0, Pod1.rob, the("Rob for work"));
+        Feed.assertPostFrom(Pod1.rob, the("Rob for work"));
         Menu.logOut();
 
         //comment post, indirect check - limited post in right aspect is shown in stream of linked user

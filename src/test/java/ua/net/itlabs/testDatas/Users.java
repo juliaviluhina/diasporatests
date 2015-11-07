@@ -19,17 +19,17 @@ public class Users {
         public static PodUser ana;
         public static PodUser rob;
         public static PodUser eve;
-        public static PodUser ron;
+        //public static PodUser ron; //currently user of this pod is not used in tests
 
         static {
 
-            if (isFirstDataSet()) {
+            if (getDataSet().equals("set1")) {
 
                 podLink = "https://diaspora.koehn.com";
                 ana = newUser("ana_tjvi", "tjvitjvi", "ana.tjvi@gmail.com");
                 rob = newUser("rob_tjvi", "tjvitjvi", "rob.tjvi@gmail.com");
                 eve = newUser("eve_tjvi", "tjvitjvi", "eve.tjvi@gmail.com");
-                ron = newUser("ron_tjvi", "tjvitjvi", "ron.tjvi@gmail.com");
+                //ron = newUser("ron_tjvi", "tjvitjvi", "ron.tjvi@gmail.com");
 
             } else {
 
@@ -37,7 +37,7 @@ public class Users {
                 ana = newUser("ana1_tjvi", "tjvitjvi", "h   ur12328@adiaw.com");
                 rob = newUser("rob1_tjvi", "tjvitjvi", "epc27203@adiaw.com");
                 eve = newUser("eve1_tjvi", "tjvitjvi", "tsw00991@adiaw.com");
-                ron = newUser("ron1_tjvi", "tjvitjvi", "smj41103@adiaw.com");
+                //ron = newUser("ron1_tjvi", "tjvitjvi", "smj41103@adiaw.com");
 
             }
 
@@ -52,7 +52,7 @@ public class Users {
 
         static {
 
-            if (isFirstDataSet()) {
+            if (getDataSet().equals("set1")) {
 
                 podLink = "https://nerdpol.ch";
                 bob = newUser("bob_tjvi", "tjvitjvi", "bob.tjvi@gmail.com");
@@ -70,13 +70,16 @@ public class Users {
 
     }
 
+    //currently user of this pod is not used in tests
+    //it can be used in future
+    //take into account - this user does not have any posts. LogOut - modal dialog is appeared.
     public static class Pod3 extends Pod {
 
         public static PodUser dave;
 
         static {
 
-            if (isFirstDataSet()) {
+            if (getDataSet().equals("set1")) {
 
                 podLink = "https://diasporabrazil.org";
                 dave = newUser("dave_tjvi", "tjvitjvi", "dave.tjvi@gmail.com");
@@ -92,8 +95,8 @@ public class Users {
 
     }
 
-    public static Boolean isFirstDataSet() {
-        return (System.getProperty("dataset").equals("set1"));
+    public static String getDataSet() {
+        return (System.getProperty("dataset"));
     }
 
 }

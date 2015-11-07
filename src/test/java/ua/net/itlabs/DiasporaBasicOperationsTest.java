@@ -57,7 +57,7 @@ public class DiasporaBasicOperationsTest extends BaseTest {
         Diaspora.signInAs(Pod1.ana);
         Menu.openStream();
         Feed.addPublicPost(the("Ana public"));
-        Feed.assertNthPostIs(0, Pod1.ana, the("Ana public"));
+        Feed.assertPostFrom(Pod1.ana, the("Ana public"));
         Menu.logOut();
 
         //like post by linked user
@@ -94,7 +94,7 @@ public class DiasporaBasicOperationsTest extends BaseTest {
         Diaspora.signInAs(Pod1.ana);
         Menu.openStream();
         Feed.addPublicPost(the("Ana public question"));
-        Feed.assertNthPostIs(0, Pod1.ana, the("Ana public question"));
+        Feed.assertPostFrom(Pod1.ana, the("Ana public question"));
         Menu.logOut();
 
         //add comment for post of another linked user
@@ -190,7 +190,7 @@ public class DiasporaBasicOperationsTest extends BaseTest {
         //add post with mention about linked user
         Diaspora.signInAs(Pod1.ana);
         Feed.addPublicPostWithMentionAbout(Pod1.rob, the("public mention"));
-        Feed.assertNthPostIs(0, Pod1.ana, the("public mention"));//this check for wait moment when stream will be loaded
+        Feed.assertPostFrom(Pod1.ana, the("public mention"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
         //check visibility in stream and in mentions stream
