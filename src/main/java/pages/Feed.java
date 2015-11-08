@@ -171,7 +171,6 @@ public class Feed {
 
     @Step
     public static void assertPostCanNotBeReshared(PodUser from, String postText) {
-        //posts.filter(textBeginAndContain(from.fullName, postText)).filter(cssClass("reshare")).shouldBe(empty);
         post(from, postText).find(".reshare").shouldNotBe(present);
     }
 
@@ -192,7 +191,6 @@ public class Feed {
 
     @Step
     public static void assertNoPostFrom(PodUser from, String postText) {
-        //posts.filter(textBeginAndContain(from.fullName, postText)).shouldBe(empty);
         post(from, postText).shouldNotBe(present);
     }
 
