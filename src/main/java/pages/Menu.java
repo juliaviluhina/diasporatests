@@ -39,11 +39,11 @@ public class Menu {
 
     @Step
     public static void search(String searchText) {
-        $("#q").setValue(searchText);
         //this code was unstable
+        //search.setValue(searchText);
         //$$(".ac_results").find(text(searchText)).shouldBe(visible);
-        assertThat(searched(searchText));
-        $("#q").pressEnter();
+        //search.pressEnter();
+        assertThat(searchIsDone(searchText));
         Contact.ensureSearchedContact(searchText);
     }
 
@@ -62,6 +62,7 @@ public class Menu {
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");
     public static ElementsCollection userMenuItems = $$(".user-menu-item a");
     private static SelenideElement accountHeader = $("header .dark-header");
+    private static SelenideElement search = $("#q");
 
     //method added because of problem with opening user menu when stream is not loaded
     private static void openMenu() {
@@ -88,14 +89,17 @@ public class Menu {
         });
     }
 
-    private static ExpectedCondition<Boolean> searched(final String searchText) {
+    private static ExpectedCondition<Boolean> searchIsDone(final String searchText) {
         return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
 
             public Boolean apply(WebDriver webDriver) {
-
+                if (!search.getText().contains(searchText)) {
+                    search.setValue(searchText);
+                }
                 if (!$$(".ac_results").find(text(searchText)).is(visible)) {
                     return FALSE;
                 }
+                search.pressEnter();
                 return TRUE;
             }
 
