@@ -12,26 +12,6 @@ import static core.AdditionalAPI.scrollToAndHover;
 
 public class Aspects {
 
-    public static final String FAMILY = "Family";
-    public static final String FRIENDS = "Friends";
-    public static final String WORK = "Work";
-    public static final String ACQUAINTANCES = "Acquaintances";
-    public static final String[] STANDART_ASPECTS = {FAMILY, FRIENDS, WORK, ACQUAINTANCES};
-
-
-    public static ElementsCollection aspectsNavBar = $$("#aspects_list li a");
-    public static ElementsCollection aspectContainersNavBar = $$("#aspects_list li");
-
-    @Step
-    public static void toggleAll() {
-        $(".toggle_selector").click();
-    }
-
-    @Step
-    public static void toggleAspect(String text) {
-        aspectsNavBar.find(text(text)).click();
-    }
-
     @Step
     public static void add(String aspect) {
         aspectsNavBar.find(text("Add an aspect")).click();
@@ -46,6 +26,16 @@ public class Aspects {
     }
 
     @Step
+    public static void toggleAll() {
+        toggleAll.click();
+    }
+
+    @Step
+    public static void toggleAspect(String text) {
+        aspectsNavBar.find(text(text)).click();
+    }
+
+    @Step
     public static void assertAspectInNavBar(String aspect) {
         aspectsNavBar.find(text(aspect)).shouldBe(visible);
     }
@@ -57,7 +47,17 @@ public class Aspects {
 
     @Step
     public static void assertToggleAllText(String text) {
-        $(".toggle_selector").shouldHave(text(text));
+        toggleAll.shouldHave(text(text));
     }
+
+    public static final String FAMILY = "Family";
+    public static final String FRIENDS = "Friends";
+    public static final String WORK = "Work";
+    public static final String ACQUAINTANCES = "Acquaintances";
+    public static final String[] STANDART_ASPECTS = {FAMILY, FRIENDS, WORK, ACQUAINTANCES};
+
+    public static ElementsCollection aspectsNavBar = $$("#aspects_list li a");
+    public static ElementsCollection aspectContainersNavBar = $$("#aspects_list li");
+    public static SelenideElement toggleAll = $(".toggle_selector");
 
 }

@@ -22,15 +22,12 @@ import static pages.Aspects.STANDART_ASPECTS;
 
 public class Contact {
 
-    public static SelenideElement contactHeader = $(".profile_header");
-    public static String manageContactLocator = ".btn.dropdown-toggle";
-
-    public static SelenideElement contact(PodUser podUser) {
-        return $$(".stream_element").find(text(podUser.fullName));
-    }
-
-    protected static SelenideElement manageContact(SelenideElement contact) {
-        return contact.find(manageContactLocator);
+    @Step
+    public static void sendMessageToContact(String subject, String text) {
+        $("#message_button").click();
+        $("#conversation_subject").setValue(subject);
+        $("#conversation_text").setValue(text);
+        $("[value='Send']").click();
     }
 
     @Step
@@ -45,16 +42,8 @@ public class Contact {
     }
 
     @Step
-    public static void sendMessageToContact(String subject, String text) {
-        $("#message_button").click();
-        $("#conversation_subject").setValue(subject);
-        $("#conversation_text").setValue(text);
-        $("[value='Send']").click();
-    }
-
-    @Step
     public static void assertNoMessaging() {
-        $$("#message_button").shouldBe(CollectionCondition.empty);
+        $("#message_button").shouldNotBe(present);
     }
 
     @Step
@@ -95,7 +84,18 @@ public class Contact {
         ensureNoIgnoreMode(contactHeader);
     }
 
+    public static SelenideElement contactHeader = $(".profile_header");
+    public static String manageContactLocator = ".btn.dropdown-toggle";
+
     private static String stopIgnoringLocator = "#unblock_user_button";
+
+    public static SelenideElement contact(PodUser podUser) {
+        return $$(".stream_element").find(text(podUser.fullName));
+    }
+
+    private static SelenideElement manageContact(SelenideElement contact) {
+        return contact.find(manageContactLocator);
+    }
 
     private static class AspectManager {
         private SelenideElement btnManageAspect;
@@ -146,7 +146,7 @@ public class Contact {
 
         @Step
         public void ensureNoIgnoreMode() {
-            if ($$(stopIgnoringLocator).size() != 0) {
+            if ($(stopIgnoringLocator).is(visible)) {
                 stopIgnoring();
             }
         }

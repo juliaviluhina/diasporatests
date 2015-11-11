@@ -9,15 +9,6 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class NavBar {
 
-    private static SelenideElement container = $("#leftNavBar");
-    public static SelenideElement aspectsHeader = container.find("[href='/aspects']");
-    public static SelenideElement followedTagsHeader = container.find("[href='/followed_tags']");
-
-    @Step
-    public static void openTags() {
-        followedTagsHeader.click();
-    }
-
     @Step
     public static void openStream() {
         container.find("[href='/stream']").click();
@@ -29,13 +20,13 @@ public class NavBar {
     }
 
     @Step
-    public static void openMyAspects() {
-        aspectsHeader.click();
+    public static void openTags() {
+        container.find("[href='/followed_tags']").click();
     }
 
     @Step
-    public static void should(Condition... conditions) {
-        container.should(conditions);
+    public static void openMyAspects() {
+        container.find("[href='/aspects']").click();
     }
 
     @Step
@@ -43,8 +34,12 @@ public class NavBar {
         container.find("[href='/mentions']").click();
     }
 
+    //bacause of slow loading stream this check is better
     @Step
     public static void assertLoggedUser(PodUser user) {
         $("#home_user_badge").shouldHave(Condition.exactText(user.userName));
     }
+
+    private static SelenideElement container = $("#leftNavBar");
+
 }

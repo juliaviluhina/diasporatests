@@ -15,35 +15,14 @@ import static core.AdditionalAPI.*;
 
 public class Menu {
 
-    public static SelenideElement userMenuHeader = $(".user-menu-trigger");//$(".user-menu-more-indicator");
-    public static ElementsCollection userMenuItems = $$(".user-menu-item a");
-    private static SelenideElement accountHeader = $("header .dark-header");
-
     @Step
-    public static void logOut() {
-        openMenu();
-        userMenuItems.find(exactText("Log out")).click();
-    }
-
-    @Step
-    public static void search(String searchText) {
-//        $("#q").setValue(searchText);
-//        $$(".ac_results").find(text(searchText)).shouldBe(visible);
-//        $("#q").pressEnter();
-        $("#q").setValue(searchText);
-        assertThat(searched(searchText));
-        $("#q").pressEnter();
-        Contact.ensureSearchedContact(searchText);
+    public static void openStream() {
+        $(".header-nav [href='/stream']").click();
     }
 
     @Step
     public static void openConversations() {
         $("#nav_badges [href='/conversations']").click();
-    }
-
-    @Step
-    public static void openStream() {
-        $(".header-nav [href='/stream']").click();
     }
 
     @Step
@@ -53,10 +32,19 @@ public class Menu {
     }
 
     @Step
-    public static void ensureLoggedOut() {
-        if (accountHeader.is(present)) {
-            logOut();
-        }
+    public static void logOut() {
+        openMenu();
+        userMenuItems.find(exactText("Log out")).click();
+    }
+
+    @Step
+    public static void search(String searchText) {
+        $("#q").setValue(searchText);
+        //this code was unstable
+        //$$(".ac_results").find(text(searchText)).shouldBe(visible);
+        assertThat(searched(searchText));
+        $("#q").pressEnter();
+        Contact.ensureSearchedContact(searchText);
     }
 
     @Step
@@ -64,11 +52,21 @@ public class Menu {
         accountHeader.shouldNotBe(present);
     }
 
+    @Step
+    public static void ensureLoggedOut() {
+        if (accountHeader.is(present)) {
+            logOut();
+        }
+    }
+
+    public static SelenideElement userMenuHeader = $(".user-menu-trigger");
+    public static ElementsCollection userMenuItems = $$(".user-menu-item a");
+    private static SelenideElement accountHeader = $("header .dark-header");
+
     //method added because of problem with opening user menu when stream is not loaded
     private static void openMenu() {
         assertThat(userMenuOpened());
     }
-
 
     private static ExpectedCondition<Boolean> userMenuOpened() {
         return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
@@ -76,7 +74,7 @@ public class Menu {
             public Boolean apply(WebDriver webDriver) {
                 userMenuHeader.click();
 
-                if (! userMenuItems.find(exactText("Log out")).is(visible)){
+                if (!userMenuItems.find(exactText("Log out")).is(visible)) {
                     return FALSE;
                 }
                 return TRUE;
@@ -95,7 +93,7 @@ public class Menu {
 
             public Boolean apply(WebDriver webDriver) {
 
-                if (! $$(".ac_results").find(text(searchText)).is(visible)){
+                if (!$$(".ac_results").find(text(searchText)).is(visible)) {
                     return FALSE;
                 }
                 return TRUE;
@@ -103,7 +101,7 @@ public class Menu {
 
             @Override
             public String toString() {
-                return "Error searching "+searchText;
+                return "Error searching " + searchText;
             }
 
         });

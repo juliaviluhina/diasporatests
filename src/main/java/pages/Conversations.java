@@ -13,9 +13,6 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class Conversations {
 
-    public static SelenideElement inbox = $("#conversation_inbox");
-    public static SelenideElement currentConversation = $(".stream_container");
-
     @Step
     public static void sendNewConversationTo(PodUser toUser, String subject, String text) {
 
@@ -40,14 +37,32 @@ public class Conversations {
     }
 
     @Step
-    public static void assertInInboxBySubject(String subject) {
-        inbox.findAll(".subject").find(exactText(subject)).shouldBe(visible);
+    public static void selectConversationBySubject(String subject) {
+        conversation(subject).click();
     }
 
     @Step
-    public static void selectConversationBySubject(String subject) {
-        SelenideElement conversation = inbox.findAll(".conversation").find(text(subject));
-        conversation.click();
+    public static void replyToCurrentConversation(String text) {
+        $("#message_text").setValue(text);
+        $("[value='Reply']").click();
+    }
+
+    @Step
+    public static void hideCurrentConversation() {
+        $(".hide_conversation").click();
+        confirm(null);
+    }
+
+    @Step
+    public static void deleteCurrentConversation() {
+        $(".delete_conversation").click();
+        confirm(null);
+    }
+
+
+    @Step
+    public static void assertInInboxBySubject(String subject) {
+        inbox.findAll(".subject").find(exactText(subject)).shouldBe(visible);
     }
 
     @Step
@@ -63,32 +78,22 @@ public class Conversations {
     }
 
     @Step
-    public static void replyToCurrentConversation(String text) {
-        $("#message_text").setValue(text);
-        $("[value='Reply']").click();
-    }
-
-    @Step
     public static void assertMessageInCurrentConversation(PodUser from, String text) {
         ElementsCollection messages = currentConversation.findAll(".stream_element");
         messages.find(textBeginAndContain(from.fullName, text)).shouldBe(visible);
     }
 
     @Step
-    public static void hideCurrentConversation() {
-        $(".hide_conversation").click();
-        confirm(null);
-    }
-
-
-    @Step
-    public static void deleteCurrentConversation() {
-        $(".delete_conversation").click();
-        confirm(null);
-    }
-
-    @Step
     public static void assertNoConversationBySubject(String subject) {
-        inbox.findAll(".conversation").find(text(subject)).shouldNotBe(present);
+        conversation(subject).shouldNotBe(present);
     }
+
+
+    public static SelenideElement inbox = $("#conversation_inbox");
+    public static SelenideElement currentConversation = $(".stream_container");
+
+    private static SelenideElement conversation(String subject) {
+        return inbox.findAll(".conversation").find(text(subject));
+    }
+
 }

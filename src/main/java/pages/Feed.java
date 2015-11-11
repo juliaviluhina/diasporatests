@@ -20,14 +20,6 @@ import static core.conditions.CustomCondition.*;
 
 public class Feed {
 
-    private static SelenideElement aspect = $(".aspect_dropdown");
-    public static SelenideElement newPostText = $("#status_message_fake_text");
-    public static SelenideElement setAspect = $(".aspect_dropdown .btn");
-    public static SelenideElement share = $("#submit");
-
-    // optimized speed via using xpath - see post() and comment()
-    //public static ElementsCollection posts = $$(".stream_element");
-
     @Step
     public static void addPublicPost(String text) {
         newPostText.click();
@@ -83,6 +75,13 @@ public class Feed {
     }
 
     @Step
+    private static void deletePost(SelenideElement post) {
+        scrollToAndHover(post);
+        removePostButton(post).click();
+        confirm(null);
+    }
+
+    @Step
     public static void hidePost(PodUser author, String text) {
         SelenideElement post = post(author, text);
         scrollToAndHover(post);
@@ -91,16 +90,14 @@ public class Feed {
     }
 
     @Step
-    public static void ignoreAuthorOfPost(PodUser author, String text) {
-        SelenideElement post = post(author, text);
-        scrollToAndHover(post);
-        post.find(".block_user").click();
-        confirm(null);
+    public static void toggleLikePost(PodUser author, String text) {
+        post(author, text).find(".like").click();
     }
 
     @Step
-    public static void toggleLikePost(PodUser author, String text) {
-        post(author, text).find(".like").click();
+    public static void resharePost(PodUser author, String text) {
+        resharePostButton(author, text).click();
+        confirm(null);
     }
 
     @Step
@@ -112,76 +109,19 @@ public class Feed {
     }
 
     @Step
-    public static void resharePost(PodUser author, String text) {
-        post(author, text).find(".reshare").click();
-        confirm(null);
-    }
-
-    @Step
     public static void deleteComment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
         SelenideElement comment = comment(postAuthor, postText, commentAuthor, commentText);
         scrollToAndHover(comment);
-        comment.find(".delete").click();
+        deleteCommentButton(comment).click();
         confirm(null);
     }
 
     @Step
-    public static void assertAspectForNewPost(String aspectName) {
-        newPostText.click();
-
-        setAspect.click();
-        aspect.findAll(".aspect_selector").find(text(aspectName)).shouldBe(visible);
-
-        newPostText.click();
-    }
-
-    @Step
-    public static void assertNoAspectForNewPost(String aspectName) {
-        newPostText.click();
-
-        setAspect.click();
-        aspect.findAll(".aspect_selector").filter(text(aspectName)).shouldBe(empty);
-
-        newPostText.click();
-    }
-
-    @Step
-    public static void assertComment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
-        comment(postAuthor, postText, commentAuthor, commentText).shouldBe(visible);
-    }
-
-    @Step
-    public static void assertCommentCanNotBeDeleted(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
-        SelenideElement comment = comment(postAuthor, postText, commentAuthor, commentText);
-        scrollToAndHover(comment);
-        comment.find(".delete").shouldNotBe(present);
-    }
-
-    @Step
-    public static void assertPostCanNotBeDeleted(PodUser author, String text) {
+    public static void ignoreAuthorOfPost(PodUser author, String text) {
         SelenideElement post = post(author, text);
         scrollToAndHover(post);
-        post.findAll(".remove_post").shouldBe(empty);
-    }
-
-    @Step
-    public static void assertNoComment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
-        comment(postAuthor, postText, commentAuthor, commentText).shouldNotBe(present);
-    }
-
-    @Step
-    public static void assertPostCanNotBeReshared(PodUser author, String text) {
-        post(author, text).find(".reshare").shouldNotBe(present);
-    }
-
-    @Step
-    public static void assertLikes(PodUser postAuthor, String postText, int countLikes) {
-        post(postAuthor, postText).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
-    }
-
-    @Step
-    public static void assertNoLikes(PodUser postAuthor, String postText) {
-        post(postAuthor, postText).findAll(".expand_likes").shouldBe(empty);
+        post.find(".block_user").click();
+        confirm(null);
     }
 
     @Step
@@ -195,75 +135,62 @@ public class Feed {
     }
 
     @Step
-    private static SelenideElement comment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
-        // optimized speed via using ugly but efficient xpath
-        // waiting for fix in Selenide, to switch back to "readable" solution
-        //return comment(post(postAuthor, postText), commentAuthor, commentText);
-        return $(By.xpath(String.format("//div[contains(@class, 'comment media')][contains(., '%s') ][descendant::*[contains(@class, 'author-name') and contains(text(), '%s')]][ancestor::*[contains(.,'%s') and descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]]",
-                commentText, commentAuthor, postText, postAuthor )));
-
-    }
-
-
-    @Step
-    private static SelenideElement post(PodUser author, String text) {
-        // optimized speed via using ugly but efficient xpath
-        // waiting for fix in Selenide, to switch back to "readable" solution
-        //return posts.find(textBeginAndContain(author.fullName, text));
-        return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", text, author.fullName)));
-    }
-
-    @Step
-    private static void deletePost(SelenideElement post) {
+    public static void assertPostCanNotBeDeleted(PodUser author, String text) {
+        SelenideElement post = post(author, text);
         scrollToAndHover(post);
-        post.find(".remove_post").click();
-        confirm(null);
+        removePostButton(post).shouldNotBe(present);
     }
 
     @Step
-    public static void ensurePublicPostingMode() {
-        if (aspect.getText().contains("Public")) {
-            return;
-        }
-        setAspect.click();
-        aspect.find(".public").click();
-        setAspect.shouldHave(Condition.text("Public"));
-    }
-
-
-    @Step
-    public static void ensurePrivatePostingMode() {
-        if (aspect.getText().contains("Select aspects")) {
-            return;
-        }
-        setAspect.click();
-        aspect.find(".all_aspects").click();
-        setAspect.click();
-        ElementsCollection aspects = aspect.findAll(".aspect_selector");
-        aspects.get(0).click();
-        String[] selectedAspectstext = aspects.filter(cssClass("selected")).getTexts();
-        for (String selectedAspectTest : selectedAspectstext) {
-            aspects.find(exactText(selectedAspectTest)).click();
-        }
+    public static void assertPostCanNotBeReshared(PodUser author, String text) {
+        resharePostButton(author, text).shouldNotBe(present);
     }
 
     @Step
-    public static void ensureAllAspectsPostingMode() {
-        if (aspect.getText().contains("All aspects")) {
-            return;
-        }
-        setAspect.click();
-        aspect.find(".all_aspects").click();
+    public static void assertLikes(PodUser postAuthor, String postText, int countLikes) {
+        likesCounterForPost(postAuthor, postText).shouldHave(text(Integer.toString(countLikes)));
     }
 
     @Step
-    public static void ensureAspectPostingMode(String diasporaAspect) {
-        ensureAllAspectsPostingMode();
+    public static void assertNoLikes(PodUser postAuthor, String postText) {
+        likesCounterForPost(postAuthor, postText).shouldNotBe(present);
+    }
+
+    @Step
+    public static void assertComment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        comment(postAuthor, postText, commentAuthor, commentText).shouldBe(visible);
+    }
+
+    @Step
+    public static void assertNoComment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        comment(postAuthor, postText, commentAuthor, commentText).shouldNotBe(present);
+    }
+
+    @Step
+    public static void assertCommentCanNotBeDeleted(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        SelenideElement comment = comment(postAuthor, postText, commentAuthor, commentText);
+        scrollToAndHover(comment);
+        deleteCommentButton(comment).shouldNotBe(present);
+    }
+
+    @Step
+    public static void assertAspectForNewPost(String aspectName) {
+        newPostText.click();
+
         setAspect.click();
-        SelenideElement selectingAspect = aspect.findAll(".aspect_selector").find(text(diasporaAspect));
-        selectingAspect.click();
-        setAspect.shouldHave(Condition.text(selectingAspect.getText()));
+        aspects().find(text(aspectName)).shouldBe(visible);
+
+        newPostText.click();
+    }
+
+    @Step
+    public static void assertNoAspectForNewPost(String aspectName) {
+        newPostText.click();
+
         setAspect.click();
+        aspects().filter(text(aspectName)).shouldBe(empty);
+
+        newPostText.click();
     }
 
     @Step
@@ -281,6 +208,97 @@ public class Feed {
             deleteUniqueValue(the("servicepost"));
             deleteAllPosts(author);
         }
+    }
+
+
+    private static SelenideElement aspect = $(".aspect_dropdown");
+    public static SelenideElement newPostText = $("#status_message_fake_text");
+    public static SelenideElement setAspect = $(".aspect_dropdown .btn");
+    public static SelenideElement share = $("#submit");
+
+    // optimized speed via using xpath - see post() and comment()
+    //public static ElementsCollection posts = $$(".stream_element");
+
+    @Step
+    private static SelenideElement post(PodUser author, String text) {
+        // optimized speed via using ugly but efficient xpath
+        // waiting for fix in Selenide, to switch back to "readable" solution
+        //return posts.find(textBeginAndContain(author.fullName, text));
+        return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", text, author.fullName)));
+    }
+
+    @Step
+    private static SelenideElement comment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        // optimized speed via using ugly but efficient xpath
+        // waiting for fix in Selenide, to switch back to "readable" solution
+        //return comment(post(postAuthor, postText), commentAuthor, commentText);
+        return $(By.xpath(String.format("//div[contains(@class, 'comment media')][contains(., '%s') ][descendant::*[contains(@class, 'author-name') and contains(text(), '%s')]][ancestor::*[contains(.,'%s') and descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]]",
+                commentText, commentAuthor, postText, postAuthor)));
+
+    }
+
+    private static ElementsCollection aspects() {
+        return aspect.findAll(".aspect_selector");
+    }
+
+    private static SelenideElement likesCounterForPost(PodUser postAuthor, String postText) {
+        return post(postAuthor, postText).find(".expand_likes");
+    }
+
+    private static SelenideElement removePostButton(SelenideElement post) {
+        return post.find(".remove_post");
+    }
+
+    private static SelenideElement resharePostButton(PodUser postAuthor, String postText) {
+        return post(postAuthor, postText).find(".reshare");
+    }
+
+    private static SelenideElement deleteCommentButton(SelenideElement comment) {
+        return comment.find(".delete");
+    }
+
+    @Step
+    private static void ensurePublicPostingMode() {
+        if (aspect.getText().contains("Public")) {
+            return;
+        }
+        setAspect.click();
+        aspect.find(".public").click();
+        setAspect.shouldHave(Condition.text("Public"));
+    }
+
+    @Step
+    private static void ensurePrivatePostingMode() {
+        if (aspect.getText().contains("Select aspects")) {
+            return;
+        }
+        setAspect.click();
+        aspect.find(".all_aspects").click();
+        setAspect.click();
+        aspects().get(0).click();
+        String[] selectedAspectstext = aspects().filter(cssClass("selected")).getTexts();
+        for (String selectedAspectTest : selectedAspectstext) {
+            aspects().find(exactText(selectedAspectTest)).click();
+        }
+    }
+
+    @Step
+    private static void ensureAllAspectsPostingMode() {
+        if (aspect.getText().contains("All aspects")) {
+            return;
+        }
+        setAspect.click();
+        aspect.find(".all_aspects").click();
+    }
+
+    @Step
+    private static void ensureAspectPostingMode(String diasporaAspect) {
+        ensureAllAspectsPostingMode();
+        setAspect.click();
+        SelenideElement selectingAspect = aspects().find(text(diasporaAspect));
+        selectingAspect.click();
+        setAspect.shouldHave(Condition.text(selectingAspect.getText()));
+        setAspect.click();
     }
 
 }
