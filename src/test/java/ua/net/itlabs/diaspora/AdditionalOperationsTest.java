@@ -17,14 +17,10 @@ import static core.Gherkin.*;
 
 public class AdditionalOperationsTest extends BaseTest {
 
-    @Before
-    public void setupForTests() {
-        clearUniqueData();
-    }
-
     @Test
     public void testHidePosts() {
         GIVEN("Setup mutual relation between users, add limited in aspect post");
+        clearUniqueData();
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, FRIENDS).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).toUser(Pod1.rob, FRIENDS).doNotLogOut().ensure();
@@ -58,6 +54,7 @@ public class AdditionalOperationsTest extends BaseTest {
     @Test
     public void testIgnoreUserInStream() {
         GIVEN("Setup mutual relation between users, add public post");
+        clearUniqueData();
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, FRIENDS).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).doNotLogOut().ensure();
@@ -83,6 +80,7 @@ public class AdditionalOperationsTest extends BaseTest {
     @Test
     public void testStopIgnoreUserInContactSite() {
         GIVEN("Public post is added, author of post is ignored by user");
+        clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Feed.addPublicPost(the("Ana for public"));
         Feed.assertPost(Pod1.ana, the("Ana for public"));//this check for wait moment when stream will be loaded
@@ -106,6 +104,7 @@ public class AdditionalOperationsTest extends BaseTest {
     @Test
     public void testStartIgnoreUserInContactSite() {
         GIVEN("Public post is added, author of post is not ignored by user");
+        clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Feed.addPublicPost(the("Ana for public"));
         Feed.assertPost(Pod1.ana, the("Ana for public"));//this check for wait moment when stream will be loaded

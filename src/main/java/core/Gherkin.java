@@ -13,6 +13,9 @@ public class Gherkin {
     public static void WHEN(String message) {}
 
     @Step
+    public static void AND(String message) {}
+
+    @Step
     public static void THEN(String message) {}
 
     @Step

@@ -7,11 +7,13 @@ import pages.*;
 import java.io.IOException;
 
 import static core.AdditionalAPI.*;
+import static core.helpers.UniqueDataHelper.*;
 
 public abstract class BaseTest {
 
     static {
         Configuration.timeout = 15000;
+        clearUniqueData();
     }
 
     @After

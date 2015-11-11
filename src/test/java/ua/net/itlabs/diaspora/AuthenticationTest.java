@@ -7,21 +7,21 @@ import pages.Menu;
 import pages.NavBar;
 import ua.net.itlabs.BaseTest;
 
-import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static ua.net.itlabs.testDatas.Users.*;
+import static core.Gherkin.*;
 
 public class AuthenticationTest extends BaseTest {
 
-    @BeforeClass
-    public static void buildGivenForTests() {
-        clearUniqueData();
-    }
-
     @Test
     public void testSignInAndLogOut() {
+        WHEN("User is signed in");
         Diaspora.signInAs(Pod1.ana);
+        THEN("User's account is opened");
         NavBar.assertLoggedUser(Pod1.ana);
+
+        WHEN("User is logged out");
         Menu.logOut();
+        THEN("User's account is closed");
         Menu.assertLoggedOut();
     }
 

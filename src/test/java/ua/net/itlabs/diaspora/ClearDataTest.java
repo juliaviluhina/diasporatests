@@ -11,11 +11,6 @@ import static ua.net.itlabs.testDatas.Users.*;
 
 public class ClearDataTest extends BaseTest {
 
-    @BeforeClass
-    public static void buildGivenForTests() {
-        clearUniqueData();
-    }
-
     @Test
     public void testClearData() {
         clearUserData(Pod1.ana);

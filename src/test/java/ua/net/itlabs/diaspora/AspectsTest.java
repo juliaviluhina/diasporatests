@@ -14,18 +14,16 @@ import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static pages.Aspects.WORK;
 import static ua.net.itlabs.testDatas.Users.*;
+import static core.Gherkin.*;
 
 public class AspectsTest extends BaseTest {
-
-    @Before
-    public void setupForTest() {
-        clearUniqueData();
-    }
 
     @Test
     public void testAddAspectInNavBar() {
 
-        //add new aspect
+        clearUniqueData();
+
+        WHEN("New aspest is added");
         Diaspora.signInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.add(the("Asp1"));
@@ -33,22 +31,23 @@ public class AspectsTest extends BaseTest {
         NavBar.openMyAspects();
         Aspects.assertAspectInNavBar(the("Asp1"));//this check for wait moment when stream will be loaded
 
-        //add contact in added aspect, indirect check - new aspect can be used for limited post
+        THEN("New aspect can be used for contact setup");
         Menu.search(Pod1.ana.fullName);
         Contact.ensureAspectsForContact(the("Asp1"));
 
-        //add limited post in this in aspect, indirect check - new aspect can be used for limited post
+        EXPECT("New aspect can be used for post setup");
         Menu.openStream();
         Feed.addAspectPost(the("Asp1"), the("Rob for new aspect"));
         Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
 
-        //filtering - only new aspect is enabled
+        WHEN("New aspect is selected in NavBar aspects list");
         NavBar.openMyAspects();
         Aspects.toggleAspect(the("Asp1"));
+        THEN("Limited post in this aspect is shown in stream");
         Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
         Menu.logOut();
 
-        //check - post in this aspect is available for linked user (check in contact
+        EXPECT("Limited in aspect post is available for linked in this aspect user");
         Diaspora.signInAs(Pod1.ana);
         Menu.search(Pod1.rob.fullName);
         Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
@@ -59,12 +58,12 @@ public class AspectsTest extends BaseTest {
     @Test
     public void testSwitchToEditModeInNavBar() {
 
-        //switch to edit mode, indirect check -
+        WHEN("Aspect is in edit mode");
         Diaspora.signInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.switchToEditMode(FRIENDS);
 
-        //check - Contacts site with this current aspect is loaded
+        THEN("Contact site with this aspect is loaded");
         Contacts.assertAspect(FRIENDS);
 
     }
@@ -72,7 +71,8 @@ public class AspectsTest extends BaseTest {
     @Test
     public void testFilterAspectsInNavBar() {
 
-        //GIVEN - setup relation and add limited in aspect posts
+        GIVEN("Setup relation between users, add limited in aspects posts from both users");
+        clearUniqueData();
         Relation.forUser(Pod1.ana).toUser(Pod1.rob, WORK).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).doNotLogOut().ensure();
         Menu.openStream();
@@ -85,41 +85,41 @@ public class AspectsTest extends BaseTest {
         Feed.assertPost(Pod1.ana, the("Ana for work"));
         Menu.logOut();
 
+        WHEN("In NavBar aspects list all aspects is deselected");
         Diaspora.signInAs(Pod1.rob);
-
-        //deselect all aspects
         NavBar.openMyAspects();
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Select all");
 
-        //check - when in filter is not any aspect - all posts is shown
+        THEN("All posts in all aspects is shown");
         Feed.assertPost(Pod1.ana, the("Ana for work"));
         Feed.assertPost(Pod1.rob, the("Rob for new friends"));
         Feed.assertPost(Pod1.rob, the("Rob for new family"));
 
-        //change filter - select to filter two aspects
+        WHEN("In NavBar aspects list some aspects is selected");
         Aspects.toggleAspect(ACQUAINTANCES);
         Aspects.toggleAspect(FRIENDS);
 
-        //check - only author's posts for aspects
-        // and posts of linked in this aspects users is shown
+        THEN("Author's posts limited in these aspects is shown");
+        AND("posts of users linked in these aspects is shown");
         Feed.assertPost(Pod1.ana, the("Ana for work"));
         Feed.assertPost(Pod1.rob, the("Rob for new friends"));
         Feed.assertNoPost(Pod1.rob, the("Rob for new family"));
 
-        //change filter - deselect from filter aspect
+        WHEN("In NavBar aspects list some aspect is deselected");
         Aspects.toggleAspect(FRIENDS);
 
-        //check posts visibility according to filter
+        THEN("Author's posts limited in this aspect is not shown");
+        AND("posts of users linked in this aspect is not shown");
         Feed.assertNoPost(Pod1.ana, the("Ana for work"));
         Feed.assertNoPost(Pod1.rob, the("Rob for new friends"));
         Feed.assertNoPost(Pod1.rob, the("Rob for new family"));
 
-        //select all aspects
+        WHEN("In NavBar aspects list all aspects is selected");
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Deselect all");
 
-        //check - when in filter is all aspects - all posts is shown
+        THEN("All posts in all aspects is shown");
         Feed.assertPost(Pod1.ana, the("Ana for work"));
         Feed.assertPost(Pod1.rob, the("Rob for new friends"));
         Feed.assertPost(Pod1.rob, the("Rob for new family"));

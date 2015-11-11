@@ -16,38 +16,35 @@ import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 import static core.helpers.UniqueDataHelper.the;
+import static core.Gherkin.*;
 
 public class ContactsTest extends BaseTest {
 
-    @Before
-    public void setupForTest() {
-        clearUniqueData();
-    }
-
     @Test
     public void testAddContacts() {
-        //GIVEN - setup relation between users
+        GIVEN("Setup relation between users");
+        clearUniqueData();
         Relation.forUser(Pod1.rob).toUser(Pod1.eve, WORK).ensure();
         Relation.forUser(Pod1.eve).toUser(Pod1.rob, WORK).doNotLogOut().ensure();
 
-        //add posts in not used aspects before managing contacts
+        WHEN("Limited post in not used aspects is added by author");
         Menu.openStream();
         Feed.addAspectPost(FAMILY, the("Eve for family before manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family before manage contacts"));//this check for wait moment when stream will be loaded
 
-        //add contacts in this aspect
+        AND("After that contact with user in this aspect is added by author");
         Menu.openContacts();
         Contacts.addLinkedContactForAspect(FAMILY, Pod1.rob);
 
-        //add post in this aspect
+        AND("Limited post in this aspect is added by author");
         Menu.openStream();
         Feed.addAspectPost(FAMILY, the("Eve for family after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
-        //check stream linked in this aspect user
-        //earlier published post does not appear in stream
-        //later published post appears in stream
+
+        THEN("Post of author added before linking is not shown in user's stream");
+        AND("Post of author added after linking is shown in user's stream");
         Diaspora.signInAs(Pod1.rob);
         Feed.assertNoPost(Pod1.eve, the("Eve for family before manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));
@@ -57,28 +54,29 @@ public class ContactsTest extends BaseTest {
 
     @Test
     public void testDeleteContacts() {
-        //GIVEN - setup relation between users
+
+        GIVEN("Setup relation between users");
+        clearUniqueData();
         Relation.forUser(Pod1.rob).toUser(Pod1.eve, WORK).ensure();
         Relation.forUser(Pod1.eve).toUser(Pod1.rob, FRIENDS).doNotLogOut().ensure();
 
-        //add posts in used aspects before managing contacts
+        WHEN("Limited post in used aspects is added by author");
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Eve for friends before manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for friends before manage contacts"));//this check for wait moment when stream will be loaded
 
-        //manage contacts - delete contact in aspect
+        AND("After that contact with user in this aspect is deleted by author");
         Menu.openContacts();
         Contacts.deleteLinkedContactForAspect(FRIENDS, Pod1.rob);
 
-        //add posts in deleted aspect after managing contacts
+        AND("Limited post in this aspect is added by author");
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Eve for friends after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for friends after manage contacts"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
-        //check stream linked in this aspect user
-        //earlier published post remind in stream
-        //later published post does not appear in stream
+        THEN("Post of author added before link deletion is shown in user's stream");
+        AND("Post of author added after link deletion is not shown in user's stream");
         Diaspora.signInAs(Pod1.rob);
         Feed.assertPost(Pod1.eve, the("Eve for friends before manage contacts"));
         Feed.assertNoPost(Pod1.eve, the("Eve for friends after manage contacts"));
@@ -88,7 +86,8 @@ public class ContactsTest extends BaseTest {
 
     @Test
     public void testManageContacts() {
-        //GIVEN - setup relation between users
+        GIVEN("Setup relation between users");
+        clearUniqueData();
         Relation.forUser(Pod1.ana).notToUsers(Pod1.eve).ensure();
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).doNotLogOut().ensure();
 
@@ -125,6 +124,7 @@ public class ContactsTest extends BaseTest {
     @Test
     public void testAddAspectInContacts() {
         //GIVEN - setup relation between users
+        clearUniqueData();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, WORK).ensure();
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).doNotLogOut().ensure();
 
@@ -155,6 +155,7 @@ public class ContactsTest extends BaseTest {
     @Test
     public void testRenameAspectInContacts() {
         //GIVEN - add aspect
+        clearUniqueData();
         Diaspora.signInAs(Pod1.eve);
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
@@ -179,6 +180,7 @@ public class ContactsTest extends BaseTest {
     @Test
     public void testDeleteAspectInContacts() {
         //GIVEN - setup relation between users, add aspect
+        clearUniqueData();
         Diaspora.signInAs(Pod1.eve);
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
