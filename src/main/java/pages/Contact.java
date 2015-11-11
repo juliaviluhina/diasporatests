@@ -1,7 +1,6 @@
 package pages;
 
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
@@ -98,7 +97,7 @@ public class Contact {
     }
 
     private static class AspectManager {
-        private SelenideElement btnManageAspect;
+        private SelenideElement manageAspectButton;
         private SelenideElement aspectsContainer;
 
         private String[] aspectTexts;
@@ -106,8 +105,8 @@ public class Contact {
         private Boolean[] beUsed;
         private Boolean[] shouldBeUsed;
 
-        public AspectManager(SelenideElement btnManageAspect, SelenideElement aspectsContainer) {
-            this.btnManageAspect = btnManageAspect;
+        public AspectManager(SelenideElement manageAspectButton, SelenideElement aspectsContainer) {
+            this.manageAspectButton = manageAspectButton;
             this.aspectsContainer = aspectsContainer;
         }
 
@@ -155,7 +154,7 @@ public class Contact {
         public void ensureNoAspects() {
             ensureNoIgnoreMode();
 
-            if (btnManageAspect.getText().equals("Add contact")) {
+            if (manageAspectButton.getText().equals("Add contact")) {
                 return;
             }
 
@@ -174,7 +173,7 @@ public class Contact {
             ensureNoIgnoreMode();
 
             if (diasporaAspects.length == 1) {
-                if (btnManageAspect.getText().equals(diasporaAspects[0])) {
+                if (manageAspectButton.getText().equals(diasporaAspects[0])) {
                     return;
                 }
             }
@@ -202,7 +201,7 @@ public class Contact {
             return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
 
                 public Boolean apply(WebDriver webDriver) {
-                    btnManageAspect.click();
+                    manageAspectButton.click();
 
                     if (aspects().find(exactText(FRIENDS)).is(visible)) {
                         if (aspects().size() >= STANDART_ASPECTS.length) {

@@ -132,7 +132,7 @@ public class Contacts {
             countDeleted++;
         }
         if (countDeleted > 1) {
-            deleteUniqueValue(the("ServAsp"));
+            deleteUniqueValue("ServAsp");
             deleteAllUserAspects();
         }
     }

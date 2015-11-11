@@ -89,7 +89,7 @@ public class Tags {
         }
 
         if (countDeleted > 1) {
-            deleteUniqueValue(the("#stag"));
+            deleteUniqueValue("#stag");
             deleteAll();
         }
 

@@ -1,4 +1,4 @@
-package core.steps;
+package steps;
 
 import datastructures.PodUser;
 import pages.*;

@@ -205,7 +205,7 @@ public class Feed {
             countDeleted++;
         }
         if (countDeleted > 1) {
-            deleteUniqueValue(the("servicepost"));
+            deleteUniqueValue("servicepost");
             deleteAllPosts(author);
         }
     }

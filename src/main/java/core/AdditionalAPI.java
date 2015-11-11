@@ -75,10 +75,10 @@ public class AdditionalAPI {
         };
     }
 
-    public static void scrollToAndHover(SelenideElement element) {
+    public static SelenideElement scrollToAndHover(SelenideElement element) {
         //element.scrollTo(); scrollTo works not always. especially unstable for tags
         element.getCoordinates().inViewPort();
-        element.hover();
+        return element.hover();
     }
 
 }

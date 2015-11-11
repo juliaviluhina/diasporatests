@@ -5,7 +5,7 @@ import org.junit.Test;
 import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
-import static core.steps.Scenarios.clearUserData;
+import static steps.Scenarios.clearUserData;
 import static ua.net.itlabs.testDatas.Users.*;
 
 
