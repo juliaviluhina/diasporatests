@@ -1,14 +1,15 @@
-package ua.net.itlabs;
+package ua.net.itlabs.diaspora;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.steps.Scenarios.clearUserData;
 import static ua.net.itlabs.testDatas.Users.*;
 
 
-public class DiasporaClearDataTest extends BaseTest {
+public class ClearDataTest extends BaseTest {
 
     @BeforeClass
     public static void buildGivenForTests() {

@@ -1,4 +1,4 @@
-package ua.net.itlabs;
+package ua.net.itlabs.diaspora;
 
 
 import core.steps.Relation;
@@ -7,6 +7,7 @@ import org.junit.Test;
 import pages.*;
 import pages.Contacts;
 import pages.Feed;
+import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static ua.net.itlabs.testDatas.Users.*;
@@ -16,7 +17,7 @@ import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 import static core.helpers.UniqueDataHelper.the;
 
-public class DiasporaContactsTest extends BaseTest {
+public class ContactsTest extends BaseTest {
 
     @Before
     public void setupForTest() {

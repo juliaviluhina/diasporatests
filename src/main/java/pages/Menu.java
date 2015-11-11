@@ -27,10 +27,10 @@ public class Menu {
 
     @Step
     public static void search(String searchText) {
-        $("#q").setValue(searchText);
-        $$(".ac_results").find(text(searchText)).shouldBe(visible);
-        $("#q").pressEnter();
-
+//        $("#q").setValue(searchText);
+//        $$(".ac_results").find(text(searchText)).shouldBe(visible);
+//        $("#q").pressEnter();
+        assertThat(searched(searchText));
         Contact.ensureSearchedContact(searchText);
     }
 
@@ -83,6 +83,27 @@ public class Menu {
             @Override
             public String toString() {
                 return "Error opening user menu";
+            }
+
+        });
+    }
+
+    private static ExpectedCondition<Boolean> searched(final String searchText) {
+        return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
+
+            public Boolean apply(WebDriver webDriver) {
+                $("#q").setValue(searchText);
+
+                if (! $$(".ac_results").find(text(searchText)).is(visible)){
+                    return FALSE;
+                }
+                $("#q").pressEnter();
+                return TRUE;
+            }
+
+            @Override
+            public String toString() {
+                return "Error searching "+searchText;
             }
 
         });

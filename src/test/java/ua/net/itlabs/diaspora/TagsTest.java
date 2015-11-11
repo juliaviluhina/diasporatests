@@ -1,4 +1,4 @@
-package ua.net.itlabs;
+package ua.net.itlabs.diaspora;
 
 import core.steps.Relation;
 import org.junit.BeforeClass;
@@ -6,12 +6,13 @@ import org.junit.Test;
 import pages.*;
 import pages.Feed;
 import pages.Tags;
+import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
 
-public class DiasporaTagsTest extends BaseTest {
+public class TagsTest extends BaseTest {
 
     private static String post1;
     private static String post2;

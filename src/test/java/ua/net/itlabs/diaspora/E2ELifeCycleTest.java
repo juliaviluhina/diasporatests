@@ -1,10 +1,11 @@
-package ua.net.itlabs;
+package ua.net.itlabs.diaspora;
 
 import core.steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.*;
+import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
@@ -13,7 +14,7 @@ import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 
 @Category(ua.net.itlabs.categories.Smoke.class)
-public class DiasporaE2ELifeCycleTest extends BaseTest {
+public class E2ELifeCycleTest extends BaseTest {
 
     @BeforeClass
     public static void buildGivenForTests() {

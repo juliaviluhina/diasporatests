@@ -11,7 +11,7 @@ import static core.AdditionalAPI.*;
 public abstract class BaseTest {
 
     static {
-        Configuration.timeout = 90000;
+        Configuration.timeout = 15000;
     }
 
     @After

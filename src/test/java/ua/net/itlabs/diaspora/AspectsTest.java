@@ -1,4 +1,4 @@
-package ua.net.itlabs;
+package ua.net.itlabs.diaspora;
 
 import core.steps.Relation;
 import org.junit.Before;
@@ -7,6 +7,7 @@ import pages.*;
 import pages.Aspects;
 import pages.Contacts;
 import pages.Feed;
+import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
@@ -14,7 +15,7 @@ import static pages.Aspects.*;
 import static pages.Aspects.WORK;
 import static ua.net.itlabs.testDatas.Users.*;
 
-public class DiasporaAspectsTest extends BaseTest {
+public class AspectsTest extends BaseTest {
 
     @Before
     public void setupForTest() {

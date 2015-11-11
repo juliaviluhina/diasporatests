@@ -1,16 +1,17 @@
-package ua.net.itlabs;
+package ua.net.itlabs.diaspora;
 
 import core.steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pages.*;
+import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
 
-public class DiasporaBasicOperationsTest extends BaseTest {
+public class BasicOperationsTest extends BaseTest {
 
     @BeforeClass
     public static void buildGivenForTests() {

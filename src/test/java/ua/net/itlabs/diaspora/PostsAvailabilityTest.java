@@ -1,4 +1,4 @@
-package ua.net.itlabs;
+package ua.net.itlabs.diaspora;
 
 import core.steps.Relation;
 import org.junit.BeforeClass;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import pages.Diaspora;
 import pages.Feed;
 import pages.Menu;
+import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
@@ -13,7 +14,7 @@ import static ua.net.itlabs.testDatas.Users.*;
 import static pages.Aspects.FRIENDS;
 import static pages.Aspects.ACQUAINTANCES;
 
-public class DiasporaPostsAvailabilityTest extends BaseTest {
+public class PostsAvailabilityTest extends BaseTest {
 
     @BeforeClass
     public static void buildGivenForTests() {
