@@ -27,12 +27,12 @@ public class TagsTest extends BaseTest {
         //new public posts linked with tags
         post1 = the("Public post with tag " + the("#tag1") + " : ");
         post2 = the("Public post with tag " + the("#tag2") + " : ");
-        Relation.forUser(Pod1.ana).notToUsers(Pod1.rob).build();
-        Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).doNotLogOut().build();
+        Relation.forUser(Pod1.ana).notToUsers(Pod1.rob).ensure();
+        Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).doNotLogOut().ensure();
         Menu.openStream();
         Feed.addPublicPost(post1);
         Feed.addPublicPost(post2);
-        Feed.assertPostFrom(Pod1.rob, post2); //this check for wait moment when stream will be loaded
+        Feed.assertPost(Pod1.rob, post2); //this check for wait moment when stream will be loaded
         Menu.logOut();
 
     }
@@ -42,14 +42,14 @@ public class TagsTest extends BaseTest {
 
         //tag is not used and public post with tag from unlinked user is not shown in stream
         Diaspora.signInAs(Pod1.ana);
-        Feed.assertNoPostFrom(Pod1.rob, post1);
+        Feed.assertNoPost(Pod1.rob, post1);
 
         NavBar.openTags();
         Tags.add(the("#tag1"));
 
         //tag is used and public post with tag from unlinked user is shown in stream
         NavBar.openStream();
-        Feed.assertPostFrom(Pod1.rob, post1);
+        Feed.assertPost(Pod1.rob, post1);
 
     }
 
@@ -64,8 +64,8 @@ public class TagsTest extends BaseTest {
         Tags.filter(the("#tag2"));
 
         //only posts with filtered tag are shown
-        Feed.assertPostFrom(Pod1.rob, post2);
-        Feed.assertNoPostFrom(Pod1.rob, post1);
+        Feed.assertPost(Pod1.rob, post2);
+        Feed.assertNoPost(Pod1.rob, post1);
 
     }
 
@@ -78,14 +78,14 @@ public class TagsTest extends BaseTest {
 
         //tag is used and public post with tag from unlinked user is shown in stream
         NavBar.openStream();
-        Feed.assertPostFrom(Pod1.rob, post2);
+        Feed.assertPost(Pod1.rob, post2);
 
         NavBar.openTags();
         Tags.delete(the("#tag2"));
 
         //tag is not used and public post with tag from unlinked user is not shown in stream
         NavBar.openStream();
-        Feed.assertNoPostFrom(Pod1.rob, post2);
+        Feed.assertNoPost(Pod1.rob, post2);
 
     }
 

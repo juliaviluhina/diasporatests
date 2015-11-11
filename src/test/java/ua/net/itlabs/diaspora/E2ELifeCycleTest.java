@@ -24,23 +24,23 @@ public class E2ELifeCycleTest extends BaseTest {
     @Test
     public void testUserActivitiesAndAccessForUsersOfOnePod() {
         //GIVEN - setup relation between users, addition one the same followed tag
-        Relation.forUser(Pod1.rob).toUser(Pod1.ana, WORK).build();
-        Relation.forUser(Pod1.ana).toUser(Pod1.rob, ACQUAINTANCES).doNotLogOut().build();
+        Relation.forUser(Pod1.rob).toUser(Pod1.ana, WORK).ensure();
+        Relation.forUser(Pod1.ana).toUser(Pod1.rob, ACQUAINTANCES).doNotLogOut().ensure();
 
         //public post
         Menu.openStream();
         Feed.addPublicPost(the("Public Ana"));
-        Feed.assertPostFrom(Pod1.ana, the("Public Ana"));
+        Feed.assertPost(Pod1.ana, the("Public Ana"));
         Menu.logOut();
 
         //like post, indirect check - public post is shown in stream of linked user
         Diaspora.signInAs(Pod1.rob);
-        Feed.toggleLike(Pod1.ana, the("Public Ana"));
+        Feed.toggleLikePost(Pod1.ana, the("Public Ana"));
         Feed.assertLikes(Pod1.ana, the("Public Ana"), 1);
 
         //limited post in right aspect
         Feed.addAspectPost(WORK, the("Rob for work"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for work"));
+        Feed.assertPost(Pod1.rob, the("Rob for work"));
         Menu.logOut();
 
         //comment post, indirect check - limited post in right aspect is shown in stream of linked user
@@ -58,22 +58,22 @@ public class E2ELifeCycleTest extends BaseTest {
         Feed.assertComment(Pod1.rob, the("Rob for work"), Pod1.ana, the("Comment from Ana"));
 
         //reshare public post
-        Feed.reshare(Pod1.ana, the("Public Ana"));
-        Feed.assertPostFrom(Pod1.rob, the("Public Ana"));
+        Feed.resharePost(Pod1.ana, the("Public Ana"));
+        Feed.assertPost(Pod1.rob, the("Public Ana"));
 
         //unlike post
-        Feed.toggleLike(Pod1.ana, the("Public Ana"));
+        Feed.toggleLikePost(Pod1.ana, the("Public Ana"));
         Feed.assertNoLikes(Pod1.ana, the("Public Ana"));
         Menu.logOut();
 
         //check visibility of reshared post
         Diaspora.signInAs(Pod1.ana);
-        Feed.assertPostFrom(Pod1.rob, the("Public Ana"));
+        Feed.assertPost(Pod1.rob, the("Public Ana"));
 
         //delete post
         NavBar.openMyActivity();
         Feed.deletePost(Pod1.ana, the("Public Ana"));
-        Feed.assertNoPostFrom(Pod1.ana, the("Public Ana"));
+        Feed.assertNoPost(Pod1.ana, the("Public Ana"));
 
         //check post of another user can not be deleted
         NavBar.openStream();
@@ -86,7 +86,7 @@ public class E2ELifeCycleTest extends BaseTest {
 
         Diaspora.signInAs(Pod1.rob);
         //check - deleted post is not shown
-        Feed.assertNoPostFrom(Pod1.ana, the("Public Ana"));
+        Feed.assertNoPost(Pod1.ana, the("Public Ana"));
         Menu.logOut();
 
     }

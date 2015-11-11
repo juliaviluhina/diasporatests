@@ -78,48 +78,48 @@ public class Feed {
     }
 
     @Step
-    public static void deletePost(PodUser from, String postText) {
-        deletePost(post(from, postText));
+    public static void deletePost(PodUser author, String text) {
+        deletePost(post(author, text));
     }
 
     @Step
-    public static void hidePost(PodUser from, String postText) {
-        SelenideElement post = post(from, postText);
+    public static void hidePost(PodUser author, String text) {
+        SelenideElement post = post(author, text);
         scrollToAndHover(post);
         post.find(".hide_post").click();
         confirm(null);
     }
 
     @Step
-    public static void ignoreAuthorOfPost(PodUser author, String postText) {
-        SelenideElement post = post(author, postText);
+    public static void ignoreAuthorOfPost(PodUser author, String text) {
+        SelenideElement post = post(author, text);
         scrollToAndHover(post);
         post.find(".block_user").click();
         confirm(null);
     }
 
     @Step
-    public static void toggleLike(PodUser from, String post) {
-        post(from, post).find(".like").click();
+    public static void toggleLikePost(PodUser author, String text) {
+        post(author, text).find(".like").click();
     }
 
     @Step
-    public static void addComment(PodUser from, String postText, String comment) {
-        SelenideElement post = post(from, postText);
+    public static void addComment(PodUser postAuthor, String postText, String commentText) {
+        SelenideElement post = post(postAuthor, postText);
         post.find(".focus_comment_textarea").click();
-        post.find(".comment_box").setValue(comment);
+        post.find(".comment_box").setValue(commentText);
         post.find(".new_comment").find(By.name("commit")).click();
     }
 
     @Step
-    public static void reshare(PodUser from, String post) {
-        post(from, post).find(".reshare").click();
+    public static void resharePost(PodUser author, String text) {
+        post(author, text).find(".reshare").click();
         confirm(null);
     }
 
     @Step
-    public static void deleteComment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
-        SelenideElement comment = comment(fromPost, postText, fromComment, commentText);
+    public static void deleteComment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        SelenideElement comment = comment(postAuthor, postText, commentAuthor, commentText);
         scrollToAndHover(comment);
         comment.find(".delete").click();
         confirm(null);
@@ -146,71 +146,71 @@ public class Feed {
     }
 
     @Step
-    public static void assertComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        comment(fromPost, post, fromComment, comment).shouldBe(visible);
+    public static void assertComment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        comment(postAuthor, postText, commentAuthor, commentText).shouldBe(visible);
     }
 
     @Step
-    public static void assertCommentCanNotBeDeleted(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
-        SelenideElement comment = comment(fromPost, postText, fromComment, commentText);
+    public static void assertCommentCanNotBeDeleted(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        SelenideElement comment = comment(postAuthor, postText, commentAuthor, commentText);
         scrollToAndHover(comment);
         comment.find(".delete").shouldNotBe(present);
     }
 
     @Step
-    public static void assertPostCanNotBeDeleted(PodUser fromPost, String postText) {
-        SelenideElement post = post(fromPost, postText);
+    public static void assertPostCanNotBeDeleted(PodUser author, String text) {
+        SelenideElement post = post(author, text);
         scrollToAndHover(post);
         post.findAll(".remove_post").shouldBe(empty);
     }
 
     @Step
-    public static void assertNoComment(PodUser fromPost, String post, PodUser fromComment, String comment) {
-        comment(fromPost, post, fromComment, comment).shouldNotBe(present);
+    public static void assertNoComment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        comment(postAuthor, postText, commentAuthor, commentText).shouldNotBe(present);
     }
 
     @Step
-    public static void assertPostCanNotBeReshared(PodUser from, String postText) {
-        post(from, postText).find(".reshare").shouldNotBe(present);
+    public static void assertPostCanNotBeReshared(PodUser author, String text) {
+        post(author, text).find(".reshare").shouldNotBe(present);
     }
 
     @Step
-    public static void assertLikes(PodUser from, String post, int countLikes) {
-        post(from, post).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
+    public static void assertLikes(PodUser postAuthor, String postText, int countLikes) {
+        post(postAuthor, postText).find(".expand_likes").shouldHave(text(Integer.toString(countLikes)));
     }
 
     @Step
-    public static void assertNoLikes(PodUser from, String post) {
-        post(from, post).findAll(".expand_likes").shouldBe(empty);
+    public static void assertNoLikes(PodUser postAuthor, String postText) {
+        post(postAuthor, postText).findAll(".expand_likes").shouldBe(empty);
     }
 
     @Step
-    public static void assertPostFrom(PodUser from, String postText) {
-        post(from, postText).shouldBe(visible);
+    public static void assertPost(PodUser author, String text) {
+        post(author, text).shouldBe(visible);
     }
 
     @Step
-    public static void assertNoPostFrom(PodUser from, String postText) {
-        post(from, postText).shouldNotBe(present);
+    public static void assertNoPost(PodUser author, String text) {
+        post(author, text).shouldNotBe(present);
     }
 
     @Step
-    private static SelenideElement comment(PodUser fromPost, String postText, PodUser fromComment, String commentText) {
+    private static SelenideElement comment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
         // optimized speed via using ugly but efficient xpath
         // waiting for fix in Selenide, to switch back to "readable" solution
-        //return comment(post(fromPost, postText), fromComment, commentText);
+        //return comment(post(postAuthor, postText), commentAuthor, commentText);
         return $(By.xpath(String.format("//div[contains(@class, 'comment media')][contains(., '%s') ][descendant::*[contains(@class, 'author-name') and contains(text(), '%s')]][ancestor::*[contains(.,'%s') and descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]]",
-                commentText, fromComment, postText, fromPost )));
+                commentText, commentAuthor, postText, postAuthor )));
 
     }
 
 
     @Step
-    private static SelenideElement post(PodUser from, String post) {
+    private static SelenideElement post(PodUser author, String text) {
         // optimized speed via using ugly but efficient xpath
         // waiting for fix in Selenide, to switch back to "readable" solution
-        //return posts.find(textBeginAndContain(from.fullName, post));
-        return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", post, from.fullName)));
+        //return posts.find(textBeginAndContain(author.fullName, text));
+        return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", text, author.fullName)));
     }
 
     @Step
@@ -267,19 +267,19 @@ public class Feed {
     }
 
     @Step
-    public static void deleteAllPosts(PodUser from) {
+    public static void deleteAllPosts(PodUser author) {
         clearUniqueData();
         addPublicPost(the("servicepost"));
-        assertPostFrom(from, the("servicepost"));
+        assertPost(author, the("servicepost"));
         int countDeleted = 0;
-        ElementsCollection userPosts = $$(".stream_element").filter(textBegin(from.fullName));
+        ElementsCollection userPosts = $$(".stream_element").filter(textBegin(author.fullName));
         for (SelenideElement userPost : userPosts) {
             deletePost(userPost);
             countDeleted++;
         }
         if (countDeleted > 1) {
             deleteUniqueValue(the("servicepost"));
-            deleteAllPosts(from);
+            deleteAllPosts(author);
         }
     }
 

@@ -92,7 +92,7 @@ public class Relation {
         }
 
         @Step
-        public Relation build() {
+        public Relation ensure() {
             return new Relation(this).createRelations();
         }
     }

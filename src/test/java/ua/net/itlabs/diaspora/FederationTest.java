@@ -23,10 +23,10 @@ public class FederationTest extends BaseTest {
 
         //GIVEN - setup relation between users, addition one the same followed tag
         tag = "#ana_bob_rob_sam";
-        Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod1.rob, Pod2.sam).build();
-        Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod1.ana, Pod2.bob).withTags(tag).build();
-        Relation.forUser(Pod2.sam).toUser(Pod1.rob, FAMILY).notToUsers(Pod1.ana, Pod2.bob).build();
-        Relation.forUser(Pod2.bob).toUser(Pod1.ana, WORK).notToUsers(Pod1.rob, Pod2.sam).withTags(tag).build();
+        Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod1.rob, Pod2.sam).ensure();
+        Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod1.ana, Pod2.bob).withTags(tag).ensure();
+        Relation.forUser(Pod2.sam).toUser(Pod1.rob, FAMILY).notToUsers(Pod1.ana, Pod2.bob).ensure();
+        Relation.forUser(Pod2.bob).toUser(Pod1.ana, WORK).notToUsers(Pod1.rob, Pod2.sam).withTags(tag).ensure();
     }
 
     @Test
@@ -35,7 +35,7 @@ public class FederationTest extends BaseTest {
         //public post with tag
         Diaspora.signInAs(Pod2.bob);
         Feed.addPublicPost(the(tag + " Public Bob"));
-        Feed.assertPostFrom(Pod2.bob, the(tag + " Public Bob"));
+        Feed.assertPost(Pod2.bob, the(tag + " Public Bob"));
         Menu.logOut();
 
         //check - public post is not shown in stream of unlinked user
@@ -58,7 +58,7 @@ public class FederationTest extends BaseTest {
         //post in right aspect
         Diaspora.signInAs(Pod2.bob);
         Feed.addAspectPost(WORK, the("Bob for work"));
-        Feed.assertPostFrom(Pod2.bob, the("Bob for work"));
+        Feed.assertPost(Pod2.bob, the("Bob for work"));
         Menu.logOut();
 
         //check - public post is not shown in stream of unlinked user

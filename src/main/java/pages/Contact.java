@@ -116,7 +116,7 @@ public class Contact {
         }
 
         private ElementsCollection selectedAspects() {
-            return aspectsContainer.findAll(".aspect_selector.selected");
+            return aspects().filter(cssClass("selected"));
         }
 
         @Step

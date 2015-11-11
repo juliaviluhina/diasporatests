@@ -40,18 +40,18 @@ public class AspectsTest extends BaseTest {
         //add limited post in this in aspect, indirect check - new aspect can be used for limited post
         Menu.openStream();
         Feed.addAspectPost(the("Asp1"), the("Rob for new aspect"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new aspect"));
+        Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
 
         //filtering - only new aspect is enabled
         NavBar.openMyAspects();
         Aspects.toggleAspect(the("Asp1"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new aspect"));
+        Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
         Menu.logOut();
 
         //check - post in this aspect is available for linked user (check in contact
         Diaspora.signInAs(Pod1.ana);
         Menu.search(Pod1.rob.fullName);
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new aspect"));
+        Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
         Menu.logOut();
 
     }
@@ -73,16 +73,16 @@ public class AspectsTest extends BaseTest {
     public void testFilterAspectsInNavBar() {
 
         //GIVEN - setup relation and add limited in aspect posts
-        Relation.forUser(Pod1.ana).toUser(Pod1.rob, WORK).build();
-        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).doNotLogOut().build();
+        Relation.forUser(Pod1.ana).toUser(Pod1.rob, WORK).ensure();
+        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).doNotLogOut().ensure();
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Rob for new friends"));
         Feed.addAspectPost(FAMILY, the("Rob for new family"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new family"));
+        Feed.assertPost(Pod1.rob, the("Rob for new family"));
         Menu.logOut();
         Diaspora.signInAs(Pod1.ana);
         Feed.addAspectPost(WORK, the("Ana for work"));
-        Feed.assertPostFrom(Pod1.ana, the("Ana for work"));
+        Feed.assertPost(Pod1.ana, the("Ana for work"));
         Menu.logOut();
 
         Diaspora.signInAs(Pod1.rob);
@@ -93,9 +93,9 @@ public class AspectsTest extends BaseTest {
         Aspects.assertToggleAllText("Select all");
 
         //check - when in filter is not any aspect - all posts is shown
-        Feed.assertPostFrom(Pod1.ana, the("Ana for work"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new friends"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new family"));
+        Feed.assertPost(Pod1.ana, the("Ana for work"));
+        Feed.assertPost(Pod1.rob, the("Rob for new friends"));
+        Feed.assertPost(Pod1.rob, the("Rob for new family"));
 
         //change filter - select to filter two aspects
         Aspects.toggleAspect(ACQUAINTANCES);
@@ -103,26 +103,26 @@ public class AspectsTest extends BaseTest {
 
         //check - only author's posts for aspects
         // and posts of linked in this aspects users is shown
-        Feed.assertPostFrom(Pod1.ana, the("Ana for work"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new friends"));
-        Feed.assertNoPostFrom(Pod1.rob, the("Rob for new family"));
+        Feed.assertPost(Pod1.ana, the("Ana for work"));
+        Feed.assertPost(Pod1.rob, the("Rob for new friends"));
+        Feed.assertNoPost(Pod1.rob, the("Rob for new family"));
 
         //change filter - deselect from filter aspect
         Aspects.toggleAspect(FRIENDS);
 
         //check posts visibility according to filter
-        Feed.assertNoPostFrom(Pod1.ana, the("Ana for work"));
-        Feed.assertNoPostFrom(Pod1.rob, the("Rob for new friends"));
-        Feed.assertNoPostFrom(Pod1.rob, the("Rob for new family"));
+        Feed.assertNoPost(Pod1.ana, the("Ana for work"));
+        Feed.assertNoPost(Pod1.rob, the("Rob for new friends"));
+        Feed.assertNoPost(Pod1.rob, the("Rob for new family"));
 
         //select all aspects
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Deselect all");
 
         //check - when in filter is all aspects - all posts is shown
-        Feed.assertPostFrom(Pod1.ana, the("Ana for work"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new friends"));
-        Feed.assertPostFrom(Pod1.rob, the("Rob for new family"));
+        Feed.assertPost(Pod1.ana, the("Ana for work"));
+        Feed.assertPost(Pod1.rob, the("Rob for new friends"));
+        Feed.assertPost(Pod1.rob, the("Rob for new family"));
 
     }
 

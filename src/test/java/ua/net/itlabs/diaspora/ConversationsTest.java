@@ -20,9 +20,9 @@ public class ConversationsTest extends BaseTest {
     @BeforeClass
     public static void buildGivenForTests() {
         //GIVEN - setup mutual relation between users in some different aspects
-        Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).build();
-        Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).notToUsers(Pod1.rob).build();
-        Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).build();
+        Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).ensure();
+        Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).notToUsers(Pod1.rob).ensure();
+        Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).ensure();
     }
 
     @Before

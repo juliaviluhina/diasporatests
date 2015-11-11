@@ -30,7 +30,9 @@ public class Menu {
 //        $("#q").setValue(searchText);
 //        $$(".ac_results").find(text(searchText)).shouldBe(visible);
 //        $("#q").pressEnter();
+        $("#q").setValue(searchText);
         assertThat(searched(searchText));
+        $("#q").pressEnter();
         Contact.ensureSearchedContact(searchText);
     }
 
@@ -92,12 +94,10 @@ public class Menu {
         return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
 
             public Boolean apply(WebDriver webDriver) {
-                $("#q").setValue(searchText);
 
                 if (! $$(".ac_results").find(text(searchText)).is(visible)){
                     return FALSE;
                 }
-                $("#q").pressEnter();
                 return TRUE;
             }
 

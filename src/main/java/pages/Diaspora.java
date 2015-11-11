@@ -1,14 +1,14 @@
 package pages;
 
-import core.AdditionalAPI;
-import datastructures.PodUser;
-import org.openqa.selenium.By;
-import ru.yandex.qatools.allure.annotations.Step;
+        import core.AdditionalAPI;
+        import datastructures.PodUser;
+        import org.openqa.selenium.By;
+        import ru.yandex.qatools.allure.annotations.Step;
 
-import java.io.IOException;
+        import java.io.IOException;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+        import static com.codeborne.selenide.Selenide.$;
+        import static com.codeborne.selenide.Selenide.open;
 
 public class Diaspora {
 

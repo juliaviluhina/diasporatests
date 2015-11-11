@@ -19,9 +19,9 @@ public class BasicOperationsTest extends BaseTest {
 
         //GIVEN - for all tests of this class
         //setup relation between users from the same pod
-        Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).build();
-        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).build();
-        Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).build();
+        Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
+        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
+        Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
 
     }
 
@@ -30,7 +30,7 @@ public class BasicOperationsTest extends BaseTest {
         //GIVEN additional - add post for deletion
         Diaspora.signInAs(Pod1.ana);
         Feed.addAspectPost(FRIENDS, the("Ana for friends"));
-        Feed.assertPostFrom(Pod1.ana, the("Ana for friends"));
+        Feed.assertPost(Pod1.ana, the("Ana for friends"));
         Menu.logOut();
 
         //check - posts of another user can not be deleted
@@ -42,12 +42,12 @@ public class BasicOperationsTest extends BaseTest {
         Diaspora.signInAs(Pod1.ana);
         Feed.deletePost(Pod1.ana, the("Ana for friends"));
         //check - post is not shown in author stream after deletion
-        Feed.assertNoPostFrom(Pod1.ana, the("Ana for friends"));
+        Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
         Menu.logOut();
 
         //check - post is not shown in linked user's stream after deletion
         Diaspora.signInAs(Pod1.rob);
-        Feed.assertNoPostFrom(Pod1.ana, the("Ana for friends"));
+        Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
         Menu.logOut();
 
     }
@@ -58,12 +58,12 @@ public class BasicOperationsTest extends BaseTest {
         Diaspora.signInAs(Pod1.ana);
         Menu.openStream();
         Feed.addPublicPost(the("Ana public"));
-        Feed.assertPostFrom(Pod1.ana, the("Ana public"));
+        Feed.assertPost(Pod1.ana, the("Ana public"));
         Menu.logOut();
 
         //like post by linked user
         Diaspora.signInAs(Pod1.rob);
-        Feed.toggleLike(Pod1.ana, the("Ana public"));
+        Feed.toggleLikePost(Pod1.ana, the("Ana public"));
         Feed.assertLikes(Pod1.ana, the("Ana public"), 1);
         Menu.logOut();
 
@@ -75,14 +75,14 @@ public class BasicOperationsTest extends BaseTest {
         //like post by unlinked user in Contact's stream
         Diaspora.signInAs(Pod1.eve);
         Menu.search(Pod1.ana.fullName);
-        Feed.toggleLike(Pod1.ana, the("Ana public"));
+        Feed.toggleLikePost(Pod1.ana, the("Ana public"));
         Feed.assertLikes(Pod1.ana, the("Ana public"), 2);
         Menu.logOut();
 
         //unlike post by linked user
         Diaspora.signInAs(Pod1.rob);
         Feed.assertLikes(Pod1.ana, the("Ana public"), 2);
-        Feed.toggleLike(Pod1.ana, the("Ana public"));
+        Feed.toggleLikePost(Pod1.ana, the("Ana public"));
         Feed.assertLikes(Pod1.ana, the("Ana public"), 1);
         Menu.logOut();
 
@@ -95,7 +95,7 @@ public class BasicOperationsTest extends BaseTest {
         Diaspora.signInAs(Pod1.ana);
         Menu.openStream();
         Feed.addPublicPost(the("Ana public question"));
-        Feed.assertPostFrom(Pod1.ana, the("Ana public question"));
+        Feed.assertPost(Pod1.ana, the("Ana public question"));
         Menu.logOut();
 
         //add comment for post of another linked user
@@ -155,8 +155,8 @@ public class BasicOperationsTest extends BaseTest {
 
         //reshare public post
         Diaspora.signInAs(Pod1.rob);
-        Feed.reshare(Pod1.ana, the("Ana about resharing for public"));
-        Feed.assertPostFrom(Pod1.rob, the("Ana about resharing for public"));
+        Feed.resharePost(Pod1.ana, the("Ana about resharing for public"));
+        Feed.assertPost(Pod1.rob, the("Ana about resharing for public"));
 
         //check - limited post from another user cannot be reshared
         Feed.assertPostCanNotBeReshared(Pod1.ana, the("Ana about resharing for friends"));
@@ -165,23 +165,23 @@ public class BasicOperationsTest extends BaseTest {
         //check - resharing post is visible in contact's stream in unlinked user (resharing post is public)
         Diaspora.signInAs(Pod1.eve);
         Menu.search(Pod1.rob.fullName);
-        Feed.assertPostFrom(Pod1.rob, the("Ana about resharing for public"));
+        Feed.assertPost(Pod1.rob, the("Ana about resharing for public"));
         Menu.logOut();
 
         //delete original post
         Diaspora.signInAs(Pod1.ana);
         Feed.deletePost(Pod1.ana, the("Ana about resharing for public"));
-        Feed.assertNoPostFrom(Pod1.ana, the("Ana about resharing for public"));
+        Feed.assertNoPost(Pod1.ana, the("Ana about resharing for public"));
 
         //check - resharing posts do not contain information from original deleted post
         Menu.openStream();//other posts refresh only after reload stream
-        Feed.assertNoPostFrom(Pod1.rob, the("Ana about resharing for public"));
+        Feed.assertNoPost(Pod1.rob, the("Ana about resharing for public"));
         Menu.logOut();
 
         //check - resharing posts do not contain deleted original information
         Diaspora.signInAs(Pod1.rob);
-        Feed.assertNoPostFrom(Pod1.ana, the("Ana about resharing for public"));
-        Feed.assertNoPostFrom(Pod1.rob, the("Ana about resharing for public"));
+        Feed.assertNoPost(Pod1.ana, the("Ana about resharing for public"));
+        Feed.assertNoPost(Pod1.rob, the("Ana about resharing for public"));
         Menu.logOut();
 
     }
@@ -191,14 +191,14 @@ public class BasicOperationsTest extends BaseTest {
         //add post with mention about linked user
         Diaspora.signInAs(Pod1.ana);
         Feed.addPublicPostWithMentionAbout(Pod1.rob, the("public mention"));
-        Feed.assertPostFrom(Pod1.ana, the("public mention"));//this check for wait moment when stream will be loaded
+        Feed.assertPost(Pod1.ana, the("public mention"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
         //check visibility in stream and in mentions stream
         Diaspora.signInAs(Pod1.rob);
-        Feed.assertPostFrom(Pod1.ana, the("public mention"));
+        Feed.assertPost(Pod1.ana, the("public mention"));
         NavBar.openMentions();
-        Feed.assertPostFrom(Pod1.ana, the("public mention"));
+        Feed.assertPost(Pod1.ana, the("public mention"));
         Menu.logOut();
 
     }
