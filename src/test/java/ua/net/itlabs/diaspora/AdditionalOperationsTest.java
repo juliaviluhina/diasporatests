@@ -13,17 +13,18 @@ import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.FRIENDS;
 import static ua.net.itlabs.testDatas.Users.*;
+import static core.Gherkin.*;
 
 public class AdditionalOperationsTest extends BaseTest {
 
     @Before
-    public void setupForTest() {
+    public void setupForTests() {
         clearUniqueData();
     }
 
     @Test
     public void testHidePosts() {
-        //GIVEN - setup mutual relation between users, add limited in aspect post
+        GIVEN("Setup mutual relation between users, add limited in aspect post");
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, FRIENDS).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).toUser(Pod1.rob, FRIENDS).doNotLogOut().ensure();
@@ -32,22 +33,22 @@ public class AdditionalOperationsTest extends BaseTest {
         Feed.assertPost(Pod1.ana, the("Ana for friends"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
-        //hide post and check - post is not shown in stream
+        EXPECT("Hidden post is not shown in stream");
         Diaspora.signInAs(Pod1.eve);
         Feed.hidePost(Pod1.ana, the("Ana for friends"));
         Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
 
-        //check - in contact site hidden post is not shown
+        EXPECT("Hidden post is not shown in contact stream");
         Menu.search(Pod1.ana.fullName);
         Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
         Menu.logOut();
 
-        //check - in stream of another user this post is shown
+        EXPECT("Hidden post is shown in stream of another user");
         Diaspora.signInAs(Pod1.rob);
         Feed.assertPost(Pod1.ana, the("Ana for friends"));
         Menu.logOut();
 
-        //check - after new sign in hidden post is not shown
+        EXPECT("After new signing in hidden post is not shown");
         Diaspora.signInAs(Pod1.eve);
         Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
         Menu.logOut();
@@ -56,7 +57,7 @@ public class AdditionalOperationsTest extends BaseTest {
 
     @Test
     public void testIgnoreUserInStream() {
-        //GIVEN - setup mutual relation between users, add public post
+        GIVEN("Setup mutual relation between users, add public post");
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, FRIENDS).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).doNotLogOut().ensure();
@@ -65,15 +66,15 @@ public class AdditionalOperationsTest extends BaseTest {
         Feed.assertPost(Pod1.ana, the("Ana for public"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
-        //ignore author of post
+        WHEN("Author of post is ignored");
         Diaspora.signInAs(Pod1.eve);
         Feed.ignoreAuthorOfPost(Pod1.ana, the("Ana for public"));
 
-        //check - posts of ignored author is not shown in stream
+        THEN("Posts of ignored author is not shown in stream");
         Feed.assertNoPost(Pod1.ana, the("Ana for public"));
         Menu.logOut();
 
-        //check - posts of ignored user is shown in stream of another user
+        EXPECT("Posts of ignored user is shown in stream of another user");
         Diaspora.signInAs(Pod1.rob);
         Feed.assertPost(Pod1.ana, the("Ana for public"));
         Menu.logOut();
@@ -81,7 +82,7 @@ public class AdditionalOperationsTest extends BaseTest {
 
     @Test
     public void testStopIgnoreUserInContactSite() {
-        //GIVEN - public post, ignore author of post
+        GIVEN("Public post is added, author of post is ignored by user");
         Diaspora.signInAs(Pod1.ana);
         Feed.addPublicPost(the("Ana for public"));
         Feed.assertPost(Pod1.ana, the("Ana for public"));//this check for wait moment when stream will be loaded
@@ -91,20 +92,20 @@ public class AdditionalOperationsTest extends BaseTest {
         Contact.ensureNoIgnoreMode();
         Feed.ignoreAuthorOfPost(Pod1.ana, the("Ana for public"));
 
-        //check - in contact site post is not shown
+        EXPECT("Post of author is not available to user");
         Feed.assertNoPost(Pod1.ana, the("Ana for public"));
 
-        //stop ignoring
+        WHEN("Ignoring is stopped");
         Contact.stopIgnoring();
 
-        //check - in contact site post is shown
+        THEN("Post of author is available to user");
         Feed.assertPost(Pod1.ana, the("Ana for public"));
         Menu.logOut();
     }
 
     @Test
     public void testStartIgnoreUserInContactSite() {
-        //GIVEN - public post, ensure no ignore mode
+        GIVEN("Public post is added, author of post is not ignored by user");
         Diaspora.signInAs(Pod1.ana);
         Feed.addPublicPost(the("Ana for public"));
         Feed.assertPost(Pod1.ana, the("Ana for public"));//this check for wait moment when stream will be loaded
@@ -113,13 +114,13 @@ public class AdditionalOperationsTest extends BaseTest {
         Menu.search(Pod1.ana.fullName);
         Contact.ensureNoIgnoreMode();
 
-        //check - in contact site post is shown
+        EXPECT("Post of author is available to user");
         Feed.assertPost(Pod1.ana, the("Ana for public"));
 
-        //stop ignoring
+        WHEN("Ignoring is started");
         Contact.startIgnoring();
 
-        //check - in contact site post is shown
+        EXPECT("Post of author is not available to user");
         Feed.assertNoPost(Pod1.ana, the("Ana for public"));
         Menu.logOut();
     }
