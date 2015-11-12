@@ -14,34 +14,33 @@ import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
+import static core.Gherkin.*;
 
 public class ConversationsTest extends BaseTest {
 
     @BeforeClass
-    public static void buildGivenForTests() {
-        //GIVEN - setup mutual relation between users in some different aspects
+    public static void givenSetupRelation() {
+
+        GIVEN("Setup mutual relation between users in some different aspects");
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).notToUsers(Pod1.rob).ensure();
         Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).ensure();
+
     }
 
-    @Before
-    public void setupForTest() {
-        //clear information about unique values
-        clearUniqueData();
-    }
 
     @Test
     public void testNewConversation() {
+        clearUniqueData();
 
-        //add new conversation
+        WHEN("Conversation to user is added by author");
         Diaspora.signInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.sendNewConversationTo(Pod1.eve, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
-        //check - sent message is shown for recipient
+        THEN("Conversation is shown for user");
         Diaspora.signInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
@@ -53,14 +52,15 @@ public class ConversationsTest extends BaseTest {
     @Test
     public void testReply() {
 
-        //GIVEN additional - add conversation
+        GIVEN("Conversation to user is added by author");
+        clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.sendNewConversationTo(Pod1.eve, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
-        //reply
+        EXPECT("User can reply on this conversation");
         Diaspora.signInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
@@ -69,7 +69,7 @@ public class ConversationsTest extends BaseTest {
         Conversations.assertMessageInCurrentConversation(Pod1.eve, the("reply"));
         Menu.logOut();
 
-        //check - both messages is shown
+        EXPECT("Original message and reply is shown for author");
         Diaspora.signInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
@@ -80,36 +80,40 @@ public class ConversationsTest extends BaseTest {
     @Test
     public void testHideAndDeleteConversations() {
 
-        //GIVEN additional - add conversation
+        GIVEN("Conversation to user is added by author");
+        clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.sendNewConversationTo(Pod1.eve, the("subject1"), the("text1"));
         Conversations.sendNewConversationTo(Pod1.eve, the("subject2"), the("text2"));
         Conversations.assertInInboxBySubject(the("subject2"));//this check for wait moment when stream will be loaded
 
-        //hide own conversation
+        WHEN("Added conversation is hidden by author");
         Conversations.selectConversationBySubject(the("subject1"));
         Conversations.assertMessageInCurrentConversation(Pod1.ana, the("text1"));//this check for wait moment when mesage will be loaded
         Conversations.hideCurrentConversation();
+        THEN("This conversation is not shown for author");
         Conversations.assertNoConversationBySubject(the("subject1"));
         Menu.logOut();
 
-        //hidden conversation from another user can be deleted
+        EXPECT("Conversation hidden for author is shown for user");
         Diaspora.signInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject1"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject1"), the("text1"));
+
+        EXPECT("Conversation hidden for author can be deleted by user");
         Conversations.deleteCurrentConversation();
         Conversations.assertNoConversationBySubject(the("subject1"));
 
-        //shown conversation from another user can be hidden
+        EXPECT("Conversation from author shown for user can be hidden by user");
         Conversations.selectConversationBySubject(the("subject2"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject2"), the("text2"));
         Conversations.hideCurrentConversation();
         Conversations.assertNoConversationBySubject(the("subject2"));
         Menu.logOut();
 
-        //hidden own conversation by another user can be deleted
+        EXPECT("Conversation of author hidden for user can be deleted by author");
         Diaspora.signInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject2"));
@@ -123,20 +127,22 @@ public class ConversationsTest extends BaseTest {
     @Test
     public void testNewConversationFromContactSite() {
 
-        //send message from contact site to searched mutual user
+        clearUniqueData();
+
+        WHEN("Message is sent from contact site to searched mutual user");
         Diaspora.signInAs(Pod1.ana);
         Menu.search(Pod1.eve.fullName);
         Contact.sendMessageToContact(the("subject"), the("text"));
 
-        //check - in conversation list message is shown
+        THEN("Conversation is shown for author");
         Conversations.assertInInboxBySubject(the("subject"));
 
-        //check - it is not possible to send message to not mutual user
+        EXPECT("It is not possible to send message to not mutual user");
         Menu.search(Pod1.rob.fullName);
         Contact.assertNoMessaging();
         Menu.logOut();
 
-        //check - sent message is shown for recipient
+        EXPECT("Message sent from author to user is shown for user");
         Diaspora.signInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
