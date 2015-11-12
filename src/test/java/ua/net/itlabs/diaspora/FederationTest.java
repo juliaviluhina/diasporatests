@@ -18,7 +18,7 @@ public class FederationTest extends BaseTest {
     private static String tag;
 
     @BeforeClass
-    public static void buildGivenForTests() {
+    public static void givenSetupUsersRelation() {
         clearUniqueData();
 
         //GIVEN - setup relation between users, addition one the same followed tag
