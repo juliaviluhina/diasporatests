@@ -81,4 +81,8 @@ public class AdditionalAPI {
         return element.hover();
     }
 
+    public static long timeout2x(){
+        return Configuration.timeout * 2;
+    }
+
 }

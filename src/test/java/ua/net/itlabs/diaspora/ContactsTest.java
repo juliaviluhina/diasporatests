@@ -91,29 +91,29 @@ public class ContactsTest extends BaseTest {
         Relation.forUser(Pod1.ana).notToUsers(Pod1.eve).ensure();
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).doNotLogOut().ensure();
 
-        //manage contacts - delete, add contacts in some aspects
+        WHEN("User is linked by author in some aspects in All contacts");
         Menu.openContacts();
         Contacts.openAllContacts();
         Contacts.ensureAspectsForContact(Pod1.ana, FRIENDS, FAMILY);
 
-        //add posts in used aspects after managing contacts
+        AND("Limited in this and another aspects posts is added by author");
         Menu.openStream();
         Feed.addAspectPost(WORK, the("Eve for work after manage contacts"));
         Feed.addAspectPost(FAMILY, the("Eve for family after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 
-        //check - in stream available post from unlinked user is not shown
+        THEN("Author's limited post in right aspect is available by user in contact's stream when user doesn't have link to author");
         Diaspora.signInAs(Pod1.ana);
         Feed.assertNoPost(Pod1.eve, the("Eve for work after manage contacts"));
         Feed.assertNoPost(Pod1.eve, the("Eve for family after manage contacts"));
 
-        //add contact in some aspect through Manage Comtacts
+        WHEN("Author is linked by user in some aspects in All contacts");
         Menu.openContacts();
         Contacts.openAllContacts();
         Contacts.ensureAspectsForContact(Pod1.eve, ACQUAINTANCES);
 
-        //check stream  - limited posts in right aspect is shown in stream
+        THEN("In stream of user available limited posts of author is shown");
         Menu.openStream();
         Feed.assertNoPost(Pod1.eve, the("Eve for work after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));
@@ -123,29 +123,31 @@ public class ContactsTest extends BaseTest {
 
     @Test
     public void testAddAspectInContacts() {
-        //GIVEN - setup relation between users
+        GIVEN("Setup relation between users");
         clearUniqueData();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, WORK).ensure();
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).doNotLogOut().ensure();
 
-        //add new aspect on contacts site
+        WHEN("Aspect is added by author");
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
+        THEN("New aspect is shown in summary information about aspects");
         Contacts.selectAspect(the("Asp1"));
         Contacts.assertCountContactsInAspect(the("Asp1"), 0);
 
-        //add link with this aspect
+        WHEN("Linked in another aspect user is added to this aspect");
         Contacts.addLinkedContactForAspect(the("Asp1"), Pod1.ana);
         Contacts.selectAspect(the("Asp1"));//only after this action counter is changed
+        THEN("In summary information count of contacts in this aspect is incremented");
         Contacts.assertCountContactsInAspect(the("Asp1"), 1);
 
-        //add post with this aspect
+        WHEN("Limited in this aspect post is added by author");
         Menu.openStream();
         Feed.addAspectPost(the("Asp1"), the("Asp1") + " Post for new Aspect from Ron");
         Feed.assertPost(Pod1.eve, the("Asp1") + " Post for new Aspect from Ron");//this check for wait moment when stream will be loaded
         Menu.logOut();
 
-        //check post visibility in stream of linked in new aspect contact
+        THEN("This post is shown in user's stream");
         Diaspora.signInAs(Pod1.ana);
         Feed.assertPost(Pod1.eve, the("Asp1") + " Post for new Aspect from Ron");
         Menu.logOut();
@@ -154,21 +156,21 @@ public class ContactsTest extends BaseTest {
 
     @Test
     public void testRenameAspectInContacts() {
-        //GIVEN - add aspect
+        GIVEN("Aspect is added");
         clearUniqueData();
         Diaspora.signInAs(Pod1.eve);
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
 
-        //rename current aspect
+        WHEN("Aspect is renamed");
         Contacts.selectAspect(the("Asp1"));
         Contacts.rename(the("Asp2"));
 
-        //check changes in aspects in contacts site
+        THEN("In summary information is no aspect with old name and is aspect with new name");
         Contacts.assertNoAspect(the("Asp1"));
         Contacts.assertAspect(the("Asp2"));
 
-        //check changes in aspects in manage aspect button for new post
+        EXPECT("New aspect is available to manage aspects of post");
         Menu.openStream();
         Feed.assertNoAspectForNewPost(the("Asp1"));
         Feed.assertAspectForNewPost(the("Asp2"));
@@ -179,20 +181,20 @@ public class ContactsTest extends BaseTest {
 
     @Test
     public void testDeleteAspectInContacts() {
-        //GIVEN - setup relation between users, add aspect
+        GIVEN("Setup relation between users, aspect is added");
         clearUniqueData();
         Diaspora.signInAs(Pod1.eve);
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
 
-        //delete added aspect
+        WHEN("Aspect is deleted");
         Contacts.selectAspect(the("Asp1"));
         Contacts.deleteAspect();
 
-        //check changes in aspects in contacts site
+        THEN("In summary information deleted aspect is not shown");
         Contacts.assertNoAspect(the("Asp1"));
 
-        //check changes in aspects in manage aspect button for new post
+        EXPECT("Deleted aspect is not available to manage aspects of post");
         Menu.openStream();
         Feed.assertNoAspectForNewPost(the("Asp1"));
 
