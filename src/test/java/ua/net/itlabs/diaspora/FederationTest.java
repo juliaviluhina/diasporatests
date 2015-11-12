@@ -20,7 +20,7 @@ public class FederationTest extends BaseTest {
 
     @BeforeClass
     public static void givenSetupUsersRelation() {
-        GIVEN("Setup relation between users, some followed tag is added for users");
+        GIVEN("Setup relation between users from two pods, some followed tag is added for users");
         tag = "#ana_bob_rob_sam";
         Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod1.rob, Pod2.sam).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod1.ana, Pod2.bob).withTags(tag).ensure();
