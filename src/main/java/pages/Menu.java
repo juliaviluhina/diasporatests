@@ -43,30 +43,22 @@ public class Menu {
         //search.setValue(searchText);
         //$$(".ac_results").find(text(searchText)).shouldBe(visible);
         //search.pressEnter();
-        assertThat(searchIsDone(searchText));
+        assertThat(searchIsDone(searchText),timeout2x());
         Contact.ensureSearchedContact(searchText);
     }
 
     @Step
     public static void assertLoggedOut() {
-        accountHeader.shouldNotBe(present);
-    }
-
-    @Step
-    public static void ensureLoggedOut() {
-        if (accountHeader.is(present)) {
-            logOut();
-        }
+        Diaspora.userName.shouldBe(visible);
     }
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");
     public static ElementsCollection userMenuItems = $$(".user-menu-item a");
-    private static SelenideElement accountHeader = $("header .dark-header");
     private static SelenideElement search = $("#q");
 
     //method added because of problem with opening user menu when stream is not loaded
     private static void openMenu() {
-        assertThat(userMenuOpened());
+        assertThat(userMenuOpened(),timeout2x());
     }
 
     private static ExpectedCondition<Boolean> userMenuOpened() {

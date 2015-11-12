@@ -108,7 +108,6 @@ public class Relation {
     }
 
     public Relation createRelations() {
-        Menu.ensureLoggedOut();
         Diaspora.signInAs(podUser);
         NavBar.assertLoggedUser(podUser);
         if (clearTags) {

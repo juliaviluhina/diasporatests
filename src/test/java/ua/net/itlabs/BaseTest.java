@@ -22,7 +22,6 @@ public abstract class BaseTest {
         if (lastSelenideScreenshot != null) {
             screenshot(lastSelenideScreenshot);
         }
-        Menu.ensureLoggedOut();
     }
 
 }

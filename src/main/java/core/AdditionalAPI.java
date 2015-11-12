@@ -53,8 +53,12 @@ public class AdditionalAPI {
         return (new WebDriverWait(getWebDriver(), timeout)).until(condition);
     }
 
+    public static <V> V assertThat(Function<? super WebDriver, V> condition, long timeout) {
+        return waitUntil(condition, (int) (timeout / 1000));
+    }
+
     public static <V> V assertThat(Function<? super WebDriver, V> condition) {
-        return waitUntil(condition, (int) (Configuration.timeout / 1000));
+        return assertThat(condition, Configuration.timeout);
     }
 
     public static <V> ExpectedCondition<V> elementExceptionsCatcher(final Function<? super WebDriver, V> condition) {
