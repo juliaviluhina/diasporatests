@@ -1,6 +1,5 @@
 package ua.net.itlabs.diaspora;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pages.Diaspora;
 import pages.Menu;

@@ -1,7 +1,6 @@
 package ua.net.itlabs.diaspora;
 
 import steps.Relation;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pages.Contact;
@@ -27,7 +26,6 @@ public class ConversationsTest extends BaseTest {
         Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).ensure();
 
     }
-
 
     @Test
     public void testNewConversation() {

@@ -2,7 +2,6 @@ package ua.net.itlabs.diaspora;
 
 
 import steps.Relation;
-import org.junit.Before;
 import org.junit.Test;
 import pages.*;
 import pages.Contacts;

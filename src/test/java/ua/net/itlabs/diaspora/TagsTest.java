@@ -8,9 +8,9 @@ import pages.Feed;
 import pages.Tags;
 import ua.net.itlabs.BaseTest;
 
-import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
+import static core.Gherkin.*;
 
 public class TagsTest extends BaseTest {
 
@@ -18,13 +18,9 @@ public class TagsTest extends BaseTest {
     private static String post2;
 
     @BeforeClass
-    public static void buildGivenForTests() {
+    public static void givenSetupUsersRelation() {
 
-        clearUniqueData();
-
-        //GIVEN - for all tests of this class
-        //setup relation between users from the same pod
-        //new public posts linked with tags
+        GIVEN("Setup relation between users, followed tags is added for users, public posts with this tags is added by author");
         post1 = the("Public post with tag " + the("#tag1") + " : ");
         post2 = the("Public post with tag " + the("#tag2") + " : ");
         Relation.forUser(Pod1.ana).notToUsers(Pod1.rob).ensure();
@@ -40,14 +36,15 @@ public class TagsTest extends BaseTest {
     @Test
     public void testAddTag() {
 
-        //tag is not used and public post with tag from unlinked user is not shown in stream
+        EXPECT("Public post with not followed tag is not shown in stream of unlinked user");
         Diaspora.signInAs(Pod1.ana);
         Feed.assertNoPost(Pod1.rob, post1);
 
+        WHEN("Tag is followed by user");
         NavBar.openTags();
         Tags.add(the("#tag1"));
 
-        //tag is used and public post with tag from unlinked user is shown in stream
+        THEN("Public post with followed tag is shown in stream of unlinked user");
         NavBar.openStream();
         Feed.assertPost(Pod1.rob, post1);
 
@@ -56,14 +53,15 @@ public class TagsTest extends BaseTest {
     @Test
     public void testFilterFeedByTag() {
 
-        //GIVEN additional - tag 2 is followed by Anna
+        GIVEN("Some tag is followed by user");
         Diaspora.signInAs(Pod1.ana);
         Tags.ensureTag(the("#tag2"));
 
+        WHEN("This followed tag is selected in NavBar");
         NavBar.openTags();
         Tags.filter(the("#tag2"));
 
-        //only posts with filtered tag are shown
+        THEN("Only posts with this tag are shown");
         Feed.assertPost(Pod1.rob, post2);
         Feed.assertNoPost(Pod1.rob, post1);
 
@@ -72,18 +70,19 @@ public class TagsTest extends BaseTest {
     @Test
     public void testDeleteTag() {
 
-        //GIVEN additional - tag 1 is followed by Anna
+        GIVEN("Some tag is followed by user");
         Diaspora.signInAs(Pod1.ana);
         Tags.ensureTag(the("#tag2"));
 
-        //tag is used and public post with tag from unlinked user is shown in stream
+        EXPECT("Public post with followed tag is shown in stream of unlinked user");
         NavBar.openStream();
         Feed.assertPost(Pod1.rob, post2);
 
+        WHEN("Followed tag is deleted");
         NavBar.openTags();
         Tags.delete(the("#tag2"));
 
-        //tag is not used and public post with tag from unlinked user is not shown in stream
+        THEN("Public post with this tag from unlinked user is not shown in stream of unlinked user");
         NavBar.openStream();
         Feed.assertNoPost(Pod1.rob, post2);
 
@@ -92,17 +91,17 @@ public class TagsTest extends BaseTest {
     @Test
     public void testTagsOrderAndSafety() {
 
-        //GIVEN additional - tag list should be empty
+        GIVEN("User does not follow any tags");
         Diaspora.signInAs(Pod1.ana);
         Tags.ensureNoTags();
 
+        WHEN("Tags are added in not alphabetical order");
         NavBar.openTags();
-        //add tags in not alphabetical order
         Tags.add(the("#Ytag1"), the("#Ztag"), the("#Ytag2"));
-        //check - after addition tags in alphabetical order
+        THEN("Added tags are shown in alphabetical order");
         Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
 
-        //check order after logout and sign in
+        EXPECT("Added tags are shown in alphabetical order after next signing in");
         Menu.logOut();
         Diaspora.signInAs(Pod1.ana);
         NavBar.openTags();

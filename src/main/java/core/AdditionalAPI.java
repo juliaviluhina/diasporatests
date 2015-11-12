@@ -49,27 +49,27 @@ public class AdditionalAPI {
         return null;
     }
 
-    protected static <V> V waitUntil(Function<? super WebDriver, V> condition, int timeout){
+    protected static <V> V waitUntil(Function<? super WebDriver, V> condition, int timeout) {
         return (new WebDriverWait(getWebDriver(), timeout)).until(condition);
     }
 
-    public static <V> V assertThat(Function<? super WebDriver, V> condition){
-        return waitUntil(condition, (int) (Configuration.timeout/1000));
+    public static <V> V assertThat(Function<? super WebDriver, V> condition) {
+        return waitUntil(condition, (int) (Configuration.timeout / 1000));
     }
 
-    public static <V> ExpectedCondition<V> elementExceptionsCatcher(final Function<? super WebDriver, V> condition){
+    public static <V> ExpectedCondition<V> elementExceptionsCatcher(final Function<? super WebDriver, V> condition) {
         return new ExpectedCondition<V>() {
             public V apply(WebDriver input) {
                 try {
                     return condition.apply(input);
                 } catch (StaleElementReferenceException e) {
                     return null;
-                } catch (ElementNotVisibleException e){
+                } catch (ElementNotVisibleException e) {
                     return null;
                 }
             }
 
-            public String toString(){
+            public String toString() {
                 return condition.toString();
             }
         };
@@ -81,7 +81,7 @@ public class AdditionalAPI {
         return element.hover();
     }
 
-    public static long timeout2x(){
+    public static long timeout2x() {
         return Configuration.timeout * 2;
     }
 

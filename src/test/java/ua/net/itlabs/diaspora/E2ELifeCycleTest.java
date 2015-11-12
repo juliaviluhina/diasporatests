@@ -1,7 +1,6 @@
 package ua.net.itlabs.diaspora;
 
 import steps.Relation;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import pages.*;
