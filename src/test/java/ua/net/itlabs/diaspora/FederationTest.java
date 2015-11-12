@@ -12,6 +12,7 @@ import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
+import static core.Gherkin.*;
 
 public class FederationTest extends BaseTest {
 
@@ -19,9 +20,7 @@ public class FederationTest extends BaseTest {
 
     @BeforeClass
     public static void givenSetupUsersRelation() {
-        clearUniqueData();
-
-        //GIVEN - setup relation between users, addition one the same followed tag
+        GIVEN("Setup relation between users, some followed tag is added for users");
         tag = "#ana_bob_rob_sam";
         Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod1.rob, Pod2.sam).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod1.ana, Pod2.bob).withTags(tag).ensure();
@@ -32,21 +31,20 @@ public class FederationTest extends BaseTest {
     @Test
     public void testAvailabilityPublicPostForUnlinkedUsersOfDifferentPods() {
 
-        //public post with tag
+        GIVEN("Public post with tag is added by author from pod 1");
         Diaspora.signInAs(Pod2.bob);
         Feed.addPublicPost(the(tag + " Public Bob"));
         Feed.assertPost(Pod2.bob, the(tag + " Public Bob"));
         Menu.logOut();
 
-        //check - public post is not shown in stream of unlinked user
+        EXPECT("Post is shown in stream of unlinked user from pod2 who has the same followed tag");
+        AND("This post can be commented");
         Diaspora.signInAs(Pod1.rob);
-
-        //comment post in stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
         Feed.addComment(Pod2.bob, the(tag + " Public Bob"), the("Comment from Rob"));
         Feed.assertComment(Pod2.bob, the(tag + " Public Bob"), Pod1.rob, the("Comment from Rob"));
         Menu.logOut();
 
-        //check visibility comment from unlinked user from another pod
+        EXPECT("Post with comment from user from another pod is shown in author's stream");
         Diaspora.signInAs(Pod2.bob);
         Feed.assertComment(Pod2.bob, the(tag + " Public Bob"), Pod1.rob, the("Comment from Rob"));
 
@@ -55,21 +53,20 @@ public class FederationTest extends BaseTest {
     @Test
     public void testAvailabilityLimitedPostForLinkedUsersOfDifferentPods() {
 
-        //post in right aspect
+        GIVEN("Limited in right aspect post is added by author from pod 2");
         Diaspora.signInAs(Pod2.bob);
         Feed.addAspectPost(WORK, the("Bob for work"));
         Feed.assertPost(Pod2.bob, the("Bob for work"));
         Menu.logOut();
 
-        //check - public post is not shown in stream of unlinked user
+        EXPECT("Post is shown in stream of linked in right aspect user from pod1");
+        AND("This post can be commented");
         Diaspora.signInAs(Pod1.ana);
-
-        //comment post in stream, indirect check - public post with tag is shown in stream of unlinked user with the same followed tag
         Feed.addComment(Pod2.bob, the("Bob for work"), the("Comment from Ana"));
         Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
         Menu.logOut();
 
-        //check visibility comment from linked user from another pod
+        EXPECT("Post with comment from user from another pod is shown in author's stream");
         Diaspora.signInAs(Pod2.bob);
         Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
 
