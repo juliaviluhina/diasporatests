@@ -154,7 +154,7 @@ public class BasicOperationsTest extends BaseTest {
         WHEN("Comment is deleted by user");
         Feed.deleteComment(Pod1.ana, the("Ana public"), Pod1.rob, the("Rob comment"));
         THEN("Comment is not shown in stream");
-        Feed.assertComment(Pod1.ana, the("Ana public"), Pod1.rob, the("Rob comment"));
+        Feed.assertNoComment(Pod1.ana, the("Ana public"), Pod1.rob, the("Rob comment"));
         Menu.logOut();
 
         EXPECT("Deleted comment is not shown in author's stream");
@@ -179,7 +179,7 @@ public class BasicOperationsTest extends BaseTest {
         Diaspora.signInAs(Pod1.ana);
         Feed.deleteComment(Pod1.ana, the("Ana public"), Pod1.rob, the("Rob comment"));
         THEN("Comment is not shown in stream");
-        Feed.assertComment(Pod1.ana, the("Ana public"), Pod1.rob, the("Rob comment"));
+        Feed.assertNoComment(Pod1.ana, the("Ana public"), Pod1.rob, the("Rob comment"));
         Menu.logOut();
 
         EXPECT("Deleted comment is not shown in user's stream");
