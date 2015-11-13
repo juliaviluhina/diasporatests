@@ -21,6 +21,7 @@ public class Feed {
 
     @Step
     public static void addPublicPost(String text) {
+        waitStreamOpening();
         newPostText.click();
         newPostText.setValue(text);
 
@@ -30,6 +31,8 @@ public class Feed {
 
     @Step
     public static void addPublicPostWithMentionAbout(PodUser podUser, String text) {
+        waitStreamOpening();
+
         newPostText.click();
 
         newPostText.sendKeys(text + " @" + podUser.userName);
@@ -43,6 +46,8 @@ public class Feed {
 
     @Step
     public static void addPrivatePost(String text) {
+        waitStreamOpening();
+
         newPostText.click();
         newPostText.setValue(text);
 
@@ -52,6 +57,8 @@ public class Feed {
 
     @Step
     public static void addAllAspectsPost(String text) {
+        waitStreamOpening();
+
         newPostText.click();
         newPostText.setValue(text);
 
@@ -61,6 +68,8 @@ public class Feed {
 
     @Step
     public static void addAspectPost(String diasporaAspect, String text) {
+        waitStreamOpening();
+
         newPostText.click();
         newPostText.setValue(text);
 

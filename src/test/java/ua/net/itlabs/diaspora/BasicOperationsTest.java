@@ -4,7 +4,6 @@ import steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pages.*;
-import steps.Scenarios;
 import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.*;
@@ -122,22 +121,22 @@ public class BasicOperationsTest extends BaseTest {
     @Test
     public void testAddCommentToPost() {
 
-        GIVEN("Public post from author exists");
+        GIVEN("Limited post from author exists");
         Diaspora.signInAs(Pod1.ana);
-        Feed.ensurePublicPost(Pod1.ana, the("Ana public"));
-        Feed.assertPost(Pod1.ana, the("Ana public"));
+        Feed.ensureAspectPost(Pod1.ana, FRIENDS, the("Ana for friends"));
+        Feed.assertPost(Pod1.ana, the("Ana for friends"));
         Menu.logOut();
 
         WHEN("Comment for post of author is added by linked user");
         Diaspora.signInAs(Pod1.rob);
-        Feed.addComment(Pod1.ana, the("Ana public"), newThe("Rob answer"));
+        Feed.addComment(Pod1.ana, the("Ana for friends"), newThe("Rob answer"));
         THEN("Comment is shown in stream");
-        Feed.assertComment(Pod1.ana, the("Ana public"), Pod1.rob, the("Rob answer"));
+        Feed.assertComment(Pod1.ana, the("Ana for friends"), Pod1.rob, the("Rob answer"));
         Menu.logOut();
 
         EXPECT("Added comment is shown in author's stream");
         Diaspora.signInAs(Pod1.ana);
-        Feed.assertComment(Pod1.ana, the("Ana public"), Pod1.rob, the("Rob answer"));
+        Feed.assertComment(Pod1.ana, the("Ana for friends"), Pod1.rob, the("Rob answer"));
 
     }
 
@@ -213,7 +212,6 @@ public class BasicOperationsTest extends BaseTest {
     public void testPostCannotBeResharedByAuthor() {
 
         GIVEN("Public post from author is exists");
-        clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Feed.ensurePublicPost(Pod1.ana, the("Ana public"));
 
@@ -227,7 +225,6 @@ public class BasicOperationsTest extends BaseTest {
     public void testLimitedPostCannotBeReshared() {
 
         GIVEN("Limited post from author is exists");
-        clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Feed.ensureAspectPost(Pod1.ana, FRIENDS, the("Ana for friends"));
         Feed.addPublicPost(the("Ana for friends"));
@@ -244,7 +241,6 @@ public class BasicOperationsTest extends BaseTest {
     public void testResharePublicPost() {
 
         GIVEN("Public post from author is exists");
-        clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Feed.ensurePublicPost(Pod1.ana, the("Ana public"));
         Menu.logOut();
@@ -268,7 +264,6 @@ public class BasicOperationsTest extends BaseTest {
     public void testDeleteResharedPublicPost() {
 
         GIVEN("Public post from author is exists and reshared");
-        clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Feed.ensurePublicPost(Pod1.ana, the("Ana public"));
         Menu.logOut();
@@ -295,72 +290,23 @@ public class BasicOperationsTest extends BaseTest {
 
     }
 
-//
-//    @Test
-//    public void testResharePost() {
-//
-//        GIVEN("Limited and public posts are added by author");
-//        clearUniqueData();
-//        Diaspora.signInAs(Pod1.ana);
-//        Feed.addAspectPost(FRIENDS, the("Ana about resharing for friends"));
-//        Feed.addPublicPost(the("Ana about resharing for public"));
-//
-//        EXPECT("Author cannot reshare their own posts");
-//        Feed.assertPostCanNotBeReshared(Pod1.ana, the("Ana about resharing for friends"));
-//        Feed.assertPostCanNotBeReshared(Pod1.ana, the("Ana about resharing for public"));
-//        Menu.logOut();
-//
-//        WHEN("Public post of author is reshared by user");
-//        Diaspora.signInAs(Pod1.rob);
-//        Feed.resharePost(Pod1.ana, the("Ana about resharing for public"));
-//        THEN("New public post about original post is added by user");
-//        Feed.assertPost(Pod1.rob, the("Ana about resharing for public"));
-//
-//        EXPECT("Limited post cannot be reshared");
-//        Feed.assertPostCanNotBeReshared(Pod1.ana, the("Ana about resharing for friends"));
-//        Menu.logOut();
-//
-//        EXPECT("Resharing post is visible in contact's stream of unlinked user (resharing post is public)");
-//        Diaspora.signInAs(Pod1.eve);
-//        Menu.search(Pod1.rob.fullName);
-//        Feed.assertPost(Pod1.rob, the("Ana about resharing for public"));
-//        Menu.logOut();
-//
-//        WHEN("Original post is deleted");
-//        Diaspora.signInAs(Pod1.ana);
-//        Feed.deletePost(Pod1.ana, the("Ana about resharing for public"));
-//        Feed.assertNoPost(Pod1.ana, the("Ana about resharing for public"));
-//
-//        THEN("Resharing posts do not contain information from original deleted post");
-//        Menu.openStream();//other posts refresh only after reload stream
-//        Feed.assertNoPost(Pod1.rob, the("Ana about resharing for public"));
-//        Menu.logOut();
-//
-//        EXPECT("In another streams there are no information from deleted original post and resharing post");
-//        Diaspora.signInAs(Pod1.rob);
-//        Feed.assertNoPost(Pod1.ana, the("Ana about resharing for public"));
-//        Feed.assertNoPost(Pod1.rob, the("Ana about resharing for public"));
-//        Menu.logOut();
-//
-//    }
-//
-//    @Test
-//    public void testAddMentionPost() {
-//
-//        WHEN("Post with mention about linked user is added by author");
-//        clearUniqueData();
-//        Diaspora.signInAs(Pod1.ana);
-//        Feed.addPublicPostWithMentionAbout(Pod1.rob, the("public mention"));
-//        Feed.assertPost(Pod1.ana, the("public mention"));//this check for wait moment when stream will be loaded
-//        Menu.logOut();
-//
-//        THEN("Post is shown in mentions stream of this linked user");
-//        Diaspora.signInAs(Pod1.rob);
-//        Feed.assertPost(Pod1.ana, the("public mention"));
-//        NavBar.openMentions();
-//        Feed.assertPost(Pod1.ana, the("public mention"));
-//        Menu.logOut();
-//
-//    }
+
+    @Test
+    public void testAddMentionPost() {
+
+        WHEN("Post with mention about linked user is added by author");
+        Diaspora.signInAs(Pod1.ana);
+        Feed.addPublicPostWithMentionAbout(Pod1.rob, newThe("public mention"));
+        Feed.assertPost(Pod1.ana, the("public mention"));//this check for wait moment when stream will be loaded
+        Menu.logOut();
+
+        THEN("Post is shown in mentions stream of this linked user");
+        Diaspora.signInAs(Pod1.rob);
+        Feed.assertPost(Pod1.ana, the("public mention"));
+        NavBar.openMentions();
+        Feed.assertPost(Pod1.ana, the("public mention"));
+        Menu.logOut();
+
+    }
 
 }
