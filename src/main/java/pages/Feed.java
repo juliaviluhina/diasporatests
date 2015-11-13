@@ -219,6 +219,16 @@ public class Feed {
         addComment(postAuthor, postText, commentText);
     }
 
+    @Step
+    public static void ensureResharePublicPost(PodUser postAuthor, String postText, PodUser reshareAuthor) {
+        Menu.openStream();
+        waitStreamOpening();
+        if (post(reshareAuthor, postText).is(visible)) {
+            return;
+        }
+        Menu.search(postAuthor.fullName);
+        resharePost(postAuthor, postText);
+    }
 
     @Step
     public static void deleteAllPosts(PodUser author) {

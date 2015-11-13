@@ -210,20 +210,90 @@ public class BasicOperationsTest extends BaseTest {
     }
 
     @Test
-    public void testPostCannotBeReshadedByAuthor() {
+    public void testPostCannotBeResharedByAuthor() {
 
         GIVEN("Public post from author is exists");
         clearUniqueData();
         Diaspora.signInAs(Pod1.ana);
         Feed.ensurePublicPost(Pod1.ana, the("Ana public"));
-        Feed.addPublicPost(the("Ana public"));
 
         EXPECT("Author cannot reshare their own posts");
         Feed.assertPostCanNotBeReshared(Pod1.ana, the("Ana public"));
         Menu.logOut();
+
     }
 
+    @Test
+    public void testLimitedPostCannotBeReshared() {
 
+        GIVEN("Limited post from author is exists");
+        clearUniqueData();
+        Diaspora.signInAs(Pod1.ana);
+        Feed.ensureAspectPost(Pod1.ana, FRIENDS, the("Ana for friends"));
+        Feed.addPublicPost(the("Ana for friends"));
+        Menu.logOut();
+
+        EXPECT("Limited post cannot be reshared by any user");
+        Diaspora.signInAs(Pod1.rob);
+        Feed.assertPostCanNotBeReshared(Pod1.ana, the("Ana public"));
+        Menu.logOut();
+
+    }
+
+    @Test
+    public void testResharePublicPost() {
+
+        GIVEN("Public post from author is exists");
+        clearUniqueData();
+        Diaspora.signInAs(Pod1.ana);
+        Feed.ensurePublicPost(Pod1.ana, the("Ana public"));
+        Menu.logOut();
+
+        WHEN("Public post is reshared by user");
+        Diaspora.signInAs(Pod1.rob);
+        Feed.resharePost(Pod1.ana, the("Ana public"));
+        THEN("New public post about original post is added by user");
+        Feed.assertPost(Pod1.rob, the("Ana public"));
+        Menu.logOut();
+
+        EXPECT("Resharing post is public and is shown for unlinked user");
+        Diaspora.signInAs(Pod1.eve);
+        Menu.search(Pod1.rob.fullName);
+        Feed.assertPost(Pod1.rob,the("Ana public"));
+        Menu.logOut();
+
+    }
+
+    @Test
+    public void testDeleteResharedPublicPost() {
+
+        GIVEN("Public post from author is exists and reshared");
+        clearUniqueData();
+        Diaspora.signInAs(Pod1.ana);
+        Feed.ensurePublicPost(Pod1.ana, the("Ana public"));
+        Menu.logOut();
+        Diaspora.signInAs(Pod1.eve);
+        Feed.ensureResharePublicPost(Pod1.ana, the("Ana public"), Pod1.eve);
+        Menu.logOut();
+
+        EXPECT("Reshared and resharing posts are shown in stream");
+        Diaspora.signInAs(Pod1.ana);
+        Feed.assertPost(Pod1.ana, the("Ana public"));
+        Menu.search(Pod1.eve.fullName);
+        Feed.assertPost(Pod1.eve, the("Ana public"));
+
+        WHEN("Reshared original post is deleted");
+        Menu.openStream();
+        Feed.deletePost(Pod1.ana, the("Ana public"));
+
+        THEN("Reshared posts is not shown in stream");
+        AND("Resharing post does not contain original information from reshared post");
+        Feed.assertNoPost(Pod1.ana, the("Ana public"));
+        Menu.search(Pod1.eve.fullName);
+        Feed.assertNoPost(Pod1.eve, the("Ana public"));
+        Menu.logOut();
+
+    }
 
 //
 //    @Test
