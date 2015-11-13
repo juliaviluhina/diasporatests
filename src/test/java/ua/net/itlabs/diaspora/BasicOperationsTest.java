@@ -18,9 +18,9 @@ public class BasicOperationsTest extends BaseTest {
     public static void givenSetupUsersRelation() {
 
         GIVEN("Setup relations between users from the same pod");
-//        Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
-//        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
-//        Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
+        Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
+        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
+        Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
 
     }
 
@@ -208,6 +208,22 @@ public class BasicOperationsTest extends BaseTest {
         Menu.logOut();
 
     }
+
+    @Test
+    public void testPostCannotBeReshadedByAuthor() {
+
+        GIVEN("Public post from author is exists");
+        clearUniqueData();
+        Diaspora.signInAs(Pod1.ana);
+        Feed.ensurePublicPost(Pod1.ana, the("Ana public"));
+        Feed.addPublicPost(the("Ana public"));
+
+        EXPECT("Author cannot reshare their own posts");
+        Feed.assertPostCanNotBeReshared(Pod1.ana, the("Ana public"));
+        Menu.logOut();
+    }
+
+
 
 //
 //    @Test

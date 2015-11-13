@@ -18,7 +18,7 @@ public class UniqueDataHelper {
 
     public static String newThe(String name) {
         if (dataContainer.containsKey(name)) {
-            deleteUniqueValue(name);
+            dataContainer.remove(name);
         }
         dataContainer.put(name, name + currentTimeMillis());
         return dataContainer.get(name);
@@ -28,7 +28,4 @@ public class UniqueDataHelper {
         dataContainer.clear();
     }
 
-    private static void deleteUniqueValue(String name) {
-        dataContainer.remove(name);
-    }
 }
