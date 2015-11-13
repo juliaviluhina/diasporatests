@@ -39,11 +39,10 @@ public class Menu {
 
     @Step
     public static void search(String searchText) {
-        //this code was unstable
-        //search.setValue(searchText);
-        //$$(".ac_results").find(text(searchText)).shouldBe(visible);
-        //search.pressEnter();
-        assertThat(searchIsDone(searchText),timeout2x());
+        openMenu();//if menu is opened then search is possible too
+        search.setValue(searchText);
+        $$(".ac_results").find(text(searchText)).shouldBe(visible);
+        search.pressEnter();
         Contact.ensureSearchedContact(searchText);
     }
 
@@ -76,28 +75,6 @@ public class Menu {
             @Override
             public String toString() {
                 return "Error opening user menu";
-            }
-
-        });
-    }
-
-    private static ExpectedCondition<Boolean> searchIsDone(final String searchText) {
-        return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
-
-            public Boolean apply(WebDriver webDriver) {
-                if (!search.getText().contains(searchText)) {
-                    search.setValue(searchText);
-                }
-                if (!$$(".ac_results").find(text(searchText)).is(visible)) {
-                    return FALSE;
-                }
-                search.pressEnter();
-                return TRUE;
-            }
-
-            @Override
-            public String toString() {
-                return "Error searching " + searchText;
             }
 
         });

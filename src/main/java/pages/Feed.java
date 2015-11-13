@@ -194,6 +194,19 @@ public class Feed {
     }
 
     @Step
+    public static void ensureAspectPost(PodUser author, String diasporaAspect, String text) {
+        if (post(author, text).is(visible)) { return; }
+        addAspectPost(diasporaAspect, text);
+    }
+
+    @Step
+    public static void ensurePublicPost(PodUser author, String text) {
+        if (post(author, text).is(visible)) { return; }
+        addPublicPost(text);
+    }
+
+
+    @Step
     public static void deleteAllPosts(PodUser author) {
         clearUniqueData();
         addPublicPost(the("servicepost"));
