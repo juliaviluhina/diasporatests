@@ -12,9 +12,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
-import static core.AdditionalAPI.assertThat;
-import static core.AdditionalAPI.elementExceptionsCatcher;
-import static core.AdditionalAPI.timeout2x;
+import static core.AdditionalAPI.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static pages.Aspects.FRIENDS;
@@ -51,7 +49,7 @@ public class Contact {
         //even id search result site is shown - clicking in avatar load Contact site
         //purpose fot this ensure - after search 2 variants site can be loaded, for test contact site is needed
         SelenideElement avatar = $("[alt='" + fullName + "']");
-        avatar.waitUntil(visible, timeout2x());
+        avatar.waitUntil(visible, timeout3x());
         avatar.click();
     }
 

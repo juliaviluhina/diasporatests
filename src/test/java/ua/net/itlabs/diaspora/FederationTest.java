@@ -1,5 +1,6 @@
 package ua.net.itlabs.diaspora;
 
+import com.codeborne.selenide.Configuration;
 import steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,12 +20,15 @@ public class FederationTest extends BaseTest {
 
     @BeforeClass
     public static void givenSetupUsersRelation() {
+
         GIVEN("Setup relation between users from two pods, some followed tag is added for users");
         tag = "#ana_bob_rob_sam";
+        Configuration.timeout = 90000;//for push data on another pod it is needed bigger timeout
         Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod1.rob, Pod2.sam).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod1.ana, Pod2.bob).withTags(tag).ensure();
         Relation.forUser(Pod2.sam).toUser(Pod1.rob, FAMILY).notToUsers(Pod1.ana, Pod2.bob).ensure();
         Relation.forUser(Pod2.bob).toUser(Pod1.ana, WORK).notToUsers(Pod1.rob, Pod2.sam).withTags(tag).ensure();
+
     }
 
     @Test

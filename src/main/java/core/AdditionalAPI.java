@@ -89,4 +89,7 @@ public class AdditionalAPI {
         return Configuration.timeout * 2;
     }
 
+    public static long timeout3x() {
+        return Configuration.timeout * 3;
+    }
 }
