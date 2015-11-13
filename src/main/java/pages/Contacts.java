@@ -111,8 +111,8 @@ public class Contacts {
 
     @Step
     public static void deleteAllUserAspects() {
-        clearUniqueData();
-        addAspect(newThe("ServAsp"));
+        deleteUniqueData("ServAsp");
+        addAspect(the("ServAsp"));
         int countDeleted = 0;
         aspects.filter(textEnd("\n" + the("ServAsp"))).shouldBe(size(1));
         String[] aspectNames = aspects.filter(text("\n")).getTexts();

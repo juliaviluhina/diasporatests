@@ -10,8 +10,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static core.AdditionalAPI.scrollToAndHover;
 import static core.conditions.CustomCondition.textBegin;
-import static core.helpers.UniqueDataHelper.newThe;
-import static core.helpers.UniqueDataHelper.the;
+import static core.helpers.UniqueDataHelper.*;
 
 public class Tags {
 
@@ -74,7 +73,8 @@ public class Tags {
 
     @Step
     public static void deleteAll() {
-        add(newThe("#stag"));
+        deleteUniqueData("#stag");
+        add(the("#stag"));
 
         //when tags are more than one page - without this code does not work
         NavBar.openTags();

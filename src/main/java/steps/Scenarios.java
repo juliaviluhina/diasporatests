@@ -24,6 +24,8 @@ public class Scenarios {
 
     @Step
     public static void waitStreamOpening(){
+        //this spike wait is needed because several actions do not run correctly
+        //when stream is loaded
         //user menu can be opened only if stream is opened - indirect check
         Menu.openMenu();
         Menu.search.click();//to close usermenu

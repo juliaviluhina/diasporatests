@@ -1,5 +1,6 @@
 package ua.net.itlabs.diaspora;
 
+import org.junit.Before;
 import steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,6 +21,15 @@ public class BasicOperationsTest extends BaseTest {
         Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
+
+    }
+
+    @Before
+    public void addGivenDescriptionToAllure() {
+
+        GIVEN("Eve is not linked with Ana and Rob");
+        GIVEN("Rob is linked with Ana in Friends aspect and unlinked with Eve");
+        GIVEN("Ana is linked with Rob in Friends aspect and unlinked with Eve");
 
     }
 
@@ -68,7 +78,7 @@ public class BasicOperationsTest extends BaseTest {
         GIVEN("Public post is added by author");
         Diaspora.signInAs(Pod1.ana);
         Menu.openStream();
-        Feed.addPublicPost(newThe("Ana public for likes"));
+        Feed.addPublicPost(the("Ana public for likes"));
         Feed.assertPost(Pod1.ana, the("Ana public for likes"));
         Menu.logOut();
 
@@ -96,24 +106,24 @@ public class BasicOperationsTest extends BaseTest {
         GIVEN("Public post is added by author and liked by user");
         Diaspora.signInAs(Pod1.ana);
         Menu.openStream();
-        Feed.addPublicPost(newThe("Ana public for likes"));
-        Feed.assertPost(Pod1.ana, the("Ana public for likes"));
+        Feed.addPublicPost(the("Ana public to unlike"));
+        Feed.assertPost(Pod1.ana, the("Ana public to unlike"));
         Menu.logOut();
         Diaspora.signInAs(Pod1.rob);
-        Feed.toggleLikePost(Pod1.ana, the("Ana public for likes"));
+        Feed.toggleLikePost(Pod1.ana, the("Ana public to unlike"));
 
         EXPECT("Count of likes is incremented");
-        Feed.assertLikes(Pod1.ana, the("Ana public for likes"), 1);
+        Feed.assertLikes(Pod1.ana, the("Ana public to unlike"), 1);
 
         WHEN("Post of author is liked by unlinked user");
-        Feed.toggleLikePost(Pod1.ana, the("Ana public for likes"));
+        Feed.toggleLikePost(Pod1.ana, the("Ana public to unlike"));
         THEN("Count of likes is decremented");
-        Feed.assertNoLikes(Pod1.ana, the("Ana public for likes"));
+        Feed.assertNoLikes(Pod1.ana, the("Ana public to unlike"));
         Menu.logOut();
 
         EXPECT("Information about likes is available by post author");
         Diaspora.signInAs(Pod1.ana);
-        Feed.assertNoLikes(Pod1.ana, the("Ana public for likes"));
+        Feed.assertNoLikes(Pod1.ana, the("Ana public to unlike"));
         Menu.logOut();
 
     }
@@ -129,7 +139,7 @@ public class BasicOperationsTest extends BaseTest {
 
         WHEN("Comment for post of author is added by linked user");
         Diaspora.signInAs(Pod1.rob);
-        Feed.addComment(Pod1.ana, the("Ana for friends"), newThe("Rob answer"));
+        Feed.addComment(Pod1.ana, the("Ana for friends"), the("Rob answer"));
         THEN("Comment is shown in stream");
         Feed.assertComment(Pod1.ana, the("Ana for friends"), Pod1.rob, the("Rob answer"));
         Menu.logOut();
@@ -255,7 +265,7 @@ public class BasicOperationsTest extends BaseTest {
         EXPECT("Resharing post is public and is shown for unlinked user");
         Diaspora.signInAs(Pod1.eve);
         Menu.search(Pod1.rob.fullName);
-        Feed.assertPost(Pod1.rob,the("Ana public"));
+        Feed.assertPost(Pod1.rob, the("Ana public"));
         Menu.logOut();
 
     }
@@ -296,7 +306,7 @@ public class BasicOperationsTest extends BaseTest {
 
         WHEN("Post with mention about linked user is added by author");
         Diaspora.signInAs(Pod1.ana);
-        Feed.addPublicPostWithMentionAbout(Pod1.rob, newThe("public mention"));
+        Feed.addPublicPostWithMentionAbout(Pod1.rob, the("public mention"));
         Feed.assertPost(Pod1.ana, the("public mention"));//this check for wait moment when stream will be loaded
         Menu.logOut();
 

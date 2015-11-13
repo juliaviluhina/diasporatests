@@ -241,8 +241,8 @@ public class Feed {
 
     @Step
     public static void deleteAllPosts(PodUser author) {
-        clearUniqueData();
-        addPublicPost(newThe("servicepost"));
+        deleteUniqueData("servicepost");
+        addPublicPost(the("servicepost"));
         assertPost(author, the("servicepost"));
         int countDeleted = 0;
         ElementsCollection userPosts = $$(".stream_element").filter(textBegin(author.fullName));

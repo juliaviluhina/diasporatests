@@ -16,16 +16,11 @@ public class UniqueDataHelper {
         return dataContainer.get(name);
     }
 
-    public static String newThe(String name) {
-        if (dataContainer.containsKey(name)) {
-            dataContainer.remove(name);
-        }
-        dataContainer.put(name, name + currentTimeMillis());
-        return dataContainer.get(name);
-    }
-
     public static void clearUniqueData() {
         dataContainer.clear();
     }
 
+    public static void deleteUniqueData(String name) {
+        dataContainer.remove(name);
+    }
 }
