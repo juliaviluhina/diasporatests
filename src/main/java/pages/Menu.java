@@ -12,6 +12,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static core.AdditionalAPI.*;
+import static steps.Scenarios.*;
 
 public class Menu {
 
@@ -39,7 +40,7 @@ public class Menu {
 
     @Step
     public static void search(String searchText) {
-        openMenu();//if menu is opened then search is possible too
+        waitStreamOpening();//if menu is opened then search is possible too
         search.setValue(searchText);
         $$(".ac_results").find(text(searchText)).shouldBe(visible);
         search.pressEnter();
@@ -53,10 +54,10 @@ public class Menu {
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");
     public static ElementsCollection userMenuItems = $$(".user-menu-item a");
-    private static SelenideElement search = $("#q");
+    public static SelenideElement search = $("#q");
 
     //method added because of problem with opening user menu when stream is not loaded
-    private static void openMenu() {
+    public static void openMenu() {
         assertThat(userMenuOpened(),timeout2x());
     }
 

@@ -13,10 +13,8 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.conditions.CustomCondition.textEnd;
-import static core.helpers.UniqueDataHelper.deleteUniqueValue;
+import static core.helpers.UniqueDataHelper.*;
 import static java.lang.Boolean.*;
-import static core.helpers.UniqueDataHelper.clearUniqueData;
-import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.STANDART_ASPECTS;
 import static pages.Contact.contact;
 
@@ -114,7 +112,7 @@ public class Contacts {
     @Step
     public static void deleteAllUserAspects() {
         clearUniqueData();
-        addAspect(the("ServAsp"));
+        addAspect(newThe("ServAsp"));
         int countDeleted = 0;
         aspects.filter(textEnd("\n" + the("ServAsp"))).shouldBe(size(1));
         String[] aspectNames = aspects.filter(text("\n")).getTexts();
@@ -131,7 +129,6 @@ public class Contacts {
             countDeleted++;
         }
         if (countDeleted > 1) {
-            deleteUniqueValue("ServAsp");
             deleteAllUserAspects();
         }
     }

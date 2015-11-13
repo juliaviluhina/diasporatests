@@ -1,9 +1,9 @@
 package core.helpers;
 
-import java.util.HashMap;
-import java.util.Map;
+        import java.util.HashMap;
+        import java.util.Map;
 
-import static java.lang.System.currentTimeMillis;
+        import static java.lang.System.currentTimeMillis;
 
 public class UniqueDataHelper {
 
@@ -16,11 +16,19 @@ public class UniqueDataHelper {
         return dataContainer.get(name);
     }
 
+    public static String newThe(String name) {
+        if (dataContainer.containsKey(name)) {
+            deleteUniqueValue(name);
+        }
+        dataContainer.put(name, name + currentTimeMillis());
+        return dataContainer.get(name);
+    }
+
     public static void clearUniqueData() {
         dataContainer.clear();
     }
 
-    public static void deleteUniqueValue(String name) {
+    private static void deleteUniqueValue(String name) {
         dataContainer.remove(name);
     }
 }

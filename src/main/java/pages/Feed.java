@@ -13,10 +13,9 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.AdditionalAPI.scrollToAndHover;
-import static core.helpers.UniqueDataHelper.clearUniqueData;
-import static core.helpers.UniqueDataHelper.deleteUniqueValue;
-import static core.helpers.UniqueDataHelper.the;
 import static core.conditions.CustomCondition.*;
+import static core.helpers.UniqueDataHelper.*;
+import static steps.Scenarios.*;
 
 public class Feed {
 
@@ -195,21 +194,36 @@ public class Feed {
 
     @Step
     public static void ensureAspectPost(PodUser author, String diasporaAspect, String text) {
-        if (post(author, text).is(visible)) { return; }
+        waitStreamOpening();
+        if (post(author, text).is(visible)) {
+            return;
+        }
         addAspectPost(diasporaAspect, text);
     }
 
     @Step
     public static void ensurePublicPost(PodUser author, String text) {
-        if (post(author, text).is(visible)) { return; }
+        waitStreamOpening();
+        if (post(author, text).is(visible)) {
+            return;
+        }
         addPublicPost(text);
+    }
+
+    @Step
+    public static void ensureCommentForPost(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        waitStreamOpening();
+        if (comment(postAuthor, postText, commentAuthor, commentText).is(visible)) {
+            return;
+        }
+        addComment(postAuthor, postText, commentText);
     }
 
 
     @Step
     public static void deleteAllPosts(PodUser author) {
         clearUniqueData();
-        addPublicPost(the("servicepost"));
+        addPublicPost(newThe("servicepost"));
         assertPost(author, the("servicepost"));
         int countDeleted = 0;
         ElementsCollection userPosts = $$(".stream_element").filter(textBegin(author.fullName));
@@ -218,7 +232,6 @@ public class Feed {
             countDeleted++;
         }
         if (countDeleted > 1) {
-            deleteUniqueValue("servicepost");
             deleteAllPosts(author);
         }
     }

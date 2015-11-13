@@ -1,8 +1,8 @@
 package steps;
 
-import datastructures.PodUser;
-import pages.*;
-import ru.yandex.qatools.allure.annotations.Step;
+        import datastructures.PodUser;
+        import pages.*;
+        import ru.yandex.qatools.allure.annotations.Step;
 
 public class Scenarios {
 
@@ -20,5 +20,12 @@ public class Scenarios {
         Contacts.deleteAllUserAspects();
 
         Menu.logOut();
+    }
+
+    @Step
+    public static void waitStreamOpening(){
+        //user menu can be opened only if stream is opened - indirect check
+        Menu.openMenu();
+        Menu.search.click();//to close usermenu
     }
 }
