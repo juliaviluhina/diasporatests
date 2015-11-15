@@ -8,7 +8,7 @@ public class Scenarios {
 
     @Step
     public static void clearUserData(PodUser user) {
-        Diaspora.signInAs(user);
+        Diaspora.ensureSignInAs(user);
 
         NavBar.openStream();
         Feed.deleteAllPosts(user);
@@ -19,7 +19,7 @@ public class Scenarios {
         Menu.openContacts();
         Contacts.deleteAllUserAspects();
 
-        Menu.logOut();
+        Menu.ensureLogOut();
     }
 
     @Step

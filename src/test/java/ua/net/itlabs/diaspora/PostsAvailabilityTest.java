@@ -28,24 +28,24 @@ public class PostsAvailabilityTest extends BaseTest {
     public void testAvailabilityPublicPost() {
 
         GIVEN("Public post is added by author");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Feed.addPublicPost(the("Public Ana"));
         Feed.assertPost(Pod1.ana, the("Public Ana"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Public post without tag is not shown in stream of unlinked user");
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Feed.assertNoPost(Pod1.ana, the("Public Ana"));
 
         EXPECT("Public post without tag is shown in contact stream of unlinked user");
         Menu.search(Pod1.ana.fullName);
         Feed.assertPost(Pod1.ana, the("Public Ana"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Public post is shown in stream of linked user");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertPost(Pod1.ana, the("Public Ana"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -53,50 +53,50 @@ public class PostsAvailabilityTest extends BaseTest {
     public void testAvailabilityPrivatePost() {
 
         GIVEN("Private post is added by author");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Feed.addPrivatePost(the("Private Ana"));
         Feed.assertPost(Pod1.ana, the("Private Ana"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Private post is not shown in contact's stream for unlinked user ");
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Menu.search(Pod1.ana.fullName);
         Feed.assertNoPost(Pod1.ana, the("Private Ana"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Private post is not shown in stream of linked user");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertNoPost(Pod1.ana, the("Private Ana"));
-        Menu.logOut();
+        Menu.ensureLogOut();
     }
 
     @Test
     public void testAvailabilityLimitedPosts() {
 
         GIVEN("Limited posts in different aspects ere added by author");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Feed.addAllAspectsPost(the("Ana for All aspects"));
         Feed.assertPost(Pod1.ana, the("Ana for All aspects"));
         Feed.addAspectPost(FRIENDS, the("Ana for Friends"));
         Feed.assertPost(Pod1.ana, the("Ana for Friends"));
         Feed.addAspectPost(ACQUAINTANCES, the("Ana for Acquaintances"));
         Feed.assertPost(Pod1.ana, the("Ana for Acquaintances"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Limited post is not shown in contact's stream for unlinked user ");
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Menu.search(Pod1.ana.fullName);
         Feed.assertNoPost(Pod1.ana, the("Ana for All aspects"));
         Feed.assertNoPost(Pod1.ana, the("Ana for Friends"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Posts limited in some aspects are shown in stream of linked user who linked in this aspects with author");
         AND("Posts limited in some aspects are not shown in stream of linked user who linked in another aspects with author");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertPost(Pod1.ana, the("Ana for All aspects"));
         Feed.assertPost(Pod1.ana, the("Ana for Friends"));
         Feed.assertNoPost(Pod1.ana, the("Ana for Acquaintances"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 }

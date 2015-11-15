@@ -34,11 +34,6 @@ public class Menu {
     }
 
     @Step
-    public static void logOut() {
-        Diaspora.currentWebDriver.manage().window().setPosition(new Point(-2000, 0));
-    }
-
-    @Step
     public static void search(String searchText) {
         waitStreamOpening();//if menu is opened then search is possible too
         search.setValue(searchText);
@@ -50,6 +45,17 @@ public class Menu {
     @Step
     public static void assertLoggedOut() {
         Diaspora.userName.shouldBe(visible);
+    }
+
+    @Step
+    public static void ensureLogOut() {
+        if (Diaspora.isSeparateSigningInMode()) {
+            Diaspora.currentWebDriver.manage().window().setPosition(new Point(-2000, 0));
+        }
+        else {
+            openMenu();
+            userMenuItems.find(exactText("Log out")).click();
+        }
     }
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");

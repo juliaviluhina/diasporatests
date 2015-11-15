@@ -29,7 +29,7 @@ public class TagsTest extends BaseTest {
         Feed.addPublicPost(post1);
         Feed.addPublicPost(post2);
         Feed.assertPost(Pod1.rob, post2); //this check for wait moment when stream will be loaded
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -37,7 +37,7 @@ public class TagsTest extends BaseTest {
     public void testAddTag() {
 
         EXPECT("Public post with not followed tag is not shown in stream of unlinked user");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Feed.assertNoPost(Pod1.rob, post1);
 
         WHEN("Tag is followed by user");
@@ -54,7 +54,7 @@ public class TagsTest extends BaseTest {
     public void testFilterFeedByTag() {
 
         GIVEN("Some tag is followed by user");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Tags.ensureTag(the("#tag2"));
 
         WHEN("This followed tag is selected in NavBar");
@@ -71,7 +71,7 @@ public class TagsTest extends BaseTest {
     public void testDeleteTag() {
 
         GIVEN("Some tag is followed by user");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Tags.ensureTag(the("#tag2"));
 
         EXPECT("Public post with followed tag is shown in stream of unlinked user");
@@ -92,7 +92,7 @@ public class TagsTest extends BaseTest {
     public void testTagsOrderAndSafety() {
 
         GIVEN("User does not follow any tags");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Tags.ensureNoTags();
 
         WHEN("Tags are added in not alphabetical order");
@@ -102,8 +102,8 @@ public class TagsTest extends BaseTest {
         Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
 
         EXPECT("Added tags are shown in alphabetical order after next signing in");
-        Menu.logOut();
-        Diaspora.signInAs(Pod1.ana);
+        Menu.ensureLogOut();
+        Diaspora.ensureSignInAs(Pod1.ana);
         NavBar.openTags();
         Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
 

@@ -35,20 +35,20 @@ public class FederationTest extends BaseTest {
     public void testAvailabilityPublicPostForUnlinkedUsersOfDifferentPods() {
 
         GIVEN("Public post with tag is added by author from pod 1");
-        Diaspora.signInAs(Pod2.bob);
+        Diaspora.ensureSignInAs(Pod2.bob);
         Feed.addPublicPost(the(tag + " Public Bob"));
         Feed.assertPost(Pod2.bob, the(tag + " Public Bob"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Post is shown in stream of unlinked user from pod2 who has the same followed tag");
         AND("This post can be commented");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         Feed.addComment(Pod2.bob, the(tag + " Public Bob"), the("Comment from Rob"));
         Feed.assertComment(Pod2.bob, the(tag + " Public Bob"), Pod1.rob, the("Comment from Rob"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Post with comment from user from another pod is shown in author's stream");
-        Diaspora.signInAs(Pod2.bob);
+        Diaspora.ensureSignInAs(Pod2.bob);
         Feed.assertComment(Pod2.bob, the(tag + " Public Bob"), Pod1.rob, the("Comment from Rob"));
 
     }
@@ -57,20 +57,20 @@ public class FederationTest extends BaseTest {
     public void testAvailabilityLimitedPostForLinkedUsersOfDifferentPods() {
 
         GIVEN("Limited in right aspect post is added by author from pod 2");
-        Diaspora.signInAs(Pod2.bob);
+        Diaspora.ensureSignInAs(Pod2.bob);
         Feed.addAspectPost(WORK, the("Bob for work"));
         Feed.assertPost(Pod2.bob, the("Bob for work"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Post is shown in stream of linked in right aspect user from pod1");
         AND("This post can be commented");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Feed.addComment(Pod2.bob, the("Bob for work"), the("Comment from Ana"));
         Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Post with comment from user from another pod is shown in author's stream");
-        Diaspora.signInAs(Pod2.bob);
+        Diaspora.ensureSignInAs(Pod2.bob);
         Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
 
     }

@@ -23,7 +23,7 @@ public class AspectsTest extends BaseTest {
         clearUniqueData();
 
         WHEN("New aspest is added");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.add(the("Asp1"));
         Menu.openStream();
@@ -44,13 +44,13 @@ public class AspectsTest extends BaseTest {
         Aspects.toggleAspect(the("Asp1"));
         THEN("Limited post in this aspect is shown in stream");
         Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Limited in aspect post is available for linked in this aspect user");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Menu.search(Pod1.rob.fullName);
         Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -58,7 +58,7 @@ public class AspectsTest extends BaseTest {
     public void testSwitchToEditModeInNavBar() {
 
         WHEN("Aspect is in edit mode");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.switchToEditMode(FRIENDS);
 
@@ -78,14 +78,14 @@ public class AspectsTest extends BaseTest {
         Feed.addAspectPost(FRIENDS, the("Rob for new friends"));
         Feed.addAspectPost(FAMILY, the("Rob for new family"));
         Feed.assertPost(Pod1.rob, the("Rob for new family"));
-        Menu.logOut();
-        Diaspora.signInAs(Pod1.ana);
+        Menu.ensureLogOut();
+        Diaspora.ensureSignInAs(Pod1.ana);
         Feed.addAspectPost(WORK, the("Ana for work"));
         Feed.assertPost(Pod1.ana, the("Ana for work"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         WHEN("In NavBar aspects list all aspects is deselected");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Select all");

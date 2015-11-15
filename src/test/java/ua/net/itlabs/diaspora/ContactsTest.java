@@ -39,15 +39,15 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.addAspectPost(FAMILY, the("Eve for family after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));//this check for wait moment when stream will be loaded
-        Menu.logOut();
+        Menu.ensureLogOut();
 
 
         THEN("Post of author added before linking is not shown in user's stream");
         AND("Post of author added after linking is shown in user's stream");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertNoPost(Pod1.eve, the("Eve for family before manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -72,14 +72,14 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Eve for friends after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for friends after manage contacts"));//this check for wait moment when stream will be loaded
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         THEN("Post of author added before link deletion is shown in user's stream");
         AND("Post of author added after link deletion is not shown in user's stream");
-        Diaspora.signInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertPost(Pod1.eve, the("Eve for friends before manage contacts"));
         Feed.assertNoPost(Pod1.eve, the("Eve for friends after manage contacts"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -100,10 +100,10 @@ public class ContactsTest extends BaseTest {
         Feed.addAspectPost(WORK, the("Eve for work after manage contacts"));
         Feed.addAspectPost(FAMILY, the("Eve for family after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));//this check for wait moment when stream will be loaded
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         THEN("Author's limited post in right aspect is available by user in contact's stream when user doesn't have link to author");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Feed.assertNoPost(Pod1.eve, the("Eve for work after manage contacts"));
         Feed.assertNoPost(Pod1.eve, the("Eve for family after manage contacts"));
 
@@ -116,7 +116,7 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.assertNoPost(Pod1.eve, the("Eve for work after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));
-        Menu.logOut();
+        Menu.ensureLogOut();
     }
 
 
@@ -144,12 +144,12 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.addAspectPost(the("Asp1"), the("Asp1") + " Post for new Aspect from Ron");
         Feed.assertPost(Pod1.eve, the("Asp1") + " Post for new Aspect from Ron");//this check for wait moment when stream will be loaded
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         THEN("This post is shown in user's stream");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Feed.assertPost(Pod1.eve, the("Asp1") + " Post for new Aspect from Ron");
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -157,7 +157,7 @@ public class ContactsTest extends BaseTest {
     public void testRenameAspectInContacts() {
         GIVEN("Aspect is added");
         clearUniqueData();
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
 
@@ -174,7 +174,7 @@ public class ContactsTest extends BaseTest {
         Feed.assertNoAspectForNewPost(the("Asp1"));
         Feed.assertAspectForNewPost(the("Asp2"));
 
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -182,7 +182,7 @@ public class ContactsTest extends BaseTest {
     public void testDeleteAspectInContacts() {
         GIVEN("Setup relation between users, aspect is added");
         clearUniqueData();
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
 
@@ -197,7 +197,7 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.assertNoAspectForNewPost(the("Asp1"));
 
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 

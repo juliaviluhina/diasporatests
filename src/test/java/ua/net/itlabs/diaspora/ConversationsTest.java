@@ -32,18 +32,18 @@ public class ConversationsTest extends BaseTest {
         clearUniqueData();
 
         WHEN("Conversation to user is added by author");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.sendNewConversationTo(Pod1.eve, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         THEN("Conversation is shown for user");
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject"), the("text"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -52,23 +52,23 @@ public class ConversationsTest extends BaseTest {
 
         GIVEN("Conversation to user is added by author");
         clearUniqueData();
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.sendNewConversationTo(Pod1.eve, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("User can reply on this conversation");
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject"), the("text"));//this check for wait moment when message will be loaded
         Conversations.replyToCurrentConversation(the("reply"));
         Conversations.assertMessageInCurrentConversation(Pod1.eve, the("reply"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Original message and reply is shown for author");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
         Conversations.assertMessageInCurrentConversation(Pod1.ana, the("text"));
@@ -80,7 +80,7 @@ public class ConversationsTest extends BaseTest {
 
         GIVEN("Conversation to user is added by author");
         clearUniqueData();
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.sendNewConversationTo(Pod1.eve, the("subject1"), the("text1"));
         Conversations.sendNewConversationTo(Pod1.eve, the("subject2"), the("text2"));
@@ -92,10 +92,10 @@ public class ConversationsTest extends BaseTest {
         Conversations.hideCurrentConversation();
         THEN("This conversation is not shown for author");
         Conversations.assertNoConversationBySubject(the("subject1"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Conversation hidden for author is shown for user");
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject1"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject1"), the("text1"));
@@ -109,16 +109,16 @@ public class ConversationsTest extends BaseTest {
         Conversations.assertCurrentConversation(Pod1.ana, the("subject2"), the("text2"));
         Conversations.hideCurrentConversation();
         Conversations.assertNoConversationBySubject(the("subject2"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Conversation of author hidden for user can be deleted by author");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject2"));
         Conversations.assertMessageInCurrentConversation(Pod1.ana, the("text2"));
         Conversations.deleteCurrentConversation();
         Conversations.assertNoConversationBySubject(the("subject2"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 
@@ -128,7 +128,7 @@ public class ConversationsTest extends BaseTest {
         clearUniqueData();
 
         WHEN("Message is sent from contact site to searched mutual user");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.ana);
         Menu.search(Pod1.eve.fullName);
         Contact.sendMessageToContact(the("subject"), the("text"));
 
@@ -138,14 +138,14 @@ public class ConversationsTest extends BaseTest {
         EXPECT("It is not possible to send message to not mutual user");
         Menu.search(Pod1.rob.fullName);
         Contact.assertNoMessaging();
-        Menu.logOut();
+        Menu.ensureLogOut();
 
         EXPECT("Message sent from author to user is shown for user");
-        Diaspora.signInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject"), the("text"));
-        Menu.logOut();
+        Menu.ensureLogOut();
 
     }
 

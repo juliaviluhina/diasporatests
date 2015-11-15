@@ -108,7 +108,7 @@ public class Relation {
     }
 
     public Relation createRelations() {
-        Diaspora.signInAs(podUser);
+        Diaspora.ensureSignInAs(podUser);
         NavBar.assertLoggedUser(podUser);
         if (clearTags) {
             NavBar.openTags();
@@ -131,7 +131,7 @@ public class Relation {
             }
         }
         if (doLogOut) {
-            Menu.logOut();
+            Menu.ensureLogOut();
         }
 
         return this;
