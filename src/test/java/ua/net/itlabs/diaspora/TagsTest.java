@@ -14,9 +14,6 @@ import static core.Gherkin.*;
 
 public class TagsTest extends BaseTest {
 
-    private static String post1;
-    private static String post2;
-
     @BeforeClass
     public static void givenSetupUsersRelation() {
 
@@ -108,4 +105,8 @@ public class TagsTest extends BaseTest {
         Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
 
     }
+
+    private static String post1;
+    private static String post2;
+    
 }

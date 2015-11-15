@@ -26,9 +26,5 @@ public class AuthenticationTest extends BaseTest {
         Menu.assertLoggedOut();
     }
 
-    @Test
-    public void test(){
-        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
-    }
 
 }

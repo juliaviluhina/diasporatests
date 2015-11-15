@@ -17,7 +17,6 @@ public class BasicOperationsTest extends BaseTest {
     @BeforeClass
     public static void givenSetupUsersRelation() {
 
-        GIVEN("Setup relations between users from the same pod");
         Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
         Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
