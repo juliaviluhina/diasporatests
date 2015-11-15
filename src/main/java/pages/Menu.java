@@ -2,6 +2,7 @@ package pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
@@ -34,8 +35,7 @@ public class Menu {
 
     @Step
     public static void logOut() {
-        openMenu();
-        userMenuItems.find(exactText("Log out")).click();
+        Diaspora.currentWebDriver.manage().window().setPosition(new Point(-2000, 0));
     }
 
     @Step

@@ -2,6 +2,7 @@ package ua.net.itlabs;
 
 import com.codeborne.selenide.Configuration;
 import org.junit.After;
+import org.junit.AfterClass;
 import pages.*;
 
 import java.io.IOException;
@@ -23,5 +24,15 @@ public abstract class BaseTest {
             screenshot(lastSelenideScreenshot);
         }
     }
+
+    @AfterClass
+    public static void CloseWebDrivers(){
+        countTestClasses++;
+        if (countTestClasses == 11) {
+            Diaspora.closeWebDrivers();
+        }
+    }
+
+    private static int countTestClasses = 0;
 
 }

@@ -4,6 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Screenshots;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.impl.ScreenShotLaboratory;
+import com.codeborne.selenide.impl.WebDriverThreadLocalContainer;
 import com.google.common.io.Files;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -16,9 +17,12 @@ import com.google.common.base.Function;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static com.codeborne.selenide.WebDriverRunner.webdriverContainer;
 
 
 public class AdditionalAPI {
@@ -46,6 +50,21 @@ public class AdditionalAPI {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    public static  WebDriver createWebDriver() {
+        try {
+            Method method = WebDriverThreadLocalContainer.class.getDeclaredMethod("createDriver");
+            method.setAccessible(true);
+            return (WebDriver) method.invoke(webdriverContainer);
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (InvocationTargetException e1) {
+            e1.printStackTrace();
+        } catch (NoSuchMethodException e1) {
+            e1.printStackTrace();
+        }
         return null;
     }
 
