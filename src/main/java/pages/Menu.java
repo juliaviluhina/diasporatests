@@ -50,9 +50,8 @@ public class Menu {
     @Step
     public static void ensureLogOut() {
         if (Diaspora.isSeparateSigningInMode()) {
-            Diaspora.currentWebDriver.manage().window().setPosition(new Point(-2000, 0));
-        }
-        else {
+            Diaspora.hideCurrentUserBrowser();
+        } else {
             openMenu();
             userMenuItems.find(exactText("Log out")).click();
         }
@@ -64,7 +63,7 @@ public class Menu {
 
     //method added because of problem with opening user menu when stream is not loaded
     public static void openMenu() {
-        assertThat(userMenuOpened(),timeout2x());
+        assertThat(userMenuOpened(), timeout2x());
     }
 
     private static ExpectedCondition<Boolean> userMenuOpened() {

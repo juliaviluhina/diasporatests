@@ -45,6 +45,13 @@ public class Diaspora {
         }
     }
 
+    public static void hideCurrentUserBrowser() {
+        if (currentUser != null) {
+            userWebDrivers.get(currentUser).manage().window().setPosition(new Point(-2000, 0));
+            currentUser = null;
+        }
+    }
+
     public static SelenideElement userName = $("#user_username");
 
     private static ExpectedCondition<Boolean> authenticationIsOpened(final PodUser user) {
@@ -76,6 +83,11 @@ public class Diaspora {
     }
 
     private static void signInAsAtSeparateWebDriver(PodUser user) {
+        WebDriver currentWebDriver;
+        if (currentUser != null) {
+            hideCurrentUserBrowser();
+        }
+        currentUser = user;
         if (!userWebDrivers.containsKey(user)) {
             if (userWebDrivers.size() == 0) {
                 currentWebDriver = getWebDriver();
@@ -105,6 +117,6 @@ public class Diaspora {
 
 
     private static Map<PodUser, WebDriver> userWebDrivers = new HashMap<PodUser, WebDriver>();
-    public static WebDriver currentWebDriver = null;
+    private static PodUser currentUser = null;
 
 }

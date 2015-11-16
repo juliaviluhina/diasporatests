@@ -108,5 +108,5 @@ public class TagsTest extends BaseTest {
 
     private static String post1;
     private static String post2;
-    
+
 }
