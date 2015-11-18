@@ -43,6 +43,7 @@ public class Diaspora {
         for (WebDriver webDriver:userWebDrivers.values()) {
             webDriver.close();
         }
+        userWebDrivers.clear();
     }
 
     public static void hideCurrentUserBrowser() {

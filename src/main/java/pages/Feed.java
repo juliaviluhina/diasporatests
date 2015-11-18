@@ -5,6 +5,8 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
@@ -12,16 +14,18 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
-import static core.AdditionalAPI.scrollToAndHover;
+import static core.AdditionalAPI.*;
 import static core.conditions.CustomCondition.*;
 import static core.helpers.UniqueDataHelper.*;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static steps.Scenarios.*;
 
 public class Feed {
 
     @Step
     public static void addPublicPost(String text) {
-        waitStreamOpening();
+        ensureAddPostMode();
         newPostText.click();
         newPostText.setValue(text);
 
@@ -31,10 +35,8 @@ public class Feed {
 
     @Step
     public static void addPublicPostWithMentionAbout(PodUser podUser, String text) {
-        waitStreamOpening();
-
+        ensureAddPostMode();
         newPostText.click();
-
         newPostText.sendKeys(text + " @" + podUser.userName);
         ElementsCollection dropdownMenuItemsForMention = $$(".mentions-autocomplete-list li");
         dropdownMenuItemsForMention.find(exactText(podUser.fullName)).click();
@@ -46,7 +48,7 @@ public class Feed {
 
     @Step
     public static void addPrivatePost(String text) {
-        waitStreamOpening();
+        ensureAddPostMode();
 
         newPostText.click();
         newPostText.setValue(text);
@@ -57,7 +59,7 @@ public class Feed {
 
     @Step
     public static void addAllAspectsPost(String text) {
-        waitStreamOpening();
+        ensureAddPostMode();
 
         newPostText.click();
         newPostText.setValue(text);
@@ -68,7 +70,7 @@ public class Feed {
 
     @Step
     public static void addAspectPost(String diasporaAspect, String text) {
-        waitStreamOpening();
+        ensureAddPostMode();
 
         newPostText.click();
         newPostText.setValue(text);
@@ -344,6 +346,31 @@ public class Feed {
         selectingAspect.click();
         setAspect.shouldHave(Condition.text(selectingAspect.getText()));
         setAspect.click();
+    }
+
+    //method added because of problem with appearing buttons to add post when stream is not loaded
+    public static void ensureAddPostMode() {
+        assertThat(buttonsForNewPostAppear(), timeout2x());
+    }
+
+    private static ExpectedCondition<Boolean> buttonsForNewPostAppear() {
+        return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
+
+            public Boolean apply(WebDriver webDriver) {
+                newPostText.click();
+
+                if (!share.is(visible)) {
+                    return FALSE;
+                }
+                return TRUE;
+            }
+
+            @Override
+            public String toString() {
+                return "Error appearing buttons for new post";
+            }
+
+        });
     }
 
 }
