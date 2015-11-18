@@ -11,6 +11,7 @@ import ru.yandex.qatools.allure.annotations.Step;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -27,10 +28,22 @@ public class Diaspora {
     public static void ensureSignInAs(PodUser user) {
 
         if (isSeparateSigningInMode()) {
+            ensureSignInAsAtSeparateWebDriver(user);
+        }
+        else {
+            ensureSignInAsAtOneWebDriver(user);
+        }
+
+    }
+
+    @Step
+    public static void signInAs(PodUser user) {
+
+        if (isSeparateSigningInMode()) {
             signInAsAtSeparateWebDriver(user);
         }
         else {
-            signInAsAtOneWebDriver(user);
+            ensureSignInAsAtOneWebDriver(user);
         }
 
     }
@@ -44,6 +57,10 @@ public class Diaspora {
             webDriver.close();
         }
         userWebDrivers.clear();
+        if (webDriverForAuthenticationTest != null) {
+            webDriverForAuthenticationTest.close();
+            webDriverForAuthenticationTest = null;
+        }
     }
 
     public static void hideCurrentUserBrowser() {
@@ -51,6 +68,12 @@ public class Diaspora {
             userWebDrivers.get(currentUser).manage().window().setPosition(new Point(-2000, 0));
             currentUser = null;
         }
+    }
+
+    @Step
+    public static void logOut() {
+        Menu.openMenu();
+        Menu.userMenuItems.find(exactText("Log out")).click();
     }
 
     public static SelenideElement userName = $("#user_username");
@@ -75,7 +98,7 @@ public class Diaspora {
         });
     }
 
-    private static void signInAsAtOneWebDriver(PodUser user) {
+    private static void ensureSignInAsAtOneWebDriver(PodUser user) {
         //open(user.podLink + "/users/sign_in");
         assertThat(authenticationIsOpened(user), timeout2x());
         userName.setValue(user.userName);
@@ -83,7 +106,7 @@ public class Diaspora {
         $(By.name("commit")).click();
     }
 
-    private static void signInAsAtSeparateWebDriver(PodUser user) {
+    private static void ensureSignInAsAtSeparateWebDriver(PodUser user) {
         WebDriver currentWebDriver;
         if (currentUser != null) {
             hideCurrentUserBrowser();
@@ -99,25 +122,42 @@ public class Diaspora {
             userWebDrivers.put(user, currentWebDriver);
             setWebDriver(currentWebDriver);
 
-            open(user.podLink + "/users/sign_in");
-
-            userName.setValue(user.userName);
-            $("#user_password").setValue(user.password);
-            $(By.name("commit")).click();
+            setUserNameAndPassword(user);
 
         }
         else
         {   currentWebDriver = userWebDrivers.get(user);
             setWebDriver(currentWebDriver);
-            //currentWebDriver.switchTo().window(user.windowHandle);
             currentWebDriver.manage().window().setPosition(new Point(0, 0));
             currentWebDriver.manage().window().maximize();
+            currentWebDriver.switchTo().window(currentWebDriver.getWindowHandle());//without this string on Linux does not work
             Menu.openStream();
         }
     }
 
 
+    private static void signInAsAtSeparateWebDriver(PodUser user) {
+        if (webDriverForAuthenticationTest != null) {
+           webDriverForAuthenticationTest.close();
+        }
+
+        webDriverForAuthenticationTest = createWebDriver();
+        setWebDriver(webDriverForAuthenticationTest);
+
+        setUserNameAndPassword(user);
+    }
+
+    private static void setUserNameAndPassword(PodUser user) {
+        open(user.podLink + "/users/sign_in");
+
+        userName.setValue(user.userName);
+        $("#user_password").setValue(user.password);
+        $(By.name("commit")).click();
+    }
+
+
     private static Map<PodUser, WebDriver> userWebDrivers = new HashMap<PodUser, WebDriver>();
     private static PodUser currentUser = null;
+    private static WebDriver webDriverForAuthenticationTest = null;
 
 }

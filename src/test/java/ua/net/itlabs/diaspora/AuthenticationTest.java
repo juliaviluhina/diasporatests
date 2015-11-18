@@ -16,12 +16,12 @@ public class AuthenticationTest extends BaseTest {
     @Test
     public void testSignInAndLogOut() {
         WHEN("User is signed in");
-        Diaspora.ensureSignInAs(Pod1.ana);
+        Diaspora.signInAs(Pod1.ana);
         THEN("User's account is opened");
         NavBar.assertLoggedUser(Pod1.ana);
 
         WHEN("User is logged out");
-        Menu.ensureLogOut();
+        Diaspora.logOut();
         THEN("User's account is closed");
         Menu.assertLoggedOut();
     }

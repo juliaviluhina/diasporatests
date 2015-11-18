@@ -52,8 +52,7 @@ public class Menu {
         if (Diaspora.isSeparateSigningInMode()) {
             Diaspora.hideCurrentUserBrowser();
         } else {
-            openMenu();
-            userMenuItems.find(exactText("Log out")).click();
+            Diaspora.logOut();
         }
     }
 

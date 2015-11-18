@@ -15,6 +15,7 @@ public abstract class BaseTest {
     static {
         Configuration.timeout = 15000;
         clearUniqueData();
+        countTestClasses = (System.getProperty("test") == null) ? 11 : 1;
     }
 
     @After
@@ -27,12 +28,13 @@ public abstract class BaseTest {
 
     @AfterClass
     public static void CloseWebDrivers(){
-        countTestClasses++;
-        if (countTestClasses == 11) {
+        countTestClassesLoaded++;
+        if (countTestClassesLoaded == countTestClasses) {
             Diaspora.closeWebDrivers();
         }
     }
 
-    private static int countTestClasses = 0;
+    private static int countTestClassesLoaded = 0;
+    private static int countTestClasses;
 
 }
