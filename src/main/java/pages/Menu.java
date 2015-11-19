@@ -49,11 +49,7 @@ public class Menu {
 
     @Step
     public static void ensureLogOut() {
-        if (Diaspora.isSeparateSigningInMode()) {
-            Diaspora.hideCurrentUserBrowser();
-        } else {
-            Diaspora.logOut();
-        }
+        Diaspora.ensureLogOut();
     }
 
     public static SelenideElement userMenuHeader = $(".user-menu-trigger");
