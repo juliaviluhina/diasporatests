@@ -7,6 +7,7 @@ import datastructures.PodUser;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
+import steps.Relation;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -31,12 +32,14 @@ public class Contact {
     @Step
     public static void stopIgnoring() {
         $(stopIgnoringLocator).click();
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
     @Step
     public static void startIgnoring() {
         $("#block_user_button").click();
         confirm(null);
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
     @Step
@@ -59,29 +62,34 @@ public class Contact {
     }
 
     @Step
+    public static void ensureNoIgnoreMode() {
+        ensureNoIgnoreMode(contactHeader);
+    }
+
+    @Step
     public static void ensureNoAspectsForContact(SelenideElement contact) {
         new AspectManager(manageContact(contact), contact).ensureNoAspects();
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
     @Step
     public static void ensureAspectsForContact(String... diasporaAspects) {
         ensureAspectsForContact(contactHeader, diasporaAspects);
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
     @Step
     public static void ensureAspectsForContact(SelenideElement contact, String... diasporaAspects) {
         new AspectManager(manageContact(contact), contact).ensureAspects(diasporaAspects);
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
     @Step
     public static void ensureNoIgnoreMode(SelenideElement contact) {
         new AspectManager(manageContact(contact), contact).ensureNoIgnoreMode();
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
-    @Step
-    public static void ensureNoIgnoreMode() {
-        ensureNoIgnoreMode(contactHeader);
-    }
 
     public static SelenideElement contactHeader = $(".profile_header");
     public static String manageContactLocator = ".btn.dropdown-toggle";

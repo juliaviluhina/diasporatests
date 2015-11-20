@@ -3,6 +3,7 @@ package ua.net.itlabs;
 import com.codeborne.selenide.Configuration;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import pages.*;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import static core.AdditionalAPI.*;
 import static core.helpers.UniqueDataHelper.*;
 
-public abstract class BaseTest {
+public class BaseTest {
 
     static {
         Configuration.timeout = 15000;
@@ -28,6 +29,7 @@ public abstract class BaseTest {
 
     @AfterClass
     public static void CloseWebDrivers(){
+
         countTestClassesLoaded++;
         if (countTestClassesLoaded == countTestClasses) {
             Diaspora.closeWebDrivers();

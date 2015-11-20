@@ -1,12 +1,12 @@
 package ua.net.itlabs.diaspora;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import ua.net.itlabs.BaseTest;
+        import org.junit.BeforeClass;
+        import org.junit.Test;
+        import ua.net.itlabs.BaseTest;
 
-import static core.helpers.UniqueDataHelper.clearUniqueData;
-import static steps.Scenarios.clearUserData;
-import static ua.net.itlabs.testDatas.Users.*;
+        import static core.helpers.UniqueDataHelper.clearUniqueData;
+        import static steps.Scenarios.clearUserData;
+        import static ua.net.itlabs.testDatas.Users.*;
 
 
 public class ClearDataTest extends BaseTest {

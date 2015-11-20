@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
+import steps.Relation;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.Condition.*;
@@ -132,6 +133,7 @@ public class Feed {
         scrollToAndHover(post);
         post.find(".block_user").click();
         confirm(null);
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
     @Step

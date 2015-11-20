@@ -21,12 +21,27 @@ public class FederationTest extends BaseTest {
     @BeforeClass
     public static void givenSetupUsersRelation() {
 
-        GIVEN("Setup relation between users from two pods, some followed tag is added for users");
-        tag = "#ana_bob_rob_sam";
         Configuration.timeout = 90000;//for push data on another pod it is needed bigger timeout
+
+        tag = "#ana_bob_rob_sam";
+
+        GIVEN("Ana from pod1 is linked with Bob from pod2 as Acquaintance");
+        AND("Ana is not linked with Rob from pod1 and Sam from pod2");
         Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod1.rob, Pod2.sam).ensure();
+
+        GIVEN("Rob from pod1 is linked with Sam from pod2 as Friend");
+        AND("Rob is not linked with Ana from pod1 and Bob from pod2");
+        AND("Rob has tag "+tag);
         Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod1.ana, Pod2.bob).withTags(tag).ensure();
+
+        GIVEN("Sam from pod2 is linked with Rob from pod1 as Family");
+        AND("Sam is not linked with Ana from pod1 and Bob from pod2");
+        AND("Rob has tag "+tag);
         Relation.forUser(Pod2.sam).toUser(Pod1.rob, FAMILY).notToUsers(Pod1.ana, Pod2.bob).ensure();
+
+        GIVEN("Bob from pod2 is linked with Ana from pod1 as Work");
+        AND("Bob is not linked with Rob from pod1 and Sam from pod2");
+        AND("Bob has tag "+tag);
         Relation.forUser(Pod2.bob).toUser(Pod1.ana, WORK).notToUsers(Pod1.rob, Pod2.sam).withTags(tag).ensure();
 
     }

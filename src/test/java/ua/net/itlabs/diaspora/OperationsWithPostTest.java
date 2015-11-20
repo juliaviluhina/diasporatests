@@ -12,28 +12,13 @@ import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
-public class BasicOperationsTest extends BaseTest {
+public class OperationsWithPostTest extends BaseTest {
 
-    @BeforeClass
-    public static void givenSetupUsersRelation() {
-
-        Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
-        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
-        Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
-
-    }
-
-    @Before
-    public void addGivenDescriptionToAllure() {
-
-        GIVEN("Eve is not linked with Ana and Rob");
-        GIVEN("Rob is linked with Ana in Friends aspect and unlinked with Eve");
-        GIVEN("Ana is linked with Rob in Friends aspect and unlinked with Eve");
-
-    }
 
     @Test
     public void testAlienPostCannotBeDeleted() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post from author exists");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -50,6 +35,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testDeletePost() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post from author exists");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -73,6 +60,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testLikePost() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post is added by author");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -101,6 +90,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testUnlikePost() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post is added by author and liked by user");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -129,6 +120,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testAddCommentToPost() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Limited post from author exists");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -151,6 +144,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testDeleteCommentByAuthorOfComment() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post from author exists, comment to post from linked user exist");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -174,6 +169,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testDeleteCommentByAuthorOfPost() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post from author exists, comment to post from linked user exist");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -199,6 +196,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testAlienCommentToAlienPostCannotBeDeleted() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post from author exists, comment to post from linked user exist");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -219,6 +218,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testPostCannotBeResharedByAuthor() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post from author is exists");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -232,6 +233,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testLimitedPostCannotBeReshared() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Limited post from author is exists");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -248,6 +251,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testResharePublicPost() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post from author is exists");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -271,6 +276,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testDeleteResharedPublicPost() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         GIVEN("Public post from author is exists and reshared");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -302,6 +309,8 @@ public class BasicOperationsTest extends BaseTest {
 
     @Test
     public void testAddMentionPost() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
 
         WHEN("Post with mention about linked user is added by author");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -317,5 +326,39 @@ public class BasicOperationsTest extends BaseTest {
         Menu.ensureLogOut();
 
     }
+
+    @Test
+    public void testHidePosts() {
+        GIVEN("Ensure relations for users from one pod");
+        ensureRelationsForUsersOfPod1();
+        clearUniqueData();
+
+        Diaspora.signInAs(Pod1.ana);
+        Feed.addAspectPost(FRIENDS, the("Ana for friends about hiding"));
+        Feed.assertPost(Pod1.ana, the("Ana for friends about hiding"));//this check for wait moment when stream will be loaded
+        Menu.ensureLogOut();
+
+        EXPECT("Hidden post is not shown in stream");
+        Diaspora.ensureSignInAs(Pod1.eve);
+        Feed.hidePost(Pod1.ana, the("Ana for friends about hiding"));
+        Feed.assertNoPost(Pod1.ana, the("Ana for friends about hiding"));
+
+        EXPECT("Hidden post is not shown in contact stream");
+        Menu.search(Pod1.ana.fullName);
+        Feed.assertNoPost(Pod1.ana, the("Ana for friends about hiding"));
+        Menu.ensureLogOut();
+
+        EXPECT("Hidden post is shown in stream of another user");
+        Diaspora.ensureSignInAs(Pod1.rob);
+        Feed.assertPost(Pod1.ana, the("Ana for friends about hiding"));
+        Menu.ensureLogOut();
+
+        EXPECT("After new signing in hidden post is not shown");
+        Diaspora.ensureSignInAs(Pod1.eve);
+        Feed.assertNoPost(Pod1.ana, the("Ana for friends about hiding"));
+        Menu.ensureLogOut();
+
+    }
+
 
 }

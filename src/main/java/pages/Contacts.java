@@ -6,6 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
+import steps.Relation;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
@@ -57,12 +58,14 @@ public class Contacts {
     public static void addLinkedContactForAspect(String aspect, PodUser podUser) {
         selectAspect(aspect);
         contact(podUser).find(".contact_add-to-aspect").click();
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
     @Step
     public static void deleteLinkedContactForAspect(String aspect, PodUser podUser) {
         selectAspect(aspect);
         contact(podUser).find(".contact_remove-from-aspect").click();
+        Relation.forUser(Diaspora.currentUser).isChanged();
     }
 
     @Step

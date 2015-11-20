@@ -1,6 +1,11 @@
 package ua.net.itlabs.testDatas;
 
 import datastructures.PodUser;
+import ru.yandex.qatools.allure.annotations.Step;
+import steps.Relation;
+
+import static core.Gherkin.*;
+import static pages.Aspects.*;
 
 public class Users {
 
@@ -69,6 +74,18 @@ public class Users {
 
     public static String getDataSet() {
         return (System.getProperty("dataset"));
+    }
+
+    @Step
+    public static void ensureRelationsForUsersOfPod1() {
+
+        GIVEN("Eve is not linked with Ana and Rob");
+        GIVEN("Rob is linked with Ana as Friend and is not linked with Eve");
+        GIVEN("Ana is linked with Rob as Friend and is not linked with Eve");
+        Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
+        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
+        Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
+
     }
 
 }
