@@ -39,7 +39,6 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.addAspectPost(FAMILY, the("Eve for family after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
 
 
         THEN("Post of author added before linking is not shown in user's stream");
@@ -47,7 +46,6 @@ public class ContactsTest extends BaseTest {
         Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertNoPost(Pod1.eve, the("Eve for family before manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));
-        Menu.ensureLogOut();
 
     }
 
@@ -72,14 +70,12 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Eve for friends after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for friends after manage contacts"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
 
         THEN("Post of author added before link deletion is shown in user's stream");
         AND("Post of author added after link deletion is not shown in user's stream");
         Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertPost(Pod1.eve, the("Eve for friends before manage contacts"));
         Feed.assertNoPost(Pod1.eve, the("Eve for friends after manage contacts"));
-        Menu.ensureLogOut();
 
     }
 
@@ -100,7 +96,6 @@ public class ContactsTest extends BaseTest {
         Feed.addAspectPost(WORK, the("Eve for work after manage contacts"));
         Feed.addAspectPost(FAMILY, the("Eve for family after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
 
         THEN("Author's limited post in right aspect is available by user in contact's stream when user doesn't have link to author");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -116,7 +111,6 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.assertNoPost(Pod1.eve, the("Eve for work after manage contacts"));
         Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));
-        Menu.ensureLogOut();
     }
 
 
@@ -130,6 +124,7 @@ public class ContactsTest extends BaseTest {
         WHEN("Aspect is added by author");
         Menu.openContacts();
         Contacts.addAspect(the("Asp1"));
+
         THEN("New aspect is shown in summary information about aspects");
         Contacts.selectAspect(the("Asp1"));
         Contacts.assertCountContactsInAspect(the("Asp1"), 0);
@@ -137,6 +132,7 @@ public class ContactsTest extends BaseTest {
         WHEN("Linked in another aspect user is added to this aspect");
         Contacts.addLinkedContactForAspect(the("Asp1"), Pod1.ana);
         Contacts.selectAspect(the("Asp1"));//only after this action counter is changed
+
         THEN("In summary information count of contacts in this aspect is incremented");
         Contacts.assertCountContactsInAspect(the("Asp1"), 1);
 
@@ -144,12 +140,10 @@ public class ContactsTest extends BaseTest {
         Menu.openStream();
         Feed.addAspectPost(the("Asp1"), the("Asp1") + " Post for new Aspect from Ron");
         Feed.assertPost(Pod1.eve, the("Asp1") + " Post for new Aspect from Ron");//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
 
         THEN("This post is shown in user's stream");
         Diaspora.ensureSignInAs(Pod1.ana);
         Feed.assertPost(Pod1.eve, the("Asp1") + " Post for new Aspect from Ron");
-        Menu.ensureLogOut();
 
     }
 
@@ -174,8 +168,6 @@ public class ContactsTest extends BaseTest {
         Feed.assertNoAspectForNewPost(the("Asp1"));
         Feed.assertAspectForNewPost(the("Asp2"));
 
-        Menu.ensureLogOut();
-
     }
 
     @Test
@@ -196,8 +188,6 @@ public class ContactsTest extends BaseTest {
         EXPECT("Deleted aspect is not available to manage aspects of post");
         Menu.openStream();
         Feed.assertNoAspectForNewPost(the("Asp1"));
-
-        Menu.ensureLogOut();
 
     }
 

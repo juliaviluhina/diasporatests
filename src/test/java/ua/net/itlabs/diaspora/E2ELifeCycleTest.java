@@ -25,7 +25,6 @@ public class E2ELifeCycleTest extends BaseTest {
         Menu.openStream();
         Feed.addPublicPost(the("Public Ana"));
         Feed.assertPost(Pod1.ana, the("Public Ana"));
-        Menu.ensureLogOut();
 
         EXPECT("Post of user1 can be liked by linked user2");
         Diaspora.ensureSignInAs(Pod1.rob);
@@ -35,7 +34,6 @@ public class E2ELifeCycleTest extends BaseTest {
         WHEN("Limited in right aspect post is added by user2");
         Feed.addAspectPost(WORK, the("Rob for work"));
         Feed.assertPost(Pod1.rob, the("Rob for work"));
-        Menu.ensureLogOut();
 
         EXPECT("Post of user2 can be commented by linked user1");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -44,7 +42,6 @@ public class E2ELifeCycleTest extends BaseTest {
 
         EXPECT("Limited post of user2 cannot be rashared by user1");
         Feed.assertPostCanNotBeReshared(Pod1.rob, the("Rob for work"));
-        Menu.ensureLogOut();
 
         EXPECT("Comments added by another user is shown for author of post"); //check visibility of comments
         Diaspora.ensureSignInAs(Pod1.rob);
@@ -57,7 +54,6 @@ public class E2ELifeCycleTest extends BaseTest {
         EXPECT("Liked post can be unliked");
         Feed.toggleLikePost(Pod1.ana, the("Public Ana"));
         Feed.assertNoLikes(Pod1.ana, the("Public Ana"));
-        Menu.ensureLogOut();
 
         EXPECT("Resharing post from user2 is shown for user1");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -74,12 +70,10 @@ public class E2ELifeCycleTest extends BaseTest {
 
         EXPECT("Comment from user can be deleted by author of post ");
         Feed.deleteComment(Pod1.rob, the("Rob for work"), Pod1.ana, the("Comment from Ana"));
-        Menu.ensureLogOut();
 
         EXPECT("Deleted post is not shown in user's stream");
         Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertNoPost(Pod1.ana, the("Public Ana"));
-        Menu.ensureLogOut();
 
     }
 

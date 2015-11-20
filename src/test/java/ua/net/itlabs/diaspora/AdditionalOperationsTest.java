@@ -26,7 +26,6 @@ public class AdditionalOperationsTest extends BaseTest {
         Menu.openStream();
         Feed.addAspectPost(FRIENDS, the("Ana for friends"));
         Feed.assertPost(Pod1.ana, the("Ana for friends"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
 
         EXPECT("Hidden post is not shown in stream");
         Diaspora.ensureSignInAs(Pod1.eve);
@@ -36,17 +35,14 @@ public class AdditionalOperationsTest extends BaseTest {
         EXPECT("Hidden post is not shown in contact stream");
         Menu.search(Pod1.ana.fullName);
         Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
-        Menu.ensureLogOut();
 
         EXPECT("Hidden post is shown in stream of another user");
         Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertPost(Pod1.ana, the("Ana for friends"));
-        Menu.ensureLogOut();
 
         EXPECT("After new signing in hidden post is not shown");
         Diaspora.ensureSignInAs(Pod1.eve);
         Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
-        Menu.ensureLogOut();
 
     }
 
@@ -60,7 +56,6 @@ public class AdditionalOperationsTest extends BaseTest {
         Menu.openStream();
         Feed.addPublicPost(the("Ana for public"));
         Feed.assertPost(Pod1.ana, the("Ana for public"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
 
         WHEN("Author of post is ignored");
         Diaspora.ensureSignInAs(Pod1.eve);
@@ -68,12 +63,10 @@ public class AdditionalOperationsTest extends BaseTest {
 
         THEN("Posts of ignored author is not shown in stream");
         Feed.assertNoPost(Pod1.ana, the("Ana for public"));
-        Menu.ensureLogOut();
 
         EXPECT("Posts of ignored user is shown in stream of another user");
         Diaspora.ensureSignInAs(Pod1.rob);
         Feed.assertPost(Pod1.ana, the("Ana for public"));
-        Menu.ensureLogOut();
     }
 
     @Test
@@ -83,7 +76,6 @@ public class AdditionalOperationsTest extends BaseTest {
         Diaspora.ensureSignInAs(Pod1.ana);
         Feed.addPublicPost(the("Ana for public"));
         Feed.assertPost(Pod1.ana, the("Ana for public"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
         Diaspora.ensureSignInAs(Pod1.eve);
         Menu.search(Pod1.ana.fullName);
         Contact.ensureNoIgnoreMode();
@@ -97,7 +89,6 @@ public class AdditionalOperationsTest extends BaseTest {
 
         THEN("Post of author is available to user");
         Feed.assertPost(Pod1.ana, the("Ana for public"));
-        Menu.ensureLogOut();
     }
 
     @Test
@@ -107,7 +98,6 @@ public class AdditionalOperationsTest extends BaseTest {
         Diaspora.ensureSignInAs(Pod1.ana);
         Feed.addPublicPost(the("Ana for public"));
         Feed.assertPost(Pod1.ana, the("Ana for public"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
         Diaspora.ensureSignInAs(Pod1.eve);
         Menu.search(Pod1.ana.fullName);
         Contact.ensureNoIgnoreMode();
@@ -120,7 +110,7 @@ public class AdditionalOperationsTest extends BaseTest {
 
         EXPECT("Post of author is not available to user");
         Feed.assertNoPost(Pod1.ana, the("Ana for public"));
-        Menu.ensureLogOut();
+
     }
 
 }

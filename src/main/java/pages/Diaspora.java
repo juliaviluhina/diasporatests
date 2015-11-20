@@ -25,6 +25,7 @@ import static java.lang.Boolean.TRUE;
 public class Diaspora {
 
     private static WebDriverManager webDriverManager;
+    private static PodUser currentUser;
 
     static {
         webDriverManager = new WebDriverManager();
@@ -32,6 +33,10 @@ public class Diaspora {
 
     @Step
     public static void ensureSignInAs(PodUser user) {
+        if (currentUser != null) {
+            ensureLogOut();
+        }
+        currentUser = user;
         if (isSeparateSigningInMode()) {
             webDriverManager.ensureSignInAsAtSeparateWebDriver(user);
         } else {
@@ -55,6 +60,7 @@ public class Diaspora {
         } else {
             logOut();
         }
+        currentUser = null;
     }
 
     @Step

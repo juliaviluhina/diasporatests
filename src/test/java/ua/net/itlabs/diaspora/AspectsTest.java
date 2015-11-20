@@ -42,9 +42,9 @@ public class AspectsTest extends BaseTest {
         WHEN("New aspect is selected in NavBar aspects list");
         NavBar.openMyAspects();
         Aspects.toggleAspect(the("Asp1"));
+
         THEN("Limited post in this aspect is shown in stream");
         Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
-        Menu.ensureLogOut();
 
         EXPECT("Limited in aspect post is available for linked in this aspect user");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -78,11 +78,9 @@ public class AspectsTest extends BaseTest {
         Feed.addAspectPost(FRIENDS, the("Rob for new friends"));
         Feed.addAspectPost(FAMILY, the("Rob for new family"));
         Feed.assertPost(Pod1.rob, the("Rob for new family"));
-        Menu.ensureLogOut();
         Diaspora.ensureSignInAs(Pod1.ana);
         Feed.addAspectPost(WORK, the("Ana for work"));
         Feed.assertPost(Pod1.ana, the("Ana for work"));
-        Menu.ensureLogOut();
 
         WHEN("In NavBar aspects list all aspects is deselected");
         Diaspora.ensureSignInAs(Pod1.rob);

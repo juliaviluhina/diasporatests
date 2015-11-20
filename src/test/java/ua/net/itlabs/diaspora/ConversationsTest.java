@@ -1,5 +1,6 @@
 package ua.net.itlabs.diaspora;
 
+import org.junit.Before;
 import steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,6 +28,15 @@ public class ConversationsTest extends BaseTest {
 
     }
 
+    @Before
+    public void addGivenDescriptionToAllure() {
+
+        GIVEN("Eve is linked with Ana in Work aspect");
+        GIVEN("Ana is linked with Eve in Friends aspect and unlinked with Rob");
+        GIVEN("Rob is with Ana");
+
+    }
+
     @Test
     public void testNewConversation() {
         clearUniqueData();
@@ -36,14 +46,13 @@ public class ConversationsTest extends BaseTest {
         Menu.openConversations();
         Conversations.sendNewConversationTo(Pod1.eve, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
 
         THEN("Conversation is shown for user");
         Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openConversations();
+        Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject"), the("text"));
-        Menu.ensureLogOut();
 
     }
 
@@ -56,7 +65,6 @@ public class ConversationsTest extends BaseTest {
         Menu.openConversations();
         Conversations.sendNewConversationTo(Pod1.eve, the("subject"), the("text"));
         Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
 
         EXPECT("User can reply on this conversation");
         Diaspora.ensureSignInAs(Pod1.eve);
@@ -65,7 +73,6 @@ public class ConversationsTest extends BaseTest {
         Conversations.assertCurrentConversation(Pod1.ana, the("subject"), the("text"));//this check for wait moment when message will be loaded
         Conversations.replyToCurrentConversation(the("reply"));
         Conversations.assertMessageInCurrentConversation(Pod1.eve, the("reply"));
-        Menu.ensureLogOut();
 
         EXPECT("Original message and reply is shown for author");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -90,9 +97,9 @@ public class ConversationsTest extends BaseTest {
         Conversations.selectConversationBySubject(the("subject1"));
         Conversations.assertMessageInCurrentConversation(Pod1.ana, the("text1"));//this check for wait moment when mesage will be loaded
         Conversations.hideCurrentConversation();
+
         THEN("This conversation is not shown for author");
         Conversations.assertNoConversationBySubject(the("subject1"));
-        Menu.ensureLogOut();
 
         EXPECT("Conversation hidden for author is shown for user");
         Diaspora.ensureSignInAs(Pod1.eve);
@@ -109,7 +116,6 @@ public class ConversationsTest extends BaseTest {
         Conversations.assertCurrentConversation(Pod1.ana, the("subject2"), the("text2"));
         Conversations.hideCurrentConversation();
         Conversations.assertNoConversationBySubject(the("subject2"));
-        Menu.ensureLogOut();
 
         EXPECT("Conversation of author hidden for user can be deleted by author");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -118,7 +124,6 @@ public class ConversationsTest extends BaseTest {
         Conversations.assertMessageInCurrentConversation(Pod1.ana, the("text2"));
         Conversations.deleteCurrentConversation();
         Conversations.assertNoConversationBySubject(the("subject2"));
-        Menu.ensureLogOut();
 
     }
 
@@ -138,14 +143,12 @@ public class ConversationsTest extends BaseTest {
         EXPECT("It is not possible to send message to not mutual user");
         Menu.search(Pod1.rob.fullName);
         Contact.assertNoMessaging();
-        Menu.ensureLogOut();
 
         EXPECT("Message sent from author to user is shown for user");
         Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openConversations();
         Conversations.selectConversationBySubject(the("subject"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject"), the("text"));
-        Menu.ensureLogOut();
 
     }
 

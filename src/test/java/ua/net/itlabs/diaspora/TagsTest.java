@@ -1,5 +1,6 @@
 package ua.net.itlabs.diaspora;
 
+import org.junit.Before;
 import steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +18,6 @@ public class TagsTest extends BaseTest {
     @BeforeClass
     public static void givenSetupUsersRelation() {
 
-        GIVEN("Setup relation between users, followed tags is added for users, public posts with this tags is added by author");
         post1 = the("Public post with tag " + the("#tag1") + " : ");
         post2 = the("Public post with tag " + the("#tag2") + " : ");
         Relation.forUser(Pod1.ana).notToUsers(Pod1.rob).ensure();
@@ -27,6 +27,15 @@ public class TagsTest extends BaseTest {
         Feed.addPublicPost(post2);
         Feed.assertPost(Pod1.rob, post2); //this check for wait moment when stream will be loaded
         Menu.ensureLogOut();
+
+    }
+
+    @Before
+    public void addGivenDescriptionToAllure() {
+
+        GIVEN("Setup relation between users, followed tags is added for users, public posts with this tags is added by author");
+        GIVEN("Ana is unlinked with Rob");
+        GIVEN("Rob is unlinked with Ana");
 
     }
 
@@ -95,11 +104,11 @@ public class TagsTest extends BaseTest {
         WHEN("Tags are added in not alphabetical order");
         NavBar.openTags();
         Tags.add(the("#Ytag1"), the("#Ztag"), the("#Ytag2"));
+
         THEN("Added tags are shown in alphabetical order");
         Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
 
         EXPECT("Added tags are shown in alphabetical order after next signing in");
-        Menu.ensureLogOut();
         Diaspora.ensureSignInAs(Pod1.ana);
         NavBar.openTags();
         Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));

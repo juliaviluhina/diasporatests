@@ -210,6 +210,7 @@ public class Feed {
             return;
         }
         addAspectPost(diasporaAspect, text);
+        assertPost(author, text);
     }
 
     @Step
@@ -219,6 +220,7 @@ public class Feed {
             return;
         }
         addPublicPost(text);
+        assertPost(author, text);
     }
 
     @Step
@@ -228,6 +230,7 @@ public class Feed {
             return;
         }
         addComment(postAuthor, postText, commentText);
+        assertComment(postAuthor, postText, commentAuthor, commentText);
     }
 
     @Step
@@ -239,6 +242,8 @@ public class Feed {
         }
         Menu.search(postAuthor.fullName);
         resharePost(postAuthor, postText);
+        Menu.openStream();
+        assertPost(reshareAuthor, postText);
     }
 
     @Step
