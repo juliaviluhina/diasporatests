@@ -19,4 +19,9 @@ public class PodUser {
     public String toString() {
         return userName;
     }
+
+    public boolean equals(PodUser toUser) {
+        if (toUser == null) return false;
+        return this.fullName.equals(toUser.fullName);
+    }
 }

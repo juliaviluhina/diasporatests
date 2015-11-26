@@ -1,5 +1,6 @@
 package ua.net.itlabs.diaspora;
 
+import concurrency.UserThreadManager;
 import org.junit.Test;
 import pages.Diaspora;
 import pages.Menu;
@@ -26,6 +27,32 @@ public class AuthenticationTest extends BaseTest {
 
         THEN("User's account is closed");
         Menu.assertLoggedOut();
+    }
+
+    @Test
+    public void test() {
+//        Diaspora.ensureSignInAs(Pod1.ana);
+//        Menu.openStream();
+//        Diaspora.ensureSignInAs(Pod1.rob);
+////        Menu.openStream();
+//        Diaspora.ensureSignInAs(Pod1.ana);
+////        Menu.openStream();
+
+
+        UserThreadManager userThreadManager = new UserThreadManager();
+
+        userThreadManager.ensureSinIn(Pod1.ana);
+        Menu.openStream();
+        userThreadManager.ensureLogOut();
+
+        userThreadManager.ensureSinIn(Pod1.eve);
+        Menu.openStream();
+        userThreadManager.ensureLogOut();
+
+        userThreadManager.ensureSinIn(Pod1.ana);
+        Menu.openStream();
+        userThreadManager.ensureLogOut();
+
     }
 
 

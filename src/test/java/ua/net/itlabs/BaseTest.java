@@ -1,10 +1,15 @@
 package ua.net.itlabs;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Screenshots;
+import com.codeborne.selenide.Selenide;
+import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.AfterClass;
 import pages.*;
+import ru.yandex.qatools.allure.annotations.Attachment;
 
+import java.io.File;
 import java.io.IOException;
 
 import static core.AdditionalAPI.*;
@@ -26,13 +31,14 @@ public abstract class BaseTest {
         }
     }
 
-    @AfterClass
-    public static void CloseWebDrivers(){
-        countTestClassesLoaded++;
-        if (countTestClassesLoaded == countTestClasses) {
-            Diaspora.closeWebDrivers();
-        }
-    }
+
+//    @AfterClass
+//    public static void CloseWebDrivers(){
+//        countTestClassesLoaded++;
+//        if (countTestClassesLoaded == countTestClasses) {
+//            Diaspora.closeWebDrivers();
+//        }
+//    }
 
     private static int countTestClassesLoaded = 0;
     private static int countTestClasses;
