@@ -27,7 +27,7 @@ public abstract class BaseTest {
 //        if (lastSelenideScreenshot != null) {
 //            screenshot(lastSelenideScreenshot);
 //        }
-        File lastSelenideScreenshot = Screenshots.getLastScreenshot();
+        File lastSelenideScreenshot = Screenshots.takeScreenShotAsFile();
         if (lastSelenideScreenshot != null) {
             screenshot(Files.toByteArray(lastSelenideScreenshot));
         }
