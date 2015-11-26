@@ -1,38 +1,46 @@
 package pages;
 
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.impl.WebDriverThreadLocalContainer;
+import core.WebDriversManager;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import core.WebDriversManager.StateAfterPreparing;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
-import static com.codeborne.selenide.WebDriverRunner.webdriverContainer;
 import static core.AdditionalAPI.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
+
 public class Diaspora {
 
-    private static WebDriverManager webDriverManager;
-    private static PodUser currentUser;
-    
+    public static SelenideElement userName = $("#user_username");
+
     static {
-        webDriverManager = new WebDriverManager();
+        webDriversManager = new WebDriversManager();
+    }
+
+    @Step
+    public static void signInAs(PodUser user) {
+        if (isSeparateSigningInMode()) {
+            signInAsAtSeparateWebDriver(user);
+        } else {
+            openUserAccount(user);
+        }
+    }
+
+    @Step
+    public static void logOut() {
+        Menu.openMenu();
+        Menu.userMenuItems.find(exactText("Log out")).click();
     }
 
     @Step
@@ -42,46 +50,25 @@ public class Diaspora {
         }
         currentUser = user;
         if (isSeparateSigningInMode()) {
-            webDriverManager.ensureSignInAsAtSeparateWebDriver(user);
+            ensureSignInAsAtSeparateWebDriver(user);
         } else {
-            ensureSignInAsAtOneWebDriver(user);
-        }
-    }
-
-    @Step
-    public static void signInAs(PodUser user) {
-        if (isSeparateSigningInMode()) {
-            webDriverManager.signInAsAtSeparateWebDriver(user);
-        } else {
-            ensureSignInAsAtOneWebDriver(user);
+            assertThat(authenticationIsOpened(user), timeout2x());
+            signIn(user);
         }
     }
 
     @Step
     public static void ensureLogOut() {
         if (isSeparateSigningInMode()) {
-            webDriverManager.hideCurrentUserBrowser();
+            webDriversManager.hideCurrentBrowser();
         } else {
             logOut();
         }
         currentUser = null;
     }
 
-    @Step
-    public static void logOut() {
-        Menu.openMenu();
-        Menu.userMenuItems.find(exactText("Log out")).click();
-    }
-
-    public static void closeWebDrivers() {
-        webDriverManager.clear();
-    }
-
-    public static Boolean isSeparateSigningInMode() {
-        return (System.getProperty("signingInMode").equals("separate"));
-    }
-
-    public static SelenideElement userName = $("#user_username");
+    private static WebDriversManager webDriversManager;
+    private static PodUser currentUser;
 
     private static ExpectedCondition<Boolean> authenticationIsOpened(final PodUser user) {
         return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
@@ -103,119 +90,31 @@ public class Diaspora {
         });
     }
 
-    private static void ensureSignInAsAtOneWebDriver(PodUser user) {
-        //open(user.podLink + "/users/sign_in");
-        assertThat(authenticationIsOpened(user), timeout2x());
+    private static Boolean isSeparateSigningInMode() {
+        return (System.getProperty("signingInMode").equals("separate"));
+    }
+
+    private static void signIn(PodUser user) {
         userName.setValue(user.userName);
         $("#user_password").setValue(user.password);
         $(By.name("commit")).click();
     }
 
-    private static void setUserNameAndPassword(PodUser user) {
+    private static void openUserAccount(PodUser user) {
         open(user.podLink + "/users/sign_in");
-
-        userName.setValue(user.userName);
-        $("#user_password").setValue(user.password);
-        $(By.name("commit")).click();
+        signIn(user);
     }
-    
-    private static class WebDriverManager extends HashMap<PodUser, WebDriver> {
 
-        private PodUser currentUser = null;
-        private WebDriver webDriverForAuthenticationTest = null;
+    private static void ensureSignInAsAtSeparateWebDriver(PodUser user) {
+        if (webDriversManager.prepareWebDriverForKey(user.fullName) == StateAfterPreparing.IS_CREATED)
+            openUserAccount(user);
+        else
+            Menu.openStream();
+    }
 
-        public void signInAsAtSeparateWebDriver(PodUser user) {
-            if (webDriverForAuthenticationTest != null) {
-                webDriverForAuthenticationTest.close();
-            }
-
-            webDriverForAuthenticationTest = createWebDriver();
-            setWebDriver(webDriverForAuthenticationTest);
-
-            setUserNameAndPassword(user);
-        }
-
-        public void ensureSignInAsAtSeparateWebDriver(PodUser user) {
-            WebDriver currentWebDriver;
-            if (currentUser != null) {
-                hideCurrentUserBrowser();
-            }
-            currentUser = user;
-            if (!containsKey(user)) {
-                if (size() == 0 && webDriverForAuthenticationTest == null) {
-                    currentWebDriver = getWebDriver();
-                } else {
-                    currentWebDriver = createWebDriver();
-                }
-                put(user, currentWebDriver);
-                setWebDriver(currentWebDriver);
-                setUserNameAndPassword(user);
-
-            } else {
-                currentWebDriver = get(user);
-                setWebDriver(currentWebDriver);
-                currentWebDriver.manage().window().setPosition(new Point(0, 0));
-                currentWebDriver.manage().window().maximize();
-                currentWebDriver.switchTo().window(currentWebDriver.getWindowHandle());//without this string on Linux does not work
-                Menu.openStream();
-            }
-        }
-
-        public void hideCurrentUserBrowser() {
-            if (currentUser != null) {
-                get(currentUser).manage().window().setPosition(new Point(-2000, 0));
-                currentUser = null;
-            }
-        }
-
-        @Override
-        public void clear() {
-            if (webDriverForAuthenticationTest != null) {
-                webDriverForAuthenticationTest.close();
-            }
-            for (WebDriver webDriver : values()) {
-                System.out.println("WebDriver for user closed");
-                webDriver.close();
-            }
-            super.clear();
-        }
-
-
-        private static  WebDriver createWebDriver() {
-            try {
-                Method method = WebDriverThreadLocalContainer.class.getDeclaredMethod("createDriver");
-                method.setAccessible(true);
-                WebDriver webDriver = (WebDriver) method.invoke(webdriverContainer);
-                return markForAutoClose(webDriver);
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-            } catch (InvocationTargetException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
-            }
-            return null;
-        }
-
-        private static WebDriver markForAutoClose(WebDriver webDriver) {
-            Runtime.getRuntime().addShutdownHook(new WebdriversFinalCleanupThread(Thread.currentThread(), webDriver));
-            return webDriver;
-        }
-
-        private static class WebdriversFinalCleanupThread extends Thread {
-            private final Thread thread;
-            private final WebDriver webDriver;
-
-            public WebdriversFinalCleanupThread(Thread thread, WebDriver webDriver) {
-                this.thread = thread;
-                this.webDriver = webDriver;
-            }
-
-            public void run() {
-                webDriver.close();
-            }
-        }
-
+    private static void signInAsAtSeparateWebDriver(PodUser user) {
+        webDriversManager.prepareDisposableWebDriver();
+        openUserAccount(user);
     }
 
 }

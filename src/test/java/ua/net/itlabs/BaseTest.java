@@ -6,6 +6,7 @@ import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.AfterClass;
 import pages.*;
+import ru.yandex.qatools.allure.annotations.Attachment;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,31 +19,19 @@ public abstract class BaseTest {
     static {
         Configuration.timeout = 15000;
         clearUniqueData();
-        countTestClasses = (System.getProperty("test") == null) ? 11 : 1;
     }
 
     @After
     public void tearDown() throws IOException {
-//        byte[] lastSelenideScreenshot = lastSelenideScreenshot();
-//        if (lastSelenideScreenshot != null) {
-//            screenshot(lastSelenideScreenshot);
-//        }
         File lastSelenideScreenshot = Screenshots.takeScreenShotAsFile();
         if (lastSelenideScreenshot != null) {
             screenshot(Files.toByteArray(lastSelenideScreenshot));
         }
-
     }
 
-    @AfterClass
-    public static void CloseWebDrivers(){
-//        countTestClassesLoaded++;
-//        if (countTestClassesLoaded == countTestClasses) {
-//            Diaspora.closeWebDrivers();
-//        }
+    @Attachment(type = "image/png")
+    public static byte[] screenshot(byte[] dataForScreenshot) {
+        return dataForScreenshot;
     }
-
-    private static int countTestClassesLoaded = 0;
-    private static int countTestClasses;
 
 }
