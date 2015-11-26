@@ -1,10 +1,13 @@
 package ua.net.itlabs;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Screenshots;
+import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.AfterClass;
 import pages.*;
 
+import java.io.File;
 import java.io.IOException;
 
 import static core.AdditionalAPI.*;
@@ -20,10 +23,15 @@ public abstract class BaseTest {
 
     @After
     public void tearDown() throws IOException {
-        byte[] lastSelenideScreenshot = lastSelenideScreenshot();
+//        byte[] lastSelenideScreenshot = lastSelenideScreenshot();
+//        if (lastSelenideScreenshot != null) {
+//            screenshot(lastSelenideScreenshot);
+//        }
+        File lastSelenideScreenshot = Screenshots.getLastScreenshot();
         if (lastSelenideScreenshot != null) {
-            screenshot(lastSelenideScreenshot);
+            screenshot(Files.toByteArray(lastSelenideScreenshot));
         }
+
     }
 
     @AfterClass
