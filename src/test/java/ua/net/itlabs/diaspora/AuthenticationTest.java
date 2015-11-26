@@ -28,5 +28,19 @@ public class AuthenticationTest extends BaseTest {
         Menu.assertLoggedOut();
     }
 
+    @Test
+    public void test() {
+        Diaspora.signInAs(Pod1.ana);
+
+        Diaspora.ensureSignInAs(Pod1.ana);
+        Menu.search(Pod1.eve.fullName);
+        Diaspora.ensureSignInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.ana);
+        Menu.search(Pod1.eve.fullName);
+
+
+    }
 
 }

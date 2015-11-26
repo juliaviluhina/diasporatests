@@ -36,10 +36,10 @@ public abstract class BaseTest {
 
     @AfterClass
     public static void CloseWebDrivers(){
-        countTestClassesLoaded++;
-        if (countTestClassesLoaded == countTestClasses) {
-            Diaspora.closeWebDrivers();
-        }
+//        countTestClassesLoaded++;
+//        if (countTestClassesLoaded == countTestClasses) {
+//            Diaspora.closeWebDrivers();
+//        }
     }
 
     private static int countTestClassesLoaded = 0;

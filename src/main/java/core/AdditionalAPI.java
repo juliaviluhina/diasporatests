@@ -53,21 +53,6 @@ public class AdditionalAPI {
         return null;
     }
 
-    public static  WebDriver createWebDriver() {
-        try {
-            Method method = WebDriverThreadLocalContainer.class.getDeclaredMethod("createDriver");
-            method.setAccessible(true);
-            return (WebDriver) method.invoke(webdriverContainer);
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();
-        } catch (NoSuchMethodException e1) {
-            e1.printStackTrace();
-        }
-        return null;
-    }
-
     protected static <V> V waitUntil(Function<? super WebDriver, V> condition, int timeout) {
         return (new WebDriverWait(getWebDriver(), timeout)).until(condition);
     }

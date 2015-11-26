@@ -1,6 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.impl.WebDriverThreadLocalContainer;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
@@ -8,8 +9,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
@@ -18,6 +21,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
+import static com.codeborne.selenide.WebDriverRunner.webdriverContainer;
 import static core.AdditionalAPI.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -26,7 +30,7 @@ public class Diaspora {
 
     private static WebDriverManager webDriverManager;
     private static PodUser currentUser;
-
+    
     static {
         webDriverManager = new WebDriverManager();
     }
@@ -114,7 +118,7 @@ public class Diaspora {
         $("#user_password").setValue(user.password);
         $(By.name("commit")).click();
     }
-
+    
     private static class WebDriverManager extends HashMap<PodUser, WebDriver> {
 
         private PodUser currentUser = null;
@@ -138,7 +142,7 @@ public class Diaspora {
             }
             currentUser = user;
             if (!containsKey(user)) {
-                if (size() == 0) {
+                if (size() == 0 && webDriverForAuthenticationTest == null) {
                     currentWebDriver = getWebDriver();
                 } else {
                     currentWebDriver = createWebDriver();
@@ -174,6 +178,42 @@ public class Diaspora {
                 webDriver.close();
             }
             super.clear();
+        }
+
+
+        private static  WebDriver createWebDriver() {
+            try {
+                Method method = WebDriverThreadLocalContainer.class.getDeclaredMethod("createDriver");
+                method.setAccessible(true);
+                WebDriver webDriver = (WebDriver) method.invoke(webdriverContainer);
+                return markForAutoClose(webDriver);
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            }
+            return null;
+        }
+
+        private static WebDriver markForAutoClose(WebDriver webDriver) {
+            Runtime.getRuntime().addShutdownHook(new WebdriversFinalCleanupThread(Thread.currentThread(), webDriver));
+            return webDriver;
+        }
+
+        private static class WebdriversFinalCleanupThread extends Thread {
+            private final Thread thread;
+            private final WebDriver webDriver;
+
+            public WebdriversFinalCleanupThread(Thread thread, WebDriver webDriver) {
+                this.thread = thread;
+                this.webDriver = webDriver;
+            }
+
+            public void run() {
+                webDriver.close();
+            }
         }
 
     }
