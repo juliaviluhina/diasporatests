@@ -18,8 +18,6 @@ import static core.Gherkin.*;
 
 public class FederationTest extends BaseTest {
 
-    private static String tag;
-
     @BeforeClass
     public static void givenSetupUsersRelation() {
 
@@ -34,10 +32,8 @@ public class FederationTest extends BaseTest {
     }
 
     @AfterClass
-    public void restoreTimeOut() {
-
-        Configuration.timeout = 15000;
-
+    public static void restoreTimeOut() {
+        Configuration.timeout = timeout;
     }
 
 
@@ -95,5 +91,8 @@ public class FederationTest extends BaseTest {
         Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
 
     }
+
+    private static long timeout = Configuration.timeout;
+    private static String tag;
 
 }

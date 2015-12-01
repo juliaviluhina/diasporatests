@@ -1,10 +1,15 @@
 package ua.net.itlabs.diaspora;
 
+import com.codeborne.selenide.Configuration;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import steps.Relation;
 import ua.net.itlabs.BaseTest;
 
+import static core.Gherkin.GIVEN;
 import static core.helpers.UniqueDataHelper.clearUniqueData;
+import static pages.Aspects.*;
 import static steps.Scenarios.clearUserData;
 import static ua.net.itlabs.testDatas.Users.*;
 
@@ -19,4 +24,16 @@ public class ClearDataTest extends BaseTest {
         clearUserData(Pod2.bob);
         clearUserData(Pod2.sam);
     }
+
+//    @BeforeClass
+//    public static void givenSetupUsersRelation() {
+//      Configuration.timeout = 30000;
+//    }
+//
+//    @AfterClass
+//    public static void restoreTimeOut() {
+//        Configuration.timeout = timeout;
+//    }
+//
+//    protected static long timeout = Configuration.timeout;
 }
