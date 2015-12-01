@@ -1,5 +1,6 @@
 package ua.net.itlabs.diaspora;
 
+import com.codeborne.selenide.Configuration;
 import org.junit.Before;
 import steps.Relation;
 import org.junit.BeforeClass;
@@ -10,6 +11,7 @@ import pages.Diaspora;
 import pages.Menu;
 import ua.net.itlabs.BaseTest;
 
+import static core.AdditionalAPI.timeout3x;
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
@@ -25,7 +27,7 @@ public class ConversationsTest extends BaseTest {
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).notToUsers(Pod1.rob).ensure();
         Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).ensure();
-
+        Configuration.timeout = timeout3x();//for refresh conversation stream more time is needed
     }
 
     @Before
@@ -101,21 +103,21 @@ public class ConversationsTest extends BaseTest {
         THEN("This conversation is not shown for author");
         Conversations.assertNoConversationBySubject(the("subject1"));
 
-        EXPECT("Conversation hidden for author is shown for user");
+        EXPECT("Conversation from author shown for user can be hidden by user");
         Diaspora.ensureSignInAs(Pod1.eve);
         Menu.openConversations();
+        Conversations.selectConversationBySubject(the("subject2"));
+        Conversations.assertCurrentConversation(Pod1.ana, the("subject2"), the("text2"));
+        Conversations.hideCurrentConversation();
+        Conversations.assertNoConversationBySubject(the("subject2"));
+
+        EXPECT("Conversation hidden for author is shown for user");
         Conversations.selectConversationBySubject(the("subject1"));
         Conversations.assertCurrentConversation(Pod1.ana, the("subject1"), the("text1"));
 
         EXPECT("Conversation hidden for author can be deleted by user");
         Conversations.deleteCurrentConversation();
         Conversations.assertNoConversationBySubject(the("subject1"));
-
-        EXPECT("Conversation from author shown for user can be hidden by user");
-        Conversations.selectConversationBySubject(the("subject2"));
-        Conversations.assertCurrentConversation(Pod1.ana, the("subject2"), the("text2"));
-        Conversations.hideCurrentConversation();
-        Conversations.assertNoConversationBySubject(the("subject2"));
 
         EXPECT("Conversation of author hidden for user can be deleted by author");
         Diaspora.ensureSignInAs(Pod1.ana);

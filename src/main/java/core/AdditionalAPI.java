@@ -3,6 +3,7 @@ package core;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -45,9 +46,19 @@ public class AdditionalAPI {
         };
     }
 
+    public static void scrollWithOffset(SelenideElement element, int x, int y) {
+
+        String code = "window.scroll(" + (element.getLocation().x + x) + "," + (element.getLocation().y + y) + ");";
+
+        ((JavascriptExecutor)getWebDriver()).executeScript(code, element, x, y);
+
+    }
+
     public static SelenideElement scrollToAndHover(SelenideElement element) {
         //element.scrollTo(); scrollTo works not always. especially unstable for tags
-        element.getCoordinates().inViewPort();
+        //element.getCoordinates().inViewPort();
+        //((JavascriptExecutor) getWebDriver()).executeScript("arguments[0].scrollIntoView(true);",element.getWrappedElement());
+        scrollWithOffset(element, 0, -150);
         return element.hover();
     }
 

@@ -33,7 +33,7 @@ public class Diaspora {
         if (isSeparateSigningInMode()) {
             signInAsAtSeparateWebDriver(user);
         } else {
-            openUserAccount(user);
+            ensureSignInAs(user);
         }
     }
 
@@ -45,10 +45,9 @@ public class Diaspora {
 
     @Step
     public static void ensureSignInAs(PodUser user) {
-        if (currentUser != null) {
+        if (isLoggedOut()) {
             ensureLogOut();
         }
-        currentUser = user;
         if (isSeparateSigningInMode()) {
             ensureSignInAsAtSeparateWebDriver(user);
         } else {
@@ -59,16 +58,14 @@ public class Diaspora {
 
     @Step
     public static void ensureLogOut() {
-        if (isSeparateSigningInMode()) {
+        if (isSeparateSigningInMode())
             webDriversManager.hideCurrentBrowser();
-        } else {
-            logOut();
-        }
-        currentUser = null;
+         else
+            if (!isLoggedOut())
+                logOut();
     }
 
     private static WebDriversManager webDriversManager;
-    private static PodUser currentUser;
 
     private static ExpectedCondition<Boolean> authenticationIsOpened(final PodUser user) {
         return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
@@ -115,6 +112,10 @@ public class Diaspora {
     private static void signInAsAtSeparateWebDriver(PodUser user) {
         webDriversManager.prepareDisposableWebDriver();
         openUserAccount(user);
+    }
+
+    private static Boolean isLoggedOut() {
+        return Diaspora.userName.is(visible);
     }
 
 }

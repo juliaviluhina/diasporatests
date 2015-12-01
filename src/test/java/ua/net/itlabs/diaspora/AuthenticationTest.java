@@ -26,6 +26,7 @@ public class AuthenticationTest extends BaseTest {
 
         THEN("User's account is closed");
         Menu.assertLoggedOut();
+
     }
 
 }

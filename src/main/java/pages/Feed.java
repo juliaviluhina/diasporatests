@@ -355,6 +355,7 @@ public class Feed {
 
     //method added because of problem with appearing buttons to add post when stream is not loaded
     public static void ensureAddPostMode() {
+        scrollToAndHover(newPostText);
         assertThat(buttonsForNewPostAppear(), timeout2x());
     }
 

@@ -2,11 +2,13 @@ package pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.confirm;
+import static core.AdditionalAPI.scrollToAndHover;
 import static core.conditions.CustomCondition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -49,14 +51,12 @@ public class Conversations {
 
     @Step
     public static void hideCurrentConversation() {
-        $(".hide_conversation").click();
-        confirm(null);
+        clickButton(".hide_conversation");
     }
 
     @Step
     public static void deleteCurrentConversation() {
-        $(".delete_conversation").click();
-        confirm(null);
+        clickButton(".delete_conversation");
     }
 
 
@@ -94,6 +94,15 @@ public class Conversations {
 
     private static SelenideElement conversation(String subject) {
         return inbox.findAll(".conversation").find(text(subject));
+    }
+
+    //this method is added because button can be hidden under the header
+    private static void clickButton(String cssSelector) {
+        SelenideElement button = $(cssSelector);
+        button.shouldBe(visible);
+        scrollToAndHover(button);
+        button.click();
+        confirm(null);
     }
 
 }
