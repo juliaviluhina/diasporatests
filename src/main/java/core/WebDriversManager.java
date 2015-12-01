@@ -8,6 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
@@ -17,7 +19,11 @@ import static core.helpers.UniqueDataHelper.the;
 
 public class WebDriversManager {
 
-    public enum StateAfterPreparing {IS_CREATED, IS_OPENED};
+    public enum StateAfterPreparing {IS_CREATED, IS_OPENED}
+
+    public WebDriversManager() {
+        currentThread = Thread.currentThread();
+    }
 
     public StateAfterPreparing prepareWebDriverForKey(String key) {
         WebDriver currentWebDriver;
@@ -31,7 +37,7 @@ public class WebDriversManager {
             } else {
                 currentWebDriver = createWebDriver();
             }
-            Runtime.getRuntime().addShutdownHook(new WebDriversFinalCleanupThread(currentWebDriver));
+            markForAutoClose(currentKey, currentWebDriver);
             webDrivers.put(key, currentWebDriver);
             setWebDriver(currentWebDriver);
             return StateAfterPreparing.IS_CREATED;
@@ -57,8 +63,11 @@ public class WebDriversManager {
         }
     }
 
+    private static final Logger log = Logger.getLogger(WebDriversManager.class.getName());
     private String currentKey = "";
     private Map<String, WebDriver> webDrivers = new HashMap<String, WebDriver>();
+    protected final AtomicBoolean cleanupThreadStarted = new AtomicBoolean(false);
+    Thread currentThread = null;
 
     private static WebDriver createWebDriver() {
         try {
@@ -76,15 +85,69 @@ public class WebDriversManager {
         return null;
     }
 
-    private static class WebDriversFinalCleanupThread extends Thread {
-        private final WebDriver webDriver;
+    protected WebDriver markForAutoClose(String key, WebDriver webDriver) {
+        if (!this.cleanupThreadStarted.get()) {
+            synchronized (this) {
+                if (!this.cleanupThreadStarted.get()) {
+                    (new UnusedWebDriversCleanupThread()).start();
+                    this.cleanupThreadStarted.set(true);
+                }
+            }
+        }
 
-        public WebDriversFinalCleanupThread(WebDriver webDriver) {
+        Runtime.getRuntime().addShutdownHook(new WebDriversFinalCleanupThread(key, webDriver));
+        return webDriver;
+    }
+
+
+    private class WebDriversFinalCleanupThread extends Thread {
+        private final WebDriver webDriver;
+        private final String key;
+
+        public WebDriversFinalCleanupThread(String key, WebDriver webDriver) {
             this.webDriver = webDriver;
+            this.key = key;
+            this.setName("WebDriver killer for key "+key+"(WebDriverManager)");
         }
 
         public void run() {
-            webDriver.close();
+            synchronized (this) {
+                webDriver.close();
+                webDrivers.remove(key);
+                log.info("WebDriverManager closed webdriver for "+key);
+            }
+        }
+    }
+
+    protected class UnusedWebDriversCleanupThread extends Thread {
+        public UnusedWebDriversCleanupThread() {
+            this.setDaemon(true);
+            this.setName("WebDrivers killer (WebDriverManager)");
+        }
+
+        public void run() {
+            while (true) {
+                closeUnusedWebDrivers();
+
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException var2) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }
+
+        protected void closeUnusedWebDrivers() {
+            synchronized (this) {
+                if (!currentThread.isAlive()) {
+                    for (String key : webDrivers.keySet()) {
+                        webDrivers.get(key).close();
+                        webDrivers.remove(key);
+                        log.info("WebDriverManager finally closed webdriver for "+key);
+                    }
+                }
+            }
         }
     }
 

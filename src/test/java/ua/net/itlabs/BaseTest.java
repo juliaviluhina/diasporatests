@@ -16,7 +16,7 @@ import static core.helpers.UniqueDataHelper.*;
 
 public abstract class BaseTest {
 
-    {
+    static {
         Configuration.timeout = 15000;
         clearUniqueData();
     }

@@ -6,6 +6,7 @@ import org.junit.experimental.categories.Category;
 import pages.*;
 import ua.net.itlabs.BaseTest;
 
+import static com.codeborne.selenide.Selenide.confirm;
 import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Users.*;
 import static pages.Aspects.WORK;

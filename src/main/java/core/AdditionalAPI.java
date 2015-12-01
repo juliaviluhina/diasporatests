@@ -56,9 +56,8 @@ public class AdditionalAPI {
 
     public static SelenideElement scrollToAndHover(SelenideElement element) {
         //element.scrollTo(); scrollTo works not always. especially unstable for tags
-        //element.getCoordinates().inViewPort();
-        //((JavascriptExecutor) getWebDriver()).executeScript("arguments[0].scrollIntoView(true);",element.getWrappedElement());
-        scrollWithOffset(element, 0, -150);
+        //element.getCoordinates().inViewPort(); this variant doesn't help in situations when something is shown under the header
+        scrollWithOffset(element, 0, -150); //this variant is used to move element from under the header
         return element.hover();
     }
 

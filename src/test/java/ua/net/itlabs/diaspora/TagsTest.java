@@ -89,7 +89,7 @@ public class TagsTest extends BaseTest {
         Tags.delete(the("#tag2"));
 
         THEN("Public post with this tag from unlinked user is not shown in stream of unlinked user");
-        NavBar.openStream();
+        Menu.openStream();
         Feed.assertNoPost(Pod1.rob, post2);
 
     }

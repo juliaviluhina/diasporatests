@@ -1,6 +1,7 @@
 package ua.net.itlabs.diaspora;
 
 import com.codeborne.selenide.Configuration;
+import org.junit.AfterClass;
 import org.junit.Before;
 import steps.Relation;
 import org.junit.BeforeClass;
@@ -31,6 +32,14 @@ public class FederationTest extends BaseTest {
         Relation.forUser(Pod2.bob).toUser(Pod1.ana, WORK).notToUsers(Pod1.rob, Pod2.sam).withTags(tag).ensure();
 
     }
+
+    @AfterClass
+    public void restoreTimeOut() {
+
+        Configuration.timeout = 15000;
+
+    }
+
 
     @Before
     public void addGivenDescriptionToAllure() {

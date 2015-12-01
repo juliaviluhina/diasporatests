@@ -27,7 +27,6 @@ public class ConversationsTest extends BaseTest {
         Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).ensure();
         Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).notToUsers(Pod1.rob).ensure();
         Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).ensure();
-        Configuration.timeout = timeout3x();//for refresh conversation stream more time is needed
     }
 
     @Before
