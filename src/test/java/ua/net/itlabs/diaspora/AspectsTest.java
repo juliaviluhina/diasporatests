@@ -12,6 +12,7 @@ import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static pages.Aspects.WORK;
+import static steps.Scenarios.waitStreamOpening;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
@@ -26,7 +27,9 @@ public class AspectsTest extends BaseTest {
         Diaspora.ensureSignInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.add(the("Asp1"));
+        Contacts.assertAspect(the("Asp1"));//this check for wait moment when operation is done
         Menu.openStream();
+        waitStreamOpening();//this wait for wait moment when stream will be loaded
         NavBar.openMyAspects();
         Aspects.assertAspectInNavBar(the("Asp1"));//this check for wait moment when stream will be loaded
 
