@@ -1,6 +1,5 @@
 package core;
 
-import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.impl.WebDriverThreadLocalContainer;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
@@ -10,9 +9,8 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
@@ -71,7 +69,7 @@ public class WebDriversManager {
 
     private static final Logger log = Logger.getLogger(WebDriversManager.class.getName());
     private String currentKey = "";
-    private Map<String, WebDriver> webDrivers = new ConcurrentHashMap<String, WebDriver>();
+    private Map<String, WebDriver> webDrivers = new HashMap<String, WebDriver>();
     Thread currentThread = null;
 
     private static WebDriver createWebDriver() {
@@ -112,7 +110,6 @@ public class WebDriversManager {
     }
 
     private void closeWebDriver(WebDriver webDriver, String key) {
-        webDrivers.remove(key);
 
         if (webDriver != null) {
             log.info("WebDriversManager's closing webDriver for key: " + key + " -> " + webDriver);
