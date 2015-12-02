@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -37,8 +38,8 @@ public class WebDriversManager {
             } else {
                 currentWebDriver = createWebDriver();
             }
-            markForAutoClose(currentKey, currentWebDriver);
             webDrivers.put(key, currentWebDriver);
+            markForAutoClose(currentKey, currentWebDriver);
             setWebDriver(currentWebDriver);
             return StateAfterPreparing.IS_CREATED;
         } else {
@@ -65,7 +66,7 @@ public class WebDriversManager {
 
     private static final Logger log = Logger.getLogger(WebDriversManager.class.getName());
     private String currentKey = "";
-    private Map<String, WebDriver> webDrivers = new HashMap<String, WebDriver>();
+    private Map<String, WebDriver> webDrivers = new ConcurrentHashMap<String, WebDriver>();//webDrivers = new HashMap<String, WebDriver>()
     protected final AtomicBoolean cleanupThreadStarted = new AtomicBoolean(false);
     Thread currentThread = null;
 
@@ -83,6 +84,24 @@ public class WebDriversManager {
             e1.printStackTrace();
         }
         return null;
+    }
+
+    private static boolean isBrowserStillOpen(WebDriver webDriver) {
+        try {
+            Method method = WebDriverThreadLocalContainer.class.getDeclaredMethod("isBrowserStillOpen");
+            method.setAccessible(true);
+            Boolean result = (Boolean) method.invoke(webdriverContainer, webDriver);
+            if (result == null)
+                return false;
+            else return result;
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (InvocationTargetException e1) {
+            e1.printStackTrace();
+        } catch (NoSuchMethodException e1) {
+            e1.printStackTrace();
+        }
+        return false;
     }
 
     protected WebDriver markForAutoClose(String key, WebDriver webDriver) {
@@ -112,9 +131,9 @@ public class WebDriversManager {
 
         public void run() {
             synchronized (this) {
-                webDriver.close();
                 webDrivers.remove(key);
                 log.info("WebDriverManager closed webdriver for "+key);
+                webDriver.close();
             }
         }
     }
@@ -132,6 +151,7 @@ public class WebDriversManager {
                 try {
                     Thread.sleep(100L);
                 } catch (InterruptedException var2) {
+                    log.info("WebDriverManager interrupted");
                     Thread.currentThread().interrupt();
                     return;
                 }
@@ -141,10 +161,20 @@ public class WebDriversManager {
         protected void closeUnusedWebDrivers() {
             synchronized (this) {
                 if (!currentThread.isAlive()) {
+                    log.info("WebDriverManager closed unused webdrivers:");
                     for (String key : webDrivers.keySet()) {
-                        webDrivers.get(key).close();
+                        log.info("WebDriverManager closed webdriver for " + key);
                         webDrivers.remove(key);
-                        log.info("WebDriverManager finally closed webdriver for "+key);
+                        WebDriver webDriver_ = webDrivers.get(key);
+
+                        if (webDriver_ != null)
+                            try {
+                                //if(isBrowserStillOpen(webDriver))
+                                webDriver_.close();
+                            } catch (Exception e) {
+                                log.info("exception in closing webdriver for " + key + " :" + e.getMessage());
+                            }
+
                     }
                 }
             }

@@ -29,4 +29,10 @@ public class AuthenticationTest extends BaseTest {
 
     }
 
+    @Test
+    public void test() {
+        Diaspora.ensureSignInAs(Pod1.ana);
+        Diaspora.ensureSignInAs(Pod1.rob);
+    }
+
 }
