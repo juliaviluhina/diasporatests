@@ -25,15 +25,4 @@ public class ClearDataTest extends BaseTest {
         clearUserData(Pod2.sam);
     }
 
-//    @BeforeClass
-//    public static void givenSetupUsersRelation() {
-//      Configuration.timeout = 30000;
-//    }
-//
-//    @AfterClass
-//    public static void restoreTimeOut() {
-//        Configuration.timeout = timeout;
-//    }
-//
-//    protected static long timeout = Configuration.timeout;
 }

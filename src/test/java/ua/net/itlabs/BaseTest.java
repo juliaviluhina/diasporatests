@@ -23,10 +23,10 @@ public abstract class BaseTest {
 
     @After
     public void tearDown() throws IOException {
-        File lastSelenideScreenshot = Screenshots.takeScreenShotAsFile();
-        if (lastSelenideScreenshot != null) {
-            screenshot(Files.toByteArray(lastSelenideScreenshot));
-        }
+//        File lastSelenideScreenshot = Screenshots.takeScreenShotAsFile();
+//        if (lastSelenideScreenshot != null) {
+//            screenshot(Files.toByteArray(lastSelenideScreenshot));
+//        }
     }
 
     @Attachment(type = "image/png")
