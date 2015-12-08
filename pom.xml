@@ -15,29 +15,29 @@
         <test.includeCategories></test.includeCategories>
         <test.excludeCategories></test.excludeCategories>
         <dataset>set2</dataset>
-        <signingInMode>separate1</signingInMode>
+        <signingInMode>separate</signingInMode>
     </properties>
 
-    <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>selenide</id>-->
-            <!--<url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
-        <!--</repository>-->
-    <!--</repositories>-->
+    <repositories>
+        <repository>
+            <id>selenide</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
-
-        <!--<dependency>-->
-            <!--<groupId>com.codeborne</groupId>-->
-            <!--<artifactId>selenide</artifactId>-->
-            <!--<version>2.25-SNAPSHOT</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
-            <version>2.24</version>
+            <version>2.25-SNAPSHOT</version>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.codeborne</groupId>-->
+            <!--<artifactId>selenide</artifactId>-->
+            <!--<version>2.24</version>-->
+        <!--</dependency>-->
 
 
         <dependency>

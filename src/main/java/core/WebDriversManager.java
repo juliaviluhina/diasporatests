@@ -11,6 +11,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
@@ -69,8 +71,9 @@ public class WebDriversManager {
 
     private static final Logger log = Logger.getLogger(WebDriversManager.class.getName());
     private String currentKey = "";
-    private Map<String, WebDriver> webDrivers = new HashMap<String, WebDriver>();
+    private Map<String, WebDriver> webDrivers = new ConcurrentHashMap<String, WebDriver>();
     Thread currentThread = null;
+    protected final AtomicBoolean cleanupThreadStarted = new AtomicBoolean(false);
 
     private static WebDriver createWebDriver() {
         try {
@@ -90,7 +93,41 @@ public class WebDriversManager {
 
     private WebDriver markForAutoClose(String key, WebDriver webDriver) {
         Runtime.getRuntime().addShutdownHook(new WebDriversFinalCleanupThread(key, webDriver));
+        if(!this.cleanupThreadStarted.get()) {
+            synchronized(this) {
+                if(!this.cleanupThreadStarted.get()) {
+                    (new UnusedWebDriversCleanupThread()).start();
+                    this.cleanupThreadStarted.set(true);
+                }
+            }
+        }
+
         return webDriver;
+    }
+
+    private class UnusedWebDriversCleanupThread extends Thread {
+        public UnusedWebDriversCleanupThread() {
+            this.setDaemon(true);
+            this.setName("Webdrivers killer thread");
+        }
+
+        public void run() {
+            while(true) {
+                if(!currentThread.isAlive()) {
+                    log.info("Thread " + currentThread.getId() + " is dead. Let\'s close webdrivers.");
+                    for (String key:webDrivers.keySet()) {
+                        closeWebDriver(webDrivers.get(key), key);
+                    }
+                }
+
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException var2) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }
     }
 
 
@@ -116,7 +153,7 @@ public class WebDriversManager {
 
             long start = System.currentTimeMillis();
 
-            Thread t = new Thread(new CloseBrowser(webDriver));
+            Thread t = new Thread(new CloseBrowser(webDriver, key));
             t.setDaemon(true);
             t.start();
 
@@ -139,9 +176,11 @@ public class WebDriversManager {
 
     private class CloseBrowser implements Runnable {
         private final WebDriver webdriver;
+        private final String key;
 
-        private CloseBrowser(WebDriver webdriver) {
+        private CloseBrowser(WebDriver webdriver, String key) {
             this.webdriver = webdriver;
+            this.key = key;
         }
 
         public void run() {
@@ -155,6 +194,7 @@ public class WebDriversManager {
                 log.severe("Cannot close browser normally");
             } finally {
                 killBrowser(webdriver);
+                webDrivers.remove(key);
             }
         }
 
