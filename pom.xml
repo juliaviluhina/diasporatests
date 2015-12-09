@@ -14,8 +14,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <test.includeCategories></test.includeCategories>
         <test.excludeCategories></test.excludeCategories>
-        <dataset>set2</dataset>
-        <signingInMode>separate</signingInMode>
+        <dataset>set1</dataset>
+        <signingInMode>separate1</signingInMode>
+        <driver.browser>phantomjs</driver.browser>
+        <!--firefox-->
+
+        <ghostdriver.version>1.1.0</ghostdriver.version>
+        <!--<junit.version>4.12</junit.version>-->
+        <phantomjs.version>1.9.8</phantomjs.version>
+        <!--<phantomjs.plugin.version>0.4</phantomjs.plugin.version>-->
+        <!--<jetty.version>9.2.2.v20140723</jetty.version>-->
+        <!--<failsafe.version>2.17</failsafe.version>-->
+
     </properties>
 
     <repositories>
@@ -47,13 +57,19 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.detro.ghostdriver</groupId>
+            <artifactId>phantomjsdriver</artifactId>
+            <version>${ghostdriver.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>ru.yandex.qatools.allure</groupId>
             <artifactId>allure-junit-adaptor</artifactId>
             <version>${allure.version}</version>
         </dependency>
 
     </dependencies>
-
 
     <build>
         <plugins>
@@ -78,6 +94,9 @@
                     <systemPropertyVariables>
                         <dataset>${dataset}</dataset>
                         <signingInMode>${signingInMode}</signingInMode>
+                        <!--<webdriver.chrome.driver>C://Program Files (x86)//chromedriver_win32//chromedriver.exe</webdriver.chrome.driver>-->
+                        <driver.browser>${driver.browser}</driver.browser>
+                        <phantomjs.binary.path>E://julia//QA//Install//phantomjs//phantomjs-2.0.0-windows//phantomjs-2.0.0-windows//bin//phantomjs.exe</phantomjs.binary.path>
                     </systemPropertyVariables>
 
                 </configuration>
@@ -106,6 +125,106 @@
                     <stopPort>1234</stopPort>
                 </configuration>
             </plugin>
+
+            <!--&lt;!&ndash; Installs PhantomJS so it doesn't have to be pre-installed &ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>com.github.klieber</groupId>-->
+                <!--<artifactId>phantomjs-maven-plugin</artifactId>-->
+                <!--<version>${phantomjs.plugin.version}</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>install</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<version>${phantomjs.version}</version>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--&lt;!&ndash; Get two free ports for our test server to use &ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>build-helper-maven-plugin</artifactId>-->
+                <!--<version>1.6</version>-->
+                <!--<configuration>-->
+                    <!--<portNames>-->
+                        <!--<portName>jetty.port</portName>-->
+                        <!--<portName>jetty.port.stop</portName>-->
+                    <!--</portNames>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>reserve-port</id>-->
+                        <!--<phase>initialize</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>reserve-network-port</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <!--&lt;!&ndash; Use failsafe to run our integration tests &ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-failsafe-plugin</artifactId>-->
+                <!--<version>${failsafe.version}</version>-->
+                <!--<configuration>-->
+                    <!--<systemPropertyVariables>-->
+                        <!--<phantomjs.binary>${phantomjs.binary}</phantomjs.binary>-->
+                    <!--</systemPropertyVariables>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>integration-test</id>-->
+                        <!--<goals>-->
+                            <!--<goal>integration-test</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>verify</id>-->
+                        <!--<goals>-->
+                            <!--<goal>verify</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <!--&lt;!&ndash; Use a Jetty test server to serve our test content &ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.eclipse.jetty</groupId>-->
+                <!--<artifactId>jetty-maven-plugin</artifactId>-->
+                <!--<version>${jetty.version}</version>-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>org.eclipse.jetty</groupId>-->
+                        <!--<artifactId>jetty-servlet</artifactId>-->
+                        <!--<version>${jetty.version}</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+                <!--<configuration>-->
+                    <!--<jvmArgs>-Djetty.port=${jetty.port}</jvmArgs>-->
+                    <!--<stopKey>ANY_KEY_HERE_IS_FINE</stopKey>-->
+                    <!--<stopPort>${jetty.port.stop}</stopPort>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>start-jetty</id>-->
+                        <!--<phase>pre-integration-test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<daemon>true</daemon>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>stop-jetty</id>-->
+                        <!--<phase>post-integration-test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>stop</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
         </plugins>
     </build>

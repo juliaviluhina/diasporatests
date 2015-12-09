@@ -17,6 +17,7 @@ import static core.helpers.UniqueDataHelper.*;
 public abstract class BaseTest {
 
     static {
+        Configuration.browser = System.getProperty("driver.browser");
         Configuration.timeout = 30000;
         clearUniqueData();
     }

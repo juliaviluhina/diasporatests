@@ -262,6 +262,7 @@ public class BasicOperationsTest extends BaseTest {
 
         THEN("Reshared posts is not shown in stream");
         AND("Resharing post does not contain original information from reshared post");
+        Menu.openStream();//without this operation checks work not always
         Feed.assertNoPost(Pod1.ana, the("Ana public"));
         Menu.search(Pod1.eve.fullName);
         Feed.assertNoPost(Pod1.eve, the("Ana public"));
