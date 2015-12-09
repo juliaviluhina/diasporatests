@@ -1,6 +1,11 @@
 package ua.net.itlabs.testDatas;
 
 import datastructures.PodUser;
+import steps.Relation;
+
+import static core.Gherkin.GIVEN;
+import static pages.Aspects.FRIENDS;
+import static java.lang.Boolean.*;
 
 public class Users {
 
@@ -20,6 +25,8 @@ public class Users {
         public static PodUser rob;
         public static PodUser eve;
 
+        private static Boolean relationsIsBuilt = FALSE;
+
         static {
 
             if (getDataSet().equals("set1")) {
@@ -38,6 +45,22 @@ public class Users {
 
             }
 
+        }
+
+        public static void ensureRelations() {
+
+            GIVEN("Eve is not linked with Ana and Rob");
+            GIVEN("Rob is linked with Ana in Friends aspect and unlinked with Eve");
+            GIVEN("Ana is linked with Rob in Friends aspect and unlinked with Eve");
+
+            if (relationsIsBuilt)
+                return;
+
+            Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
+            Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
+            Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
+
+            relationsIsBuilt = TRUE;
         }
 
     }

@@ -101,7 +101,7 @@ public class Feed {
 
     @Step
     public static void toggleLikePost(PodUser author, String text) {
-        post(author, text).find(".like").click();
+        likeUnlike(post(author, text)).click();
     }
 
     @Step
@@ -162,6 +162,33 @@ public class Feed {
     }
 
     @Step
+    public static void assertLike(PodUser postAuthor, String postText, PodUser likedUser) {
+        SelenideElement post = post(postAuthor, postText);
+        likes(post).click();
+        likeFromUser(post, likedUser).shouldBe(visible);
+    }
+
+    @Step
+    public static void assertNoLike(PodUser postAuthor, String postText, PodUser likedUser) {
+        SelenideElement post = post(postAuthor, postText);
+        post.shouldBe(visible);
+        if (likes(post).is(visible)) {
+            likes(post).click();
+            likeFromUser(post, likedUser).shouldNotBe(present);
+        }
+    }
+
+    @Step
+    public static void assertLikeOfCurrentUser(PodUser postAuthor, String postText) {
+        likeUnlike(post(postAuthor, postText)).shouldBe(exactText("Unlike"));
+    }
+
+    @Step
+    public static void assertNoLikeOfCurrentUser(PodUser postAuthor, String postText) {
+        likeUnlike(post(postAuthor, postText)).shouldBe(exactText("Like"));
+    }
+
+    @Step
     public static void assertNoLikes(PodUser postAuthor, String postText) {
         likesCounterForPost(postAuthor, postText).shouldNotBe(present);
     }
@@ -203,6 +230,8 @@ public class Feed {
         newPostText.click();
     }
 
+
+
     @Step
     public static void ensureAspectPost(PodUser author, String diasporaAspect, String text) {
         waitStreamOpening();
@@ -224,6 +253,15 @@ public class Feed {
     }
 
     @Step
+    public static void ensureNoPost(PodUser author, String text) {
+        waitStreamOpening();
+        if (post(author, text).is(visible)) {
+            deletePost(author, text);
+            assertNoPost(author, text);
+        }
+    }
+
+    @Step
     public static void ensureCommentForPost(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
         waitStreamOpening();
         if (comment(postAuthor, postText, commentAuthor, commentText).is(visible)) {
@@ -231,6 +269,16 @@ public class Feed {
         }
         addComment(postAuthor, postText, commentText);
         assertComment(postAuthor, postText, commentAuthor, commentText);
+    }
+
+    @Step
+    public static void ensureNoCommentForPost(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
+        waitStreamOpening();
+        if (comment(postAuthor, postText, commentAuthor, commentText).is(visible)) {
+            deleteComment(postAuthor, postText, commentAuthor, commentText);
+            assertNoComment(postAuthor, postText, commentAuthor, commentText);
+            return;
+        }
     }
 
     @Step
@@ -244,6 +292,22 @@ public class Feed {
         resharePost(postAuthor, postText);
         Menu.openStream();
         assertPost(reshareAuthor, postText);
+    }
+
+    @Step
+    public static void ensureLike(PodUser postAuthor, String postText) {
+        SelenideElement likeUnlike = likeUnlike(post(postAuthor, postText));
+        if (likeUnlike.getText().equals("Like"))
+            likeUnlike.click();
+        likeUnlike.shouldBe(exactText("Unlike"));
+    }
+
+    @Step
+    public static void ensureNoLike(PodUser postAuthor, String postText) {
+        SelenideElement likeUnlike = likeUnlike(post(postAuthor, postText));
+        if (likeUnlike.getText().equals("Unlike"))
+            likeUnlike.click();
+        likeUnlike.shouldBe(exactText("Like"));
     }
 
     @Step
@@ -287,6 +351,18 @@ public class Feed {
         return $(By.xpath(String.format("//div[contains(@class, 'comment media')][contains(., '%s') ][descendant::*[contains(@class, 'author-name') and contains(text(), '%s')]][ancestor::*[contains(.,'%s') and descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]]",
                 commentText, commentAuthor, postText, postAuthor)));
 
+    }
+
+    private static SelenideElement likeUnlike(SelenideElement post) {
+        return post.find(".like");
+    }
+
+    private static SelenideElement likes(SelenideElement post) {
+        return post.find(".expand_likes");
+    }
+
+    private static SelenideElement likeFromUser(SelenideElement post, PodUser likedUser) {
+        return post.find(String.format(".avatar.micro[alt='%s']", likedUser.fullName));
     }
 
     private static ElementsCollection aspects() {
