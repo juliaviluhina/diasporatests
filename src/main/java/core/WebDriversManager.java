@@ -27,8 +27,9 @@ public class WebDriversManager {
 
     public enum StateAfterPreparing {IS_CREATED, IS_OPENED}
 
-    public WebDriversManager() {
+    public WebDriversManager(int capacity) {
         currentThread = Thread.currentThread();
+        webDrivers = new ConcurrentHashMap<String, WebDriver>(capacity);
     }
 
     public StateAfterPreparing prepareWebDriverForKey(String key) {
@@ -71,7 +72,7 @@ public class WebDriversManager {
 
     private static final Logger log = Logger.getLogger(WebDriversManager.class.getName());
     private String currentKey = "";
-    private Map<String, WebDriver> webDrivers = new ConcurrentHashMap<String, WebDriver>();
+    private Map<String, WebDriver> webDrivers;
     Thread currentThread = null;
     protected final AtomicBoolean cleanupThreadStarted = new AtomicBoolean(false);
 

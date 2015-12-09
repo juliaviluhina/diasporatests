@@ -25,7 +25,7 @@ public class Diaspora {
     public static SelenideElement userName = $("#user_username");
 
     static {
-        webDriversManager = new WebDriversManager();
+        webDriversManager = new WebDriversManager(6);
     }
 
     @Step
