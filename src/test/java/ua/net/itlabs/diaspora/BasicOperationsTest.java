@@ -1,6 +1,7 @@
 package ua.net.itlabs.diaspora;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import pages.*;
 import ua.net.itlabs.BaseTest;
 
@@ -9,6 +10,7 @@ import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 import static ua.net.itlabs.testDatas.Phrases.*;
 
+@Category(ua.net.itlabs.categories.Smoke.class)
 public class BasicOperationsTest extends BaseTest {
 
     @Test

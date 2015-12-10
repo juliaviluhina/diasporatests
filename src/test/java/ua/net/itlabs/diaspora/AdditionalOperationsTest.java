@@ -1,5 +1,6 @@
 package ua.net.itlabs.diaspora;
 
+import org.junit.experimental.categories.Category;
 import steps.Relation;
 import org.junit.Test;
 import pages.Contact;
@@ -12,36 +13,40 @@ import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.FRIENDS;
 import static ua.net.itlabs.testDatas.Phrases.POST_FOR_FRIENDS;
+import static ua.net.itlabs.testDatas.Phrases.POST_FOR_HIDING;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
 public class AdditionalOperationsTest extends BaseTest {
 
+    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testHidePosts() {
         GIVEN("Setup relations among users of pod1");
         Pod1.ensureRelations();
 
-        GIVEN("Limited post from author exists");
+        GIVEN("Post from author exists and is not hidden");
         Diaspora.ensureSignInAs(Pod1.ana);
-        Feed.ensureAspectPostIsNotHidden(Pod1.ana, FRIENDS, POST_FOR_FRIENDS);
+        Feed.ensurePublicPostIsNotHidden(Pod1.ana, POST_FOR_HIDING);
 
-        EXPECT("Hidden post is not shown in stream");
+        WHEN("Post of author is hidden by user");
         Diaspora.ensureSignInAs(Pod1.rob);
-        Feed.hidePost(Pod1.ana, POST_FOR_FRIENDS);
-        Feed.assertNoPost(Pod1.ana, POST_FOR_FRIENDS);
+        Feed.hidePost(Pod1.ana, POST_FOR_HIDING);
+        THEN("Author's post is not shown in user's stream");
+        Feed.assertNoPost(Pod1.ana, POST_FOR_HIDING);
 
-        EXPECT("Hidden post is not shown in contact stream");
+        EXPECT("Hidden post is not shown in author's contact stream");
         Menu.search(Pod1.ana.fullName);
-        Feed.assertNoPost(Pod1.ana, POST_FOR_FRIENDS);
+        Feed.assertNoPost(Pod1.ana, POST_FOR_HIDING);
 
         EXPECT("Hidden post is shown in stream of another user");
-        Diaspora.ensureSignInAs(Pod1.rob);
-        Feed.assertPost(Pod1.ana, the("Ana for friends"));
-
-        EXPECT("After new signing in hidden post is not shown");
         Diaspora.ensureSignInAs(Pod1.eve);
-        Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
+        Menu.search(Pod1.ana.fullName);
+        Feed.assertPost(Pod1.ana, POST_FOR_HIDING);
+
+        EXPECT("After new signing in hidden post is not shown in user's stream");
+        Diaspora.ensureSignInAs(Pod1.rob);
+        Feed.assertNoPost(Pod1.ana, POST_FOR_HIDING);
 
     }
 

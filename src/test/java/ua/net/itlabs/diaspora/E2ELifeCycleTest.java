@@ -13,7 +13,7 @@ import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 import static core.Gherkin.*;
 
-@Category(ua.net.itlabs.categories.Smoke.class)
+
 public class E2ELifeCycleTest extends BaseTest {
 
     @Test

@@ -255,6 +255,18 @@ public class Feed {
     }
 
     @Step
+    public static void ensurePublicPostIsNotHidden(PodUser author, String text) {
+        //addition post from scratch is the only known way when post will be shown
+        waitStreamOpening();
+        SelenideElement post = post(author, text);
+        if (post.is(visible)) {
+            deletePost(post);
+        }
+        addPublicPost(text);
+        assertPost(author, text);
+    }
+
+    @Step
     public static void ensurePublicPost(PodUser author, String text) {
         waitStreamOpening();
         if (post(author, text).is(visible)) {
@@ -344,25 +356,16 @@ public class Feed {
     public static SelenideElement setAspect = $(".aspect_dropdown .btn");
     public static SelenideElement share = $("#submit");
 
-    // optimized speed via using xpath - see post() and comment()
-    //public static ElementsCollection posts = $$(".stream_element");
+    public static ElementsCollection posts = $$(".stream_element");
 
     @Step
     private static SelenideElement post(PodUser author, String text) {
-        // optimized speed via using ugly but efficient xpath
-        // waiting for fix in Selenide, to switch back to "readable" solution
-        //return posts.find(textBeginAndContain(author.fullName, text));
-        return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", text, author.fullName)));
+        return posts.find(textBeginAndContain(author.fullName, text));
     }
 
     @Step
     private static SelenideElement comment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
-        // optimized speed via using ugly but efficient xpath
-        // waiting for fix in Selenide, to switch back to "readable" solution
-        //return comment(post(postAuthor, postText), commentAuthor, commentText);
-        return $(By.xpath(String.format("//div[contains(@class, 'comment media')][contains(., '%s') ][descendant::*[contains(@class, 'author-name') and contains(text(), '%s')]][ancestor::*[contains(.,'%s') and descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]]",
-                commentText, commentAuthor, postText, postAuthor)));
-
+        return post(postAuthor, postText).findAll(".comment").find(textBeginAndContain(commentAuthor.fullName, commentText));
     }
 
     private static SelenideElement likeUnlike(SelenideElement post) {
