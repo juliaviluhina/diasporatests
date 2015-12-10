@@ -243,6 +243,18 @@ public class Feed {
     }
 
     @Step
+    public static void ensureAspectPostIsNotHidden(PodUser author, String diasporaAspect, String text) {
+        //addition post from scratch is the only known way when post will be shown
+        waitStreamOpening();
+        SelenideElement post = post(author, text);
+        if (post.is(visible)) {
+            deletePost(post);
+        }
+        addAspectPost(diasporaAspect, text);
+        assertPost(author, text);
+    }
+
+    @Step
     public static void ensurePublicPost(PodUser author, String text) {
         waitStreamOpening();
         if (post(author, text).is(visible)) {

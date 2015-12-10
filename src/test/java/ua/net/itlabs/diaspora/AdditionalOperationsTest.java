@@ -11,6 +11,7 @@ import ua.net.itlabs.BaseTest;
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.FRIENDS;
+import static ua.net.itlabs.testDatas.Phrases.POST_FOR_FRIENDS;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
@@ -18,23 +19,21 @@ public class AdditionalOperationsTest extends BaseTest {
 
     @Test
     public void testHidePosts() {
-        GIVEN("Setup mutual relation between users, add limited in aspect post");
-        clearUniqueData();
-        Relation.forUser(Pod1.eve).toUser(Pod1.ana, FRIENDS).ensure();
-        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).ensure();
-        Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).toUser(Pod1.rob, FRIENDS).doNotLogOut().ensure();
-        Menu.openStream();
-        Feed.addAspectPost(FRIENDS, the("Ana for friends"));
-        Feed.assertPost(Pod1.ana, the("Ana for friends"));//this check for wait moment when stream will be loaded
+        GIVEN("Setup relations among users of pod1");
+        Pod1.ensureRelations();
+
+        GIVEN("Limited post from author exists");
+        Diaspora.ensureSignInAs(Pod1.ana);
+        Feed.ensureAspectPostIsNotHidden(Pod1.ana, FRIENDS, POST_FOR_FRIENDS);
 
         EXPECT("Hidden post is not shown in stream");
-        Diaspora.ensureSignInAs(Pod1.eve);
-        Feed.hidePost(Pod1.ana, the("Ana for friends"));
-        Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
+        Diaspora.ensureSignInAs(Pod1.rob);
+        Feed.hidePost(Pod1.ana, POST_FOR_FRIENDS);
+        Feed.assertNoPost(Pod1.ana, POST_FOR_FRIENDS);
 
         EXPECT("Hidden post is not shown in contact stream");
         Menu.search(Pod1.ana.fullName);
-        Feed.assertNoPost(Pod1.ana, the("Ana for friends"));
+        Feed.assertNoPost(Pod1.ana, POST_FOR_FRIENDS);
 
         EXPECT("Hidden post is shown in stream of another user");
         Diaspora.ensureSignInAs(Pod1.rob);

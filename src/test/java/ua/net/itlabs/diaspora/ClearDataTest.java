@@ -23,6 +23,8 @@ public class ClearDataTest extends BaseTest {
         clearUserData(Pod1.eve);
         clearUserData(Pod2.bob);
         clearUserData(Pod2.sam);
+
+        clearUserData(Pod1.ron);
     }
 
 }
