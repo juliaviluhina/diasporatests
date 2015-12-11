@@ -1,5 +1,6 @@
 package ua.net.itlabs.diaspora;
 
+import org.junit.experimental.categories.Category;
 import steps.Relation;
 import org.junit.Test;
 import pages.*;
@@ -15,44 +16,52 @@ import static pages.Aspects.WORK;
 import static steps.Scenarios.waitStreamOpening;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
+import static ua.net.itlabs.testDatas.Phrases.*;
 
 public class AspectsTest extends BaseTest {
-
+    
+    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testAddAspectInNavBar() {
 
-        clearUniqueData();
+        GIVEN("Aspect "+ASPECT1+" is not used by author");
+        Diaspora.ensureSignInAs(Pod2.bob);
+        Aspects.ensureNoAspect(ASPECT1);
+
+        GIVEN("Post in aspect "+ASPECT1+" does not exist");
+        Feed.ensureNoPost(Pod2.bob, POST_IN_ASPECT1);
 
         WHEN("New aspest is added");
-        Diaspora.ensureSignInAs(Pod1.rob);
         NavBar.openMyAspects();
-        Aspects.add(the("Asp1"));
-        Contacts.assertAspect(the("Asp1"));//this check for wait moment when operation is done
+        Aspects.add(ASPECT1);
+        Contacts.assertAspect(ASPECT1);//this check for wait moment when operation is done
+
+        EXPECT("Added aspect is shown in Nav Bar");
         Menu.openStream();
         waitStreamOpening();//this wait for wait moment when stream will be loaded
         NavBar.openMyAspects();
-        Aspects.assertAspectInNavBar(the("Asp1"));//this check for wait moment when stream will be loaded
+        Aspects.assertAspectInNavBar(ASPECT1);//this check for wait moment when stream will be loaded
 
         THEN("New aspect can be used for contact setup");
-        Menu.search(Pod1.ana.fullName);
-        Contact.ensureAspectsForContact(the("Asp1"));
+        Menu.search(Pod2.sam.fullName);
+        Contact.ensureAspectsForContact(ASPECT1);
 
         EXPECT("New aspect can be used for post setup");
         Menu.openStream();
-        Feed.addAspectPost(the("Asp1"), the("Rob for new aspect"));
-        Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
+        Feed.addAspectPost(ASPECT1, POST_IN_ASPECT1);
+        Feed.assertPost(Pod2.bob, POST_IN_ASPECT1);
 
         WHEN("New aspect is selected in NavBar aspects list");
         NavBar.openMyAspects();
-        Aspects.toggleAspect(the("Asp1"));
+        Aspects.toggleAspect(ASPECT1);
 
         THEN("Limited post in this aspect is shown in stream");
-        Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
+        Feed.assertPost(Pod2.bob, POST_IN_ASPECT1);
 
         EXPECT("Limited in aspect post is available for linked in this aspect user");
-        Diaspora.ensureSignInAs(Pod1.ana);
-        Menu.search(Pod1.rob.fullName);
-        Feed.assertPost(Pod1.rob, the("Rob for new aspect"));
+        Diaspora.ensureSignInAs(Pod2.sam);
+        Menu.search(Pod2.bob.fullName);
+        Feed.assertPost(Pod2.bob, POST_IN_ASPECT1);
         Menu.ensureLogOut();
 
     }

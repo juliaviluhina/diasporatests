@@ -18,11 +18,12 @@ public class ClearDataTest extends BaseTest {
 
     @Test
     public void testClearData() {
-          clearUserData(Pod1.ana);
-//        clearUserData(Pod1.rob);
-//        clearUserData(Pod1.eve);
-//        clearUserData(Pod2.bob);
-//        clearUserData(Pod2.sam);
+
+        clearUserData(Pod1.ana);
+        clearUserData(Pod1.rob);
+        clearUserData(Pod1.eve);
+        clearUserData(Pod2.bob);
+        clearUserData(Pod2.sam);
 
     }
 

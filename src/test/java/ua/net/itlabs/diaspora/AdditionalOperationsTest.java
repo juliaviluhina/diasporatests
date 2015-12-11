@@ -52,7 +52,7 @@ public class AdditionalOperationsTest extends BaseTest {
     @Test
     public void testIgnoreUserInStream() {
 
-        GIVEN("Setup mutual relation between users");
+        GIVEN("Sam-+-Bob and Bob-+-Ana as Friends ");
         Relation.forUser(Pod2.sam).toUser(Pod2.bob, FRIENDS).ensure();
         Relation.forUser(Pod2.bob).toUser(Pod2.sam, FRIENDS).toUser(Pod1.ana, FRIENDS).doNotLogOut().ensure();
 

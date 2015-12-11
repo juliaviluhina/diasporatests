@@ -29,8 +29,8 @@ public class Aspects {
     }
 
     @Step
-    public static void switchToEditMode(String aspect) {
-        SelenideElement currentAspect = aspectContainersNavBar.find(exactText(aspect));
+    public static void switchToEditMode(String aspectName) {
+        SelenideElement currentAspect = aspect(aspectName);
         scrollToAndHover(currentAspect);
         currentAspect.find(".modify_aspect").click();
     }
@@ -58,6 +58,20 @@ public class Aspects {
     @Step
     public static void assertToggleAllText(String text) {
         toggleAll.shouldHave(text(text));
+    }
+
+    @Step
+    public static void ensureNoAspect(String aspectName) {
+        NavBar.openMyAspects();
+        if (aspect(aspectName).is(visible)) {
+            switchToEditMode(aspectName);
+            Contacts.deleteAspect();
+            Menu.openStream();
+        }
+    }
+
+    private static SelenideElement aspect(String aspectName)  {
+        return aspectContainersNavBar.find(exactText(aspectName));
     }
 
 }

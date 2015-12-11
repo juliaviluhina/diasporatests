@@ -10,4 +10,7 @@ public class Phrases {
 
     public static final String COMMENT = "Answer in comment";
 
+    public static final String ASPECT1 = "Aspect1";
+    public static final String POST_IN_ASPECT1 = "Information about Aspect1";
+
 }

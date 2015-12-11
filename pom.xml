@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <test.includeCategories></test.includeCategories>
         <test.excludeCategories></test.excludeCategories>
-        <dataset>set2</dataset>
+        <dataset>set1</dataset>
         <signingInMode>separate1</signingInMode>
     </properties>
 

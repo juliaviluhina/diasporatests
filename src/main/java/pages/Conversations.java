@@ -4,6 +4,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import datastructures.PodUser;
+import org.openqa.selenium.StaleElementReferenceException;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.Condition.*;
@@ -105,14 +106,18 @@ public class Conversations {
 
         int count = conversations.size();
 
-        for (int i = 1; i<count; i++) {
-            SelenideElement conversation = conversations.first();
-            conversation.click();
+        try {
+            for (int i = 1; i < count; i++) {
+                SelenideElement conversation = conversations.first();
+                conversation.click();
 
-            if (hideButton.is(visible))
-                clickButton(hideButton);
-            else if (deleteButton.is(visible))
-                clickButton(deleteButton);
+                if (hideButton.is(visible))
+                    clickButton(hideButton);
+                else if (deleteButton.is(visible))
+                    clickButton(deleteButton);
+
+            }
+        }catch (StaleElementReferenceException e) {
 
         }
 
