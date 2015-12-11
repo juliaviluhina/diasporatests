@@ -83,6 +83,16 @@ public class Contact {
         ensureNoIgnoreMode(contactHeader);
     }
 
+    @Step
+    public static void ensureIgnoreMode(SelenideElement contact) {
+        new AspectManager(manageContact(contact), contact).ensureIgnoreMode();
+    }
+
+    @Step
+    public static void ensureIgnoreMode() {
+        ensureIgnoreMode(contactHeader);
+    }
+
     public static SelenideElement contactHeader = $(".profile_header");
     public static String manageContactLocator = ".btn.dropdown-toggle";
 
@@ -147,6 +157,13 @@ public class Contact {
         public void ensureNoIgnoreMode() {
             if ($(stopIgnoringLocator).is(visible)) {
                 stopIgnoring();
+            }
+        }
+
+        @Step
+        public void ensureIgnoreMode() {
+            if (!$(stopIgnoringLocator).is(visible)) {
+                startIgnoring();
             }
         }
 

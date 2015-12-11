@@ -19,7 +19,7 @@ public class BasicOperationsTest extends BaseTest {
         GIVEN("Setup relations among users of pod1");
         Pod1.ensureRelations();
 
-        GIVEN("There is no Ana's public post");
+        GIVEN("There is no author's public post");
         Diaspora.ensureSignInAs(Pod1.ana);
         Feed.ensureNoPost(Pod1.ana, PUBLIC_POST);
 
@@ -317,8 +317,11 @@ public class BasicOperationsTest extends BaseTest {
         GIVEN("Setup relations among users of pod1");
         Pod1.ensureRelations();
 
-        WHEN("Post with mention about linked user is added by author");
+        GIVEN("There is no author's mention post");
         Diaspora.ensureSignInAs(Pod1.ana);
+        Feed.ensureNoPost(Pod1.ana, MENTION_POST);
+
+        WHEN("Post with mention about linked user is added by author");
         Feed.addPublicPostWithMentionAbout(Pod1.rob, MENTION_POST);
         Feed.assertPost(Pod1.ana, MENTION_POST);//this check for wait moment when stream will be loaded
 

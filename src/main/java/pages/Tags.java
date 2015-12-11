@@ -11,6 +11,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static core.AdditionalAPI.scrollToAndHover;
 import static core.conditions.CustomCondition.textBegin;
 import static core.helpers.UniqueDataHelper.*;
+import static steps.Scenarios.*;
 
 public class Tags {
 
@@ -71,16 +72,37 @@ public class Tags {
     }
 
 
+//    @Step
+//    public static void deleteAll() {
+//        deleteUniqueData("#stag");
+//        add(the("#stag"));
+//
+//        //when tags are more than one page - without this code does not work
+//        NavBar.openTags();
+//
+//        ElementsCollection userTags = tags.filter(textBegin("#"));
+//        userTags.find(exactText(the("#stag"))).shouldBe(visible); //for wait - tags collection is loaded
+//        int countDeleted = 0;
+//
+//        for (SelenideElement userTag : userTags) {
+//            delete(userTag);
+//            countDeleted++;
+//        }
+//
+//        if (countDeleted > 1) {
+//            deleteAll();
+//        }
+//
+//    }
+
     @Step
     public static void deleteAll() {
-        deleteUniqueData("#stag");
-        add(the("#stag"));
 
         //when tags are more than one page - without this code does not work
         NavBar.openTags();
+        waitStreamOpening();
 
         ElementsCollection userTags = tags.filter(textBegin("#"));
-        userTags.find(exactText(the("#stag"))).shouldBe(visible); //for wait - tags collection is loaded
         int countDeleted = 0;
 
         for (SelenideElement userTag : userTags) {

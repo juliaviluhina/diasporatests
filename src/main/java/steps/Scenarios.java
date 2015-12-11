@@ -11,7 +11,7 @@ public class Scenarios {
         Diaspora.ensureSignInAs(user);
 
         NavBar.openStream();
-        Feed.deleteAllPosts(user);
+        Feed.deleteAllPosts(user , "");
 
         NavBar.openTags();
         Tags.deleteAll();

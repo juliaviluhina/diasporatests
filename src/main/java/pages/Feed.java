@@ -277,6 +277,16 @@ public class Feed {
     }
 
     @Step
+    public static void ensurePublicPostWithMention(PodUser author, PodUser about, String text) {
+        waitStreamOpening();
+        if (post(author, text).is(visible)) {
+            return;
+        }
+        addPublicPostWithMentionAbout(about, text);
+        assertPost(author, text);
+    }
+
+    @Step
     public static void ensureNoPost(PodUser author, String text) {
         waitStreamOpening();
         if (post(author, text).is(visible)) {
@@ -334,22 +344,37 @@ public class Feed {
         likeUnlike.shouldBe(exactText("Like"));
     }
 
+//    @Step
+//    public static void deleteAllPosts(PodUser author) {
+//        deleteUniqueData("servicepost");
+//        addPublicPost(the("servicepost"));
+//        assertPost(author, the("servicepost"));
+//        int countDeleted = 0;
+//        ElementsCollection userPosts = $$(".stream_element").filter(textBegin(author.fullName));
+//        for (SelenideElement userPost : userPosts) {
+//            deletePost(userPost);
+//            countDeleted++;
+//        }
+//        if (countDeleted > 1) {
+//            deleteAllPosts(author);
+//        }
+//    }
+
     @Step
-    public static void deleteAllPosts(PodUser author) {
-        deleteUniqueData("servicepost");
-        addPublicPost(the("servicepost"));
-        assertPost(author, the("servicepost"));
+    public static void deleteAllPosts(PodUser author, String text) {
+
+        Menu.openStream();
+        waitStreamOpening();
         int countDeleted = 0;
-        ElementsCollection userPosts = $$(".stream_element").filter(textBegin(author.fullName));
+        ElementsCollection userPosts = $$(".stream_element").filter(textBeginAndContain(author.fullName, text));
         for (SelenideElement userPost : userPosts) {
             deletePost(userPost);
             countDeleted++;
         }
         if (countDeleted > 1) {
-            deleteAllPosts(author);
+            deleteAllPosts(author, text);
         }
     }
-
 
     private static SelenideElement aspect = $(".aspect_dropdown");
     public static SelenideElement newPostText = $("#status_message_fake_text");
@@ -360,7 +385,12 @@ public class Feed {
 
     @Step
     private static SelenideElement post(PodUser author, String text) {
-        return posts.find(textBeginAndContain(author.fullName, text));
+        //return posts.find(textBeginAndContain(author.fullName, text));
+        // optimized speed via using ugly but efficient xpath
+        // waiting for fix in Selenide, to switch back to "readable" solution
+        //return posts.find(textBeginAndContain(author.fullName, text));
+        return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", text, author.fullName)));
+
     }
 
     @Step

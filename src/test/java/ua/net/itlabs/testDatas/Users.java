@@ -1,6 +1,7 @@
 package ua.net.itlabs.testDatas;
 
 import datastructures.PodUser;
+import ru.yandex.qatools.allure.annotations.Step;
 import steps.Relation;
 
 import static core.Gherkin.GIVEN;
@@ -53,18 +54,17 @@ public class Users {
 
         }
 
+        @Step
         public static void ensureRelations() {
 
-            GIVEN("Eve is not linked with Ana and Rob");
-            GIVEN("Rob is linked with Ana in Friends aspect and unlinked with Eve");
-            GIVEN("Ana is linked with Rob in Friends aspect and unlinked with Eve");
+            GIVEN("Ana-+-Rob as Friends, Eve-x-Ana, Eve-x-Rob");
 
             if (relationsIsBuilt)
                 return;
 
-            Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
-            Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).notToUsers(Pod1.eve).ensure();
-            Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
+            Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).clearTags().clearOldResharingPost().ensure();
+            Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).clearTags().clearOldResharingPost().notToUsers(Pod1.eve).ensure();
+            Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).clearTags().clearOldResharingPost().notToUsers(Pod1.eve).ensure();
 
             relationsIsBuilt = TRUE;
         }

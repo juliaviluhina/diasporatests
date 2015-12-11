@@ -19,6 +19,9 @@ public class Relation {
     private final List<String> followedTags;
     private Boolean doLogOut;
     private Boolean clearTags;
+    private Boolean clearOldResharingPost;
+
+    private static final String OLD_RESHARING_POST = "Original post deleted by author";
 
     private static class LinkWithUser {
         public PodUser linkedUser;
@@ -48,6 +51,7 @@ public class Relation {
         private List<String> followedTags;
         private Boolean doLogOut;
         private Boolean clearTags;
+        private Boolean clearOldResharingPost;
 
         private Builder(PodUser podUser) {
             this.podUser = podUser;
@@ -57,6 +61,7 @@ public class Relation {
             followedTags = new ArrayList<String>();
             doLogOut = TRUE;
             clearTags = FALSE;
+            clearOldResharingPost = FALSE;
         }
 
         public Builder doNotLogOut() {
@@ -66,6 +71,11 @@ public class Relation {
 
         public Builder clearTags() {
             clearTags = TRUE;
+            return this;
+        }
+
+        public Builder clearOldResharingPost() {
+            clearOldResharingPost = TRUE;
             return this;
         }
 
@@ -104,16 +114,22 @@ public class Relation {
         this.followedTags = builder.followedTags;
         this.doLogOut = builder.doLogOut;
         this.clearTags = builder.clearTags;
+        this.clearOldResharingPost = builder.clearOldResharingPost;
 
     }
 
     public Relation createRelations() {
+
         Diaspora.ensureSignInAs(podUser);
         NavBar.assertLoggedUser(podUser);
+
         if (clearTags) {
-            NavBar.openTags();
             Tags.deleteAll();
         }
+        if (clearOldResharingPost) {
+            Feed.deleteAllPosts(podUser, OLD_RESHARING_POST);
+        }
+
         for (LinkWithUser linkWithUser : linkWithUsers) {
             Menu.search(linkWithUser.linkedUser.fullName);
             Contact.ensureAspectsForContact(linkWithUser.aspects);
