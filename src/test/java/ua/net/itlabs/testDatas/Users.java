@@ -51,7 +51,7 @@ public class Users {
         @Step
         public static void ensureRelations() {
 
-            GIVEN("Ana-+-Rob as Friends, Eve-x-Ana, Eve-x-Rob");
+            GIVEN("Ana<-+->Rob as Friends, Eve<-X->Ana, Eve<-X->Rob");
 
             if (relationsIsBuilt)
                 return;

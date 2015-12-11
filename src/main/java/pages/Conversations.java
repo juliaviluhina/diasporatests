@@ -102,7 +102,8 @@ public class Conversations {
 
         Menu.openConversations();
         waitStreamOpening();
-        $("#as-selections-contact_ids").click();
+        if (conversations.isEmpty())
+            return;
 
         int count = conversations.size();
 

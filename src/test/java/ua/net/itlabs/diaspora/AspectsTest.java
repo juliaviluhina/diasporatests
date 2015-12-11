@@ -9,8 +9,6 @@ import pages.Contacts;
 import pages.Feed;
 import ua.net.itlabs.BaseTest;
 
-import static core.helpers.UniqueDataHelper.clearUniqueData;
-import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static pages.Aspects.WORK;
 import static steps.Scenarios.waitStreamOpening;
@@ -18,9 +16,9 @@ import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 import static ua.net.itlabs.testDatas.Phrases.*;
 
+@Category(ua.net.itlabs.categories.Smoke.class)
 public class AspectsTest extends BaseTest {
-    
-    @Category(ua.net.itlabs.categories.Smoke.class)
+
     @Test
     public void testAddAspectInNavBar() {
 
@@ -70,7 +68,7 @@ public class AspectsTest extends BaseTest {
     public void testSwitchToEditModeInNavBar() {
 
         WHEN("Aspect is in edit mode");
-        Diaspora.ensureSignInAs(Pod1.rob);
+        Diaspora.ensureSignInAs(Pod2.bob);
         NavBar.openMyAspects();
         Aspects.switchToEditMode(FRIENDS);
 
@@ -82,28 +80,30 @@ public class AspectsTest extends BaseTest {
     @Test
     public void testFilterAspectsInNavBar() {
 
-        GIVEN("Setup relation between users, add limited in aspects posts from both users");
-        clearUniqueData();
-        Relation.forUser(Pod1.ana).toUser(Pod1.rob, WORK).ensure();
-        Relation.forUser(Pod1.rob).toUser(Pod1.ana, FRIENDS).doNotLogOut().ensure();
+        GIVEN("Sam-+->Bob as Work");
+        Relation.forUser(Pod2.sam).toUser(Pod2.bob, WORK).doNotLogOut().ensure();
+
+        GIVEN("Work aspect post from Sam exists");
         Menu.openStream();
-        Feed.addAspectPost(FRIENDS, the("Rob for new friends"));
-        Feed.addAspectPost(FAMILY, the("Rob for new family"));
-        Feed.assertPost(Pod1.rob, the("Rob for new family"));
-        Diaspora.ensureSignInAs(Pod1.ana);
-        Feed.addAspectPost(WORK, the("Ana for work"));
-        Feed.assertPost(Pod1.ana, the("Ana for work"));
+        Feed.ensureAspectPost(Pod2.sam, WORK, POST_FOR_WORK);
+
+        GIVEN("Bob-+->Sam as Friends ");
+        Relation.forUser(Pod2.bob).toUser(Pod2.sam, FRIENDS).doNotLogOut().ensure();
+
+        GIVEN("Friends and Family aspects post from Bob exist");
+        Menu.openStream();
+        Feed.ensureAspectPost(Pod2.bob, FRIENDS, POST_FOR_FRIENDS);
+        Feed.ensureAspectPost(Pod2.bob, FAMILY, POST_FOR_FAMILY);
 
         WHEN("In NavBar aspects list all aspects is deselected");
-        Diaspora.ensureSignInAs(Pod1.rob);
         NavBar.openMyAspects();
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Select all");
 
         THEN("All posts in all aspects is shown");
-        Feed.assertPost(Pod1.ana, the("Ana for work"));
-        Feed.assertPost(Pod1.rob, the("Rob for new friends"));
-        Feed.assertPost(Pod1.rob, the("Rob for new family"));
+        Feed.assertPost(Pod2.sam, POST_FOR_WORK);
+        Feed.assertPost(Pod2.bob, POST_FOR_FRIENDS);
+        Feed.assertPost(Pod2.bob, POST_FOR_FAMILY);
 
         WHEN("In NavBar aspects list some aspects is selected");
         Aspects.toggleAspect(ACQUAINTANCES);
@@ -111,27 +111,27 @@ public class AspectsTest extends BaseTest {
 
         THEN("Author's posts limited in these aspects is shown");
         AND("posts of users linked in these aspects is shown");
-        Feed.assertPost(Pod1.ana, the("Ana for work"));
-        Feed.assertPost(Pod1.rob, the("Rob for new friends"));
-        Feed.assertNoPost(Pod1.rob, the("Rob for new family"));
+        Feed.assertPost(Pod2.sam, POST_FOR_WORK);
+        Feed.assertPost(Pod2.bob, POST_FOR_FRIENDS);
+        Feed.assertNoPost(Pod2.bob, POST_FOR_FAMILY);
 
         WHEN("In NavBar aspects list some aspect is deselected");
         Aspects.toggleAspect(FRIENDS);
 
         THEN("Author's posts limited in this aspect is not shown");
         AND("posts of users linked in this aspect is not shown");
-        Feed.assertNoPost(Pod1.ana, the("Ana for work"));
-        Feed.assertNoPost(Pod1.rob, the("Rob for new friends"));
-        Feed.assertNoPost(Pod1.rob, the("Rob for new family"));
+        Feed.assertNoPost(Pod2.sam, POST_FOR_WORK);
+        Feed.assertNoPost(Pod2.bob, POST_FOR_FRIENDS);
+        Feed.assertNoPost(Pod2.bob, POST_FOR_FAMILY);
 
         WHEN("In NavBar aspects list all aspects is selected");
         Aspects.toggleAll();
         Aspects.assertToggleAllText("Deselect all");
 
         THEN("All posts in all aspects is shown");
-        Feed.assertPost(Pod1.ana, the("Ana for work"));
-        Feed.assertPost(Pod1.rob, the("Rob for new friends"));
-        Feed.assertPost(Pod1.rob, the("Rob for new family"));
+        Feed.assertPost(Pod2.sam, POST_FOR_WORK);
+        Feed.assertPost(Pod2.bob, POST_FOR_FRIENDS);
+        Feed.assertPost(Pod2.bob, POST_FOR_FAMILY);
 
     }
 

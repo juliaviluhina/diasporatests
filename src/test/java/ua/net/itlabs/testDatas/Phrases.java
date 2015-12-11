@@ -4,6 +4,9 @@ public class Phrases {
 
     public static final String PUBLIC_POST = "Public information";
     public static final String POST_FOR_FRIENDS = "Information for friends";
+    public static final String POST_FOR_FAMILY = "Information for family";
+    public static final String POST_FOR_WORK = "Information for work";
+
     public static final String MENTION_POST = "Mention information";
 
     public static final String POST_FOR_HIDING = "Information for hiding";
