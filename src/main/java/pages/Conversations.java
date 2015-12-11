@@ -102,23 +102,29 @@ public class Conversations {
 
         Menu.openConversations();
         waitStreamOpening();
-        if (conversations.isEmpty())
-            return;
 
-        int count = conversations.size();
+
+        int count = 0;
 
         try {
-            for (int i = 1; i < count; i++) {
+            while (true) {
                 SelenideElement conversation = conversations.first();
+                if (!conversation.is(present))
+                    break;
                 conversation.click();
 
-                if (hideButton.is(visible))
+                if (hideButton.is(visible)) {
+                    count++;
                     clickButton(hideButton);
-                else if (deleteButton.is(visible))
+                }
+                else if (deleteButton.is(visible)) {
+                    count++;
                     clickButton(deleteButton);
-
+                }
             }
         }catch (StaleElementReferenceException e) {
+            //in this case is valid exception because of dynamic refresh list of conversation
+        } catch (IndexOutOfBoundsException e) {
             //in this case is valid exception because of dynamic refresh list of conversation
         }
 
