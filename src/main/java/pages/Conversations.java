@@ -119,7 +119,7 @@ public class Conversations {
 
             }
         }catch (StaleElementReferenceException e) {
-
+            //in this case is valid exception because of dynamic refresh list of conversation
         }
 
         if (count>0)

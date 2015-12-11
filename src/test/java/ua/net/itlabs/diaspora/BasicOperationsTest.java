@@ -315,7 +315,7 @@ public class BasicOperationsTest extends BaseTest {
     public void testAddMentionPost() {
 
         GIVEN("Setup relations among users of pod1");
-        Pod1.ensureRelations();
+        //Pod1.ensureRelations();
 
         GIVEN("There is no author's mention post");
         Diaspora.ensureSignInAs(Pod1.ana);

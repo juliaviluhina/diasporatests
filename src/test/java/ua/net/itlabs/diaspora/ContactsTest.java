@@ -1,6 +1,7 @@
 package ua.net.itlabs.diaspora;
 
 
+import org.junit.experimental.categories.Category;
 import steps.Relation;
 import org.junit.Test;
 import pages.*;
@@ -16,36 +17,41 @@ import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 import static core.helpers.UniqueDataHelper.the;
 import static core.Gherkin.*;
+import static ua.net.itlabs.testDatas.Phrases.*;
 
 public class ContactsTest extends BaseTest {
 
+    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testAddContacts() {
-        GIVEN("Setup relation between users");
-        clearUniqueData();
-        Relation.forUser(Pod1.rob).toUser(Pod1.eve, WORK).ensure();
-        Relation.forUser(Pod1.eve).toUser(Pod1.rob, WORK).doNotLogOut().ensure();
+
+        GIVEN("Sam<-+->Bob as Work");
+        Relation.forUser(Pod2.sam).toUser(Pod2.bob, WORK).ensure();
+        Relation.forUser(Pod2.bob).toUser(Pod2.sam, WORK).doNotLogOut().ensure();
+
+        GIVEN("Limited post in Family aspect is not exists");
+        Menu.openStream();
+        Feed.ensureNoPost(Pod2.bob, POST_FOR_FAMILY_AFTER_MANAGING_CONTACTS);
+        Feed.ensureNoPost(Pod2.bob, POST_FOR_FAMILY);
 
         WHEN("Limited post in not used aspects is added by author");
-        Menu.openStream();
-        Feed.addAspectPost(FAMILY, the("Eve for family before manage contacts"));
-        Feed.assertPost(Pod1.eve, the("Eve for family before manage contacts"));//this check for wait moment when stream will be loaded
+        Feed.addAspectPost(FAMILY, POST_FOR_FAMILY);
+        Feed.assertPost(Pod2.bob, POST_FOR_FAMILY);//this check for wait moment when stream will be loaded
 
         AND("After that contact with user in this aspect is added by author");
         Menu.openContacts();
-        Contacts.addLinkedContactForAspect(FAMILY, Pod1.rob);
+        Contacts.addLinkedContactForAspect(FAMILY, Pod2.sam);
 
         AND("Limited post in this aspect is added by author");
         Menu.openStream();
-        Feed.addAspectPost(FAMILY, the("Eve for family after manage contacts"));
-        Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));//this check for wait moment when stream will be loaded
-
+        Feed.addAspectPost(FAMILY, POST_FOR_FAMILY_AFTER_MANAGING_CONTACTS);
+        Feed.assertPost(Pod2.bob, POST_FOR_FAMILY_AFTER_MANAGING_CONTACTS);//this check for wait moment when stream will be loaded
 
         THEN("Post of author added before linking is not shown in user's stream");
         AND("Post of author added after linking is shown in user's stream");
-        Diaspora.ensureSignInAs(Pod1.rob);
-        Feed.assertNoPost(Pod1.eve, the("Eve for family before manage contacts"));
-        Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));
+        Diaspora.ensureSignInAs(Pod2.sam);
+        Feed.assertNoPost(Pod2.bob, POST_FOR_FAMILY);
+        Feed.assertPost(Pod2.bob, POST_FOR_FAMILY_AFTER_MANAGING_CONTACTS);
 
     }
 
