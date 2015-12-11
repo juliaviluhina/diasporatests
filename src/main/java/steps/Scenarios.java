@@ -10,11 +10,11 @@ public class Scenarios {
     public static void clearUserData(PodUser user) {
         Diaspora.ensureSignInAs(user);
 
-        NavBar.openStream();
         Feed.deleteAllPosts(user , "");
 
-        NavBar.openTags();
         Tags.deleteAll();
+
+        Conversations.clearAll();
 
         Menu.openContacts();
         Contacts.deleteAllUserAspects();

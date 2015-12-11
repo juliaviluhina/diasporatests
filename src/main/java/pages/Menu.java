@@ -17,6 +17,10 @@ import static steps.Scenarios.*;
 
 public class Menu {
 
+    public static SelenideElement userMenuHeader = $(".user-menu-trigger");
+    public static ElementsCollection userMenuItems = $$(".user-menu-item a");
+    public static SelenideElement search = $("#q");
+
     @Step
     public static void openStream() {
         $(".header-nav [href='/stream']").click();
@@ -51,10 +55,6 @@ public class Menu {
     public static void ensureLogOut() {
         Diaspora.ensureLogOut();
     }
-
-    public static SelenideElement userMenuHeader = $(".user-menu-trigger");
-    public static ElementsCollection userMenuItems = $$(".user-menu-item a");
-    public static SelenideElement search = $("#q");
 
     //method added because of problem with opening user menu when stream is not loaded
     public static void openMenu() {

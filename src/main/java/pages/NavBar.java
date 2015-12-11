@@ -9,6 +9,8 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class NavBar {
 
+    private static SelenideElement container = $("#leftNavBar");
+
     @Step
     public static void openStream() {
         container.find("[href='/stream']").click();
@@ -40,6 +42,4 @@ public class NavBar {
         $("#home_user_badge").shouldHave(Condition.exactText(user.userName));
     }
 
-    private static SelenideElement container = $("#leftNavBar");
-
-}
+ }

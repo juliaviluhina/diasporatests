@@ -12,8 +12,16 @@ import static core.AdditionalAPI.scrollToAndHover;
 import static core.conditions.CustomCondition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static steps.Scenarios.*;
 
 public class Conversations {
+
+    public static SelenideElement inbox = $("#conversation_inbox");
+    public static SelenideElement currentConversation = $(".stream_container");
+
+    private static ElementsCollection conversations = inbox.findAll(".conversation");
+    private static SelenideElement hideButton = $(".hide_conversation");
+    private static SelenideElement deleteButton = $(".delete_conversation");
 
     @Step
     public static void sendNewConversationTo(PodUser toUser, String subject, String text) {
@@ -51,12 +59,12 @@ public class Conversations {
 
     @Step
     public static void hideCurrentConversation() {
-        clickButton(".hide_conversation");
+        clickButton(hideButton);
     }
 
     @Step
     public static void deleteCurrentConversation() {
-        clickButton(".delete_conversation");
+        clickButton(deleteButton);
     }
 
 
@@ -88,17 +96,37 @@ public class Conversations {
         conversation(subject).shouldNotBe(present);
     }
 
+    @Step
+    public static void clearAll() {
 
-    public static SelenideElement inbox = $("#conversation_inbox");
-    public static SelenideElement currentConversation = $(".stream_container");
+        Menu.openConversations();
+        waitStreamOpening();
+        $("#as-selections-contact_ids").click();
+
+        int count = conversations.size();
+
+        for (int i = 1; i<count; i++) {
+            SelenideElement conversation = conversations.first();
+            conversation.click();
+
+            if (hideButton.is(visible))
+                clickButton(hideButton);
+            else if (deleteButton.is(visible))
+                clickButton(deleteButton);
+
+        }
+
+        if (count>0)
+            clearAll();
+
+    }
 
     private static SelenideElement conversation(String subject) {
-        return inbox.findAll(".conversation").find(text(subject));
+        return conversations.find(text(subject));
     }
 
     //this method is added because button can be hidden under the header
-    private static void clickButton(String cssSelector) {
-        SelenideElement button = $(cssSelector);
+    private static void clickButton(SelenideElement button) {
         button.shouldBe(visible);
         scrollToAndHover(button);
         button.click();

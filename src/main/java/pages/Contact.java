@@ -20,6 +20,11 @@ import static pages.Aspects.STANDART_ASPECTS;
 
 public class Contact {
 
+    public static SelenideElement contactHeader = $(".profile_header");
+    public static String manageContactLocator = ".btn.dropdown-toggle";
+
+    private static String stopIgnoringLocator = "#unblock_user_button";
+
     @Step
     public static void sendMessageToContact(String subject, String text) {
         $("#message_button").click();
@@ -92,11 +97,6 @@ public class Contact {
     public static void ensureIgnoreMode() {
         ensureIgnoreMode(contactHeader);
     }
-
-    public static SelenideElement contactHeader = $(".profile_header");
-    public static String manageContactLocator = ".btn.dropdown-toggle";
-
-    private static String stopIgnoringLocator = "#unblock_user_button";
 
     public static SelenideElement contact(PodUser podUser) {
         return $$(".stream_element").find(text(podUser.fullName));

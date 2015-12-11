@@ -15,6 +15,9 @@ import static steps.Scenarios.*;
 
 public class Tags {
 
+    public static SelenideElement newTag = $("#tags");
+    public static ElementsCollection tags = $$("#tags_list  [data-template='tag_following']");
+
     @Step
     public static void add(String tagName) {
         newTag.setValue(tagName);
@@ -115,9 +118,6 @@ public class Tags {
         }
 
     }
-
-    public static SelenideElement newTag = $("#tags");
-    public static ElementsCollection tags = $$("#tags_list  [data-template='tag_following']");
 
     @Step
     private static void delete(SelenideElement tag) {

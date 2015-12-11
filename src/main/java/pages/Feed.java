@@ -23,6 +23,13 @@ import static steps.Scenarios.*;
 
 public class Feed {
 
+    public static SelenideElement newPostText = $("#status_message_fake_text");
+    public static SelenideElement setAspect = $(".aspect_dropdown .btn");
+    public static SelenideElement share = $("#submit");
+    public static ElementsCollection posts = $$(".stream_element");
+
+    private static SelenideElement aspect = $(".aspect_dropdown");
+
     @Step
     public static void addPublicPost(String text) {
         ensureAddPostMode();
@@ -375,13 +382,6 @@ public class Feed {
             deleteAllPosts(author, text);
         }
     }
-
-    private static SelenideElement aspect = $(".aspect_dropdown");
-    public static SelenideElement newPostText = $("#status_message_fake_text");
-    public static SelenideElement setAspect = $(".aspect_dropdown .btn");
-    public static SelenideElement share = $("#submit");
-
-    public static ElementsCollection posts = $$(".stream_element");
 
     @Step
     private static SelenideElement post(PodUser author, String text) {
