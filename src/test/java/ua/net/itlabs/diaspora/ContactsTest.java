@@ -7,6 +7,7 @@ import org.junit.Test;
 import pages.*;
 import pages.Contacts;
 import pages.Feed;
+import steps.Scenarios;
 import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.clearUniqueData;
@@ -50,6 +51,7 @@ public class ContactsTest extends BaseTest {
         THEN("Post of author added before linking is not shown in user's stream");
         AND("Post of author added after linking is shown in user's stream");
         Diaspora.ensureSignInAs(Pod2.sam);
+        //Scenarios.waitStreamOpening();
         Feed.assertNoPost(Pod2.bob, POST_FOR_FAMILY);
         Feed.assertPost(Pod2.bob, POST_FOR_FAMILY_AFTER_MANAGING_CONTACTS);
 
@@ -90,38 +92,44 @@ public class ContactsTest extends BaseTest {
 
     }
 
+    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testManageContacts() {
-        GIVEN("Setup relation between users");
-        clearUniqueData();
-        Relation.forUser(Pod1.ana).notToUsers(Pod1.eve).ensure();
-        Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).doNotLogOut().ensure();
+
+        GIVEN("Sam-X->Bob, Bob-+->Sam as Work");
+        Relation.forUser(Pod2.sam).notToUsers(Pod2.bob).ensure();
+        Relation.forUser(Pod2.bob).toUser(Pod2.sam, WORK).doNotLogOut().ensure();
+
+        GIVEN("Limited post in Work, Family aspects is not exists");
+        Menu.openStream();
+        Feed.ensureNoPost(Pod2.bob, POST_FOR_WORK);
+        Feed.ensureNoPost(Pod2.bob, POST_FOR_FAMILY);
 
         WHEN("User is linked by author in some aspects in All contacts");
         Menu.openContacts();
         Contacts.openAllContacts();
-        Contacts.ensureAspectsForContact(Pod1.ana, FRIENDS, FAMILY);
+        Contacts.ensureAspectsForContact(Pod2.sam, FRIENDS, FAMILY);
 
         AND("Limited in this and another aspects posts is added by author");
         Menu.openStream();
-        Feed.addAspectPost(WORK, the("Eve for work after manage contacts"));
-        Feed.addAspectPost(FAMILY, the("Eve for family after manage contacts"));
-        Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));//this check for wait moment when stream will be loaded
+        Feed.addAspectPost(WORK, POST_FOR_WORK);
+        Feed.addAspectPost(FAMILY, POST_FOR_FAMILY);
+        Feed.assertPost(Pod2.bob, POST_FOR_FAMILY);//this check for wait moment when stream will be loaded
 
-        THEN("Author's limited post in right aspect is available by user in contact's stream when user doesn't have link to author");
-        Diaspora.ensureSignInAs(Pod1.ana);
-        Feed.assertNoPost(Pod1.eve, the("Eve for work after manage contacts"));
-        Feed.assertNoPost(Pod1.eve, the("Eve for family after manage contacts"));
+        THEN("Author's limited post in right aspect is not shown in user's stream because of non linking user to author");
+        Diaspora.ensureSignInAs(Pod2.sam);
+        Feed.assertNoPost(Pod2.bob, POST_FOR_FAMILY);
+        Feed.assertNoPost(Pod2.bob, POST_FOR_WORK);
 
         WHEN("Author is linked by user in some aspects in All contacts");
         Menu.openContacts();
         Contacts.openAllContacts();
-        Contacts.ensureAspectsForContact(Pod1.eve, ACQUAINTANCES);
+        Contacts.ensureAspectsForContact(Pod2.bob, ACQUAINTANCES);
 
         THEN("In stream of user available limited posts of author is shown");
         Menu.openStream();
-        Feed.assertNoPost(Pod1.eve, the("Eve for work after manage contacts"));
-        Feed.assertPost(Pod1.eve, the("Eve for family after manage contacts"));
+        Feed.assertNoPost(Pod2.bob, POST_FOR_WORK);
+        Feed.assertPost(Pod2.bob, POST_FOR_FAMILY);
     }
 
 

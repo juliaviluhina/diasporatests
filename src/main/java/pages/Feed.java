@@ -298,6 +298,7 @@ public class Feed {
         waitStreamOpening();
         if (post(author, text).is(visible)) {
             deletePost(author, text);
+            waitStreamOpening();
             assertNoPost(author, text);
         }
     }
