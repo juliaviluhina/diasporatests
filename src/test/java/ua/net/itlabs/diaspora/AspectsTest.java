@@ -7,6 +7,7 @@ import pages.*;
 import pages.Aspects;
 import pages.Contacts;
 import pages.Feed;
+import steps.Scenarios;
 import ua.net.itlabs.BaseTest;
 
 import static pages.Aspects.*;
@@ -83,17 +84,20 @@ public class AspectsTest extends BaseTest {
         GIVEN("Sam-+->Bob as Work");
         Relation.forUser(Pod2.sam).toUser(Pod2.bob, WORK).doNotLogOut().ensure();
 
-        GIVEN("Work aspect post from Sam exists");
+        GIVEN("Work aspect post from Sam is added after setup relation");
         Menu.openStream();
-        Feed.ensureAspectPost(Pod2.sam, WORK, POST_FOR_WORK);
+        Feed.ensureNoPost(Pod2.sam, POST_FOR_WORK);
+        Feed.addAspectPost(WORK, POST_FOR_WORK);
 
         GIVEN("Bob-+->Sam as Friends ");
         Relation.forUser(Pod2.bob).toUser(Pod2.sam, FRIENDS).doNotLogOut().ensure();
 
-        GIVEN("Friends and Family aspects post from Bob exist");
+        GIVEN("Friends and Family aspects post from Bob are added after setup relation");
         Menu.openStream();
-        Feed.ensureAspectPost(Pod2.bob, FRIENDS, POST_FOR_FRIENDS);
-        Feed.ensureAspectPost(Pod2.bob, FAMILY, POST_FOR_FAMILY);
+        Feed.ensureNoPost(Pod2.bob, POST_FOR_FRIENDS);
+        Feed.addAspectPost(FRIENDS, POST_FOR_FRIENDS);
+        Feed.ensureNoPost(Pod2.bob, POST_FOR_FAMILY);
+        Feed.addAspectPost(FAMILY, POST_FOR_FAMILY);
 
         WHEN("In NavBar aspects list all aspects is deselected");
         NavBar.openMyAspects();

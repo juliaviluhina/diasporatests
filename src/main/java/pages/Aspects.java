@@ -18,13 +18,13 @@ public class Aspects {
     public static final String ACQUAINTANCES = "Acquaintances";
     public static final String[] STANDART_ASPECTS = {FAMILY, FRIENDS, WORK, ACQUAINTANCES};
 
-    public static ElementsCollection aspectsNavBar = $$("#aspects_list li a");
     public static ElementsCollection aspectContainersNavBar = $$("#aspects_list li");
+
     public static SelenideElement toggleAll = $(".toggle_selector");
 
     @Step
     public static void add(String aspect) {
-        aspectsNavBar.find(text("Add an aspect")).click();
+        aspect("+ Add an aspect").click();
         Contacts.addAspectInDialog(aspect);
     }
 
@@ -41,18 +41,18 @@ public class Aspects {
     }
 
     @Step
-    public static void toggleAspect(String text) {
-        aspectsNavBar.find(text(text)).click();
+    public static void toggleAspect(String aspectName) {
+        aspect(aspectName).click();
     }
 
     @Step
-    public static void assertAspectInNavBar(String aspect) {
-        aspectsNavBar.find(text(aspect)).shouldBe(visible);
+    public static void assertAspectInNavBar(String aspectName) {
+        aspect(aspectName).shouldBe(visible);
     }
 
     @Step
-    public static void assertNoAspectInNavBar(String aspect) {
-        aspectsNavBar.filter(text(aspect)).shouldBe(empty);
+    public static void assertNoAspectInNavBar(String aspectName) {
+        aspect(aspectName).shouldNotBe(present);
     }
 
     @Step

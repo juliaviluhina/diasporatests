@@ -16,6 +16,7 @@ import static core.conditions.CustomCondition.textEnd;
 import static core.helpers.UniqueDataHelper.*;
 import static java.lang.Boolean.*;
 import static pages.Aspects.STANDART_ASPECTS;
+import static pages.Aspects.add;
 import static pages.Contact.contact;
 
 public class Contacts {
@@ -93,6 +94,21 @@ public class Contacts {
     @Step
     public static void ensureAspectsForContact(PodUser podUser, String... aspects) {
         Contact.ensureAspectsForContact(contact(podUser), aspects);
+    }
+
+    @Step
+    public static void ensureAspect(String aspectName) {
+        if (!aspect(aspectName).is(visible)) {
+            add(aspectName);
+        }
+    }
+
+    @Step
+    public static void ensureNoAspect(String aspectName) {
+        if (aspect(aspectName).is(visible)) {
+            selectAspect(aspectName);
+            deleteAspect();
+        }
     }
 
     @Step
