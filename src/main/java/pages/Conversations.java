@@ -115,6 +115,14 @@ public class Conversations {
     }
 
     @Step
+    public static void ensureAddConversationFromScratch(PodUser fromUser, PodUser toUser, String subject, String text) {
+        ensureNoConversation(toUser, subject);
+        ensureNoConversation(fromUser, subject);
+        sendNewConversationTo(toUser, subject, text);
+        assertInInboxBySubject(subject);//this check for wait moment when stream will be loaded
+    }
+
+    @Step
     public static void clearAll() {
 
         Menu.openConversations();

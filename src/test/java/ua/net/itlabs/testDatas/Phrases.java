@@ -18,8 +18,13 @@ public class Phrases {
     public static final String ASPECT2 = "Aspect2";
     public static final String POST_IN_ASPECT1 = "Information about Aspect1";
 
-    public static final String CONVERSATION_TEXT = "Conversation text";
-    public static final String CONVERSATION_SUBJECT = "Subject for conversation";
-    public static final String ANSWER_FOR_CONVERSATION1 = "Answer for conversation";
+    public static final String CONVERSATION1_TEXT = "Conversation 1 text";
+    public static final String CONVERSATION1_SUBJECT = "Subject for conversation 1";
+    public static final String CONVERSATION1_REPLY = "Reply for conversation 1";
+
+    public static final String CONVERSATION2_TEXT = "Conversation 2 text";
+    public static final String CONVERSATION2_SUBJECT = "Subject for conversation 2";
+    public static final String CONVERSATION2_REPLY = "Reply for conversation 2";
+
 
 }
