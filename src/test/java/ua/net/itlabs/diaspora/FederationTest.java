@@ -3,6 +3,7 @@ package ua.net.itlabs.diaspora;
 import com.codeborne.selenide.Configuration;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.experimental.categories.Category;
 import steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
+import static ua.net.itlabs.testDatas.Phrases.*;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
@@ -21,13 +23,30 @@ public class FederationTest extends BaseTest {
     @BeforeClass
     public static void givenSetupUsersRelation() {
 
-        GIVEN("Setup relation between users from two pods, some followed tag is added for users");
-        tag = "#ana_bob_rob_sam";
         Configuration.timeout = 90000;//for push data on another pod it is needed bigger timeout
-        Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod1.rob, Pod2.sam).ensure();
-        Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod1.ana, Pod2.bob).withTags(tag).ensure();
+
+        //setup relation among users from pod1(which aren't changed in all tests and built once)
+        Pod1.ensureRelations();
+
+        //in addition to relation among users from pod1
+        //setup relation Pod1-+->Pod2
+        Relation.forUser(Pod1.ana).toUser(Pod2.bob, ACQUAINTANCES).notToUsers(Pod2.sam).ensure();
+        Relation.forUser(Pod1.rob).toUser(Pod2.sam, FRIENDS).notToUsers(Pod2.bob).withTags(TAG).ensure();
+
+        //setup relation among users from pod2 and Pod2-+->Pod1
         Relation.forUser(Pod2.sam).toUser(Pod1.rob, FAMILY).notToUsers(Pod1.ana, Pod2.bob).ensure();
-        Relation.forUser(Pod2.bob).toUser(Pod1.ana, WORK).notToUsers(Pod1.rob, Pod2.sam).withTags(tag).ensure();
+        Relation.forUser(Pod2.bob).toUser(Pod1.ana, WORK).notToUsers(Pod1.rob, Pod2.sam).withTags(TAG).ensure();
+
+    }
+
+    //method added to insert given description on allure report
+    @Before
+    public void givenDescription() {
+
+        GIVEN("POD1:         Ana<-+->Rob as Friends           , Eve<-X->Ana & Rob");
+        GIVEN("POD2:         Sam<-X->Bob");
+        GIVEN("POD1-+->POD2: P1.Ana-+->P2.Bob as Acquaintances, P1.Rob-+->P2.Sam as Friends");
+        GIVEN("POD2-+->POD1: P2.Bob-+->P1.Ana as Work         , P2.Sam-+->P1.Rob as Family");
 
     }
 
@@ -36,39 +55,25 @@ public class FederationTest extends BaseTest {
         Configuration.timeout = timeout;
     }
 
-
-    @Before
-    public void addGivenDescriptionToAllure() {
-
-        GIVEN("Setup relation between users from two pods, some followed tag is added for users");
-        GIVEN("Ana from pod1 is linked with Bob from pod2 as Acquaintance");
-        AND("Ana is not linked with Rob from pod1 and Sam from pod2");
-        GIVEN("Rob from pod1 is linked with Sam from pod2 as Friend");
-        AND("Rob is not linked with Ana from pod1 and Bob from pod2");
-        AND("Rob has tag "+tag);
-        GIVEN("Sam from pod2 is linked with Rob from pod1 as Family");
-        AND("Sam is not linked with Ana from pod1 and Bob from pod2");
-        AND("Rob has tag "+tag);
-        GIVEN("Bob from pod2 is linked with Ana from pod1 as Work");
-    }
-
+    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testAvailabilityPublicPostForUnlinkedUsersOfDifferentPods() {
 
-        GIVEN("Public post with tag is added by author from pod 1");
+        GIVEN("Public post with tag is added by author from pod 1 from scratch");
         Diaspora.ensureSignInAs(Pod2.bob);
-        Feed.addPublicPost(the(tag + " Public Bob"));
-        Feed.assertPost(Pod2.bob, the(tag + " Public Bob"));
+        Feed.ensureNoPost(Pod2.bob, PUBLIC_POST_WITH_TAG);
+        Feed.addPublicPost(PUBLIC_POST_WITH_TAG);
+        Feed.assertPost(Pod2.bob, PUBLIC_POST_WITH_TAG);
 
         EXPECT("Post is shown in stream of unlinked user from pod2 who has the same followed tag");
         AND("This post can be commented");
         Diaspora.ensureSignInAs(Pod1.rob);
-        Feed.addComment(Pod2.bob, the(tag + " Public Bob"), the("Comment from Rob"));
-        Feed.assertComment(Pod2.bob, the(tag + " Public Bob"), Pod1.rob, the("Comment from Rob"));
+        Feed.addComment(Pod2.bob, PUBLIC_POST_WITH_TAG, COMMENT);
+        Feed.assertComment(Pod2.bob, PUBLIC_POST_WITH_TAG, Pod1.rob, COMMENT);
 
         EXPECT("Post with comment from user from another pod is shown in author's stream");
         Diaspora.ensureSignInAs(Pod2.bob);
-        Feed.assertComment(Pod2.bob, the(tag + " Public Bob"), Pod1.rob, the("Comment from Rob"));
+        Feed.assertComment(Pod2.bob, PUBLIC_POST_WITH_TAG, Pod1.rob, COMMENT);
 
     }
 
@@ -93,6 +98,5 @@ public class FederationTest extends BaseTest {
     }
 
     private static long timeout = Configuration.timeout;
-    private static String tag;
 
 }

@@ -68,7 +68,7 @@ public class ConversationsTest extends BaseTest {
     public void testHideAndDeleteConversations() {
 
         GIVEN("Setup relations among users of pod1");
-        Pod1.ensureRelations();
+        //Pod1.ensureRelations();
 
         GIVEN("Messages from Ana to Rob are added from scratch");
         Conversations.ensureAddConversationFromScratch(Pod1.ana, Pod1.rob, CONVERSATION1_SUBJECT, CONVERSATION1_TEXT);

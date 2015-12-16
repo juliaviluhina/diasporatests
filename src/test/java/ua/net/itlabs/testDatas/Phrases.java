@@ -26,5 +26,9 @@ public class Phrases {
     public static final String CONVERSATION2_SUBJECT = "Subject for conversation 2";
     public static final String CONVERSATION2_REPLY = "Reply for conversation 2";
 
+    public static final String TAG = "#ana_bob_rob_sam";
+    public static final String PUBLIC_POST_WITH_TAG = TAG + " Public information";
+
+
 
 }
