@@ -1,15 +1,8 @@
 package ua.net.itlabs.diaspora;
 
-import com.codeborne.selenide.Configuration;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import steps.Relation;
 import ua.net.itlabs.BaseTest;
 
-import static core.Gherkin.GIVEN;
-import static core.helpers.UniqueDataHelper.clearUniqueData;
-import static pages.Aspects.*;
 import static steps.Scenarios.clearUserData;
 import static ua.net.itlabs.testDatas.Users.*;
 

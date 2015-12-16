@@ -7,7 +7,6 @@ import pages.*;
 import pages.Aspects;
 import pages.Contacts;
 import pages.Feed;
-import steps.Scenarios;
 import ua.net.itlabs.BaseTest;
 
 import static pages.Aspects.*;
@@ -23,11 +22,11 @@ public class AspectsTest extends BaseTest {
     @Test
     public void testAddAspectInNavBar() {
 
-        GIVEN("Aspect "+ASPECT1+" is not used by author");
+        GIVEN("Aspect " + ASPECT1 + " is not used by author");
         Diaspora.ensureSignInAs(Pod2.bob);
         Aspects.ensureNoAspect(ASPECT1);
 
-        GIVEN("Post in aspect "+ASPECT1+" does not exist");
+        GIVEN("Post in aspect " + ASPECT1 + " does not exist");
         Feed.ensureNoPost(Pod2.bob, POST_IN_ASPECT1);
 
         WHEN("New aspest is added");

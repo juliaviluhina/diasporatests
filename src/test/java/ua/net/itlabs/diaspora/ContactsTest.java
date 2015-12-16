@@ -7,22 +7,19 @@ import org.junit.Test;
 import pages.*;
 import pages.Contacts;
 import pages.Feed;
-import steps.Scenarios;
 import ua.net.itlabs.BaseTest;
 
-import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static ua.net.itlabs.testDatas.Users.*;
 import static pages.Aspects.FRIENDS;
 import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
-import static core.helpers.UniqueDataHelper.the;
 import static core.Gherkin.*;
 import static ua.net.itlabs.testDatas.Phrases.*;
 
+@Category(ua.net.itlabs.categories.Smoke.class)
 public class ContactsTest extends BaseTest {
 
-    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testAddContacts() {
 
@@ -56,7 +53,6 @@ public class ContactsTest extends BaseTest {
 
     }
 
-    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testDeleteContacts() {
 
@@ -91,7 +87,6 @@ public class ContactsTest extends BaseTest {
 
     }
 
-    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testManageContacts() {
 
@@ -131,7 +126,6 @@ public class ContactsTest extends BaseTest {
         Feed.assertPost(Pod2.bob, POST_FOR_FAMILY);
     }
 
-    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testAddAspectInContacts() {
 
@@ -170,7 +164,6 @@ public class ContactsTest extends BaseTest {
 
     }
 
-    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testRenameAspectInContacts() {
 

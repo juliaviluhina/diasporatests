@@ -5,10 +5,8 @@ import org.junit.experimental.categories.Category;
 import pages.Diaspora;
 import pages.Menu;
 import pages.NavBar;
-import steps.Relation;
 import ua.net.itlabs.BaseTest;
 
-import static pages.Aspects.FRIENDS;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
