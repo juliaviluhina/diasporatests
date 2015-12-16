@@ -1,59 +1,42 @@
 package ua.net.itlabs.diaspora;
 
-import com.codeborne.selenide.Configuration;
-import org.junit.Before;
-import steps.Relation;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import pages.Contact;
 import pages.Conversations;
 import pages.Diaspora;
 import pages.Menu;
 import ua.net.itlabs.BaseTest;
 
-import static core.AdditionalAPI.timeout3x;
 import static core.helpers.UniqueDataHelper.clearUniqueData;
 import static core.helpers.UniqueDataHelper.the;
-import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
+import static ua.net.itlabs.testDatas.Phrases.*;
 
 public class ConversationsTest extends BaseTest {
 
-    @BeforeClass
-    public static void givenSetupRelation() {
-
-        GIVEN("Setup mutual relation between users in some different aspects");
-        Relation.forUser(Pod1.eve).toUser(Pod1.ana, WORK).ensure();
-        Relation.forUser(Pod1.ana).toUser(Pod1.eve, FRIENDS).notToUsers(Pod1.rob).ensure();
-        Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).ensure();
-    }
-
-    @Before
-    public void addGivenDescriptionToAllure() {
-
-        GIVEN("Eve is linked with Ana in Work aspect");
-        GIVEN("Ana is linked with Eve in Friends aspect and unlinked with Rob");
-        GIVEN("Rob is with Ana");
-
-    }
-
+    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
     public void testNewConversation() {
-        clearUniqueData();
+
+        GIVEN("Setup relations among users of pod1");
+        Pod1.ensureRelations();
+        GIVEN("Message in Ana's and Rob's conversations is not exist");
+        Conversations.ensureNoConversation(Pod1.ana, CONVERSATION_SUBJECT);
+        Conversations.ensureNoConversation(Pod1.rob, CONVERSATION_SUBJECT);
 
         WHEN("Conversation to user is added by author");
         Diaspora.ensureSignInAs(Pod1.ana);
         Menu.openConversations();
-        Conversations.sendNewConversationTo(Pod1.eve, the("subject"), the("text"));
-        Conversations.assertInInboxBySubject(the("subject"));//this check for wait moment when stream will be loaded
+        Conversations.sendNewConversationTo(Pod1.rob, CONVERSATION_SUBJECT, CONVERSATION_TEXT);
+        Conversations.assertInInboxBySubject(CONVERSATION_SUBJECT);//this check for wait moment when stream will be loaded
 
         THEN("Conversation is shown for user");
-        Diaspora.ensureSignInAs(Pod1.eve);
+        Diaspora.ensureSignInAs(Pod1.rob);
         Menu.openConversations();
-        Menu.openConversations();
-        Conversations.selectConversationBySubject(the("subject"));
-        Conversations.assertCurrentConversation(Pod1.ana, the("subject"), the("text"));
+        Conversations.selectConversationBySubject(CONVERSATION_SUBJECT);
+        Conversations.assertCurrentConversation(Pod1.ana, CONVERSATION_SUBJECT, CONVERSATION_TEXT);
 
     }
 

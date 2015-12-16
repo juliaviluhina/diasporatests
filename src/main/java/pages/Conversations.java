@@ -77,13 +77,18 @@ public class Conversations {
     @Step
     public static void assertCurrentConversation(PodUser from, String subject, String text) {
 
-        SelenideElement currentSubject = currentConversation.find(".conversation_participants h3");
-        currentSubject.shouldHave(exactText(subject));
+        assertCurrentSubject(subject);
 
         SelenideElement firstMessage = currentConversation.find("#conversation_show #first_unread");
         firstMessage.find(".ltr").shouldHave(exactText(text));
         firstMessage.find(".author").shouldHave(exactText(from.fullName));
 
+    }
+
+    @Step
+    public static void assertCurrentSubject(String subject) {
+        SelenideElement currentSubject = currentConversation.find(".conversation_participants h3");
+        currentSubject.shouldHave(exactText(subject));
     }
 
     @Step
@@ -95,6 +100,18 @@ public class Conversations {
     @Step
     public static void assertNoConversationBySubject(String subject) {
         conversation(subject).shouldNotBe(present);
+    }
+
+    @Step
+    public static void ensureNoConversation(PodUser podUser, String subject) {
+        Diaspora.ensureSignInAs(podUser);
+        Menu.openConversations();
+        SelenideElement conversation = conversation(subject);
+        if (conversation.is(visible)) {
+            conversation.click();
+            assertCurrentSubject(subject);
+            hideOrDeleteCurrentConversation();
+        }
     }
 
     @Step
@@ -113,13 +130,8 @@ public class Conversations {
                     break;
                 conversation.click();
 
-                if (hideButton.is(visible)) {
+                if (hideOrDeleteCurrentConversation()) {
                     count++;
-                    clickButton(hideButton);
-                }
-                else if (deleteButton.is(visible)) {
-                    count++;
-                    clickButton(deleteButton);
                 }
             }
         }catch (StaleElementReferenceException e) {
@@ -131,6 +143,18 @@ public class Conversations {
         if (count>0)
             clearAll();
 
+    }
+
+    private static boolean hideOrDeleteCurrentConversation() {
+        if (hideButton.is(visible)) {
+            clickButton(hideButton);
+            return true;
+        }
+        else if (deleteButton.is(visible)) {
+            clickButton(deleteButton);
+            return true;
+        }
+        return false;
     }
 
     private static SelenideElement conversation(String subject) {

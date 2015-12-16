@@ -18,4 +18,8 @@ public class Phrases {
     public static final String ASPECT2 = "Aspect2";
     public static final String POST_IN_ASPECT1 = "Information about Aspect1";
 
+    public static final String CONVERSATION_TEXT = "Conversation text";
+    public static final String CONVERSATION_SUBJECT = "Subject for conversation";
+    public static final String ANSWER_FOR_CONVERSATION1 = "Answer for conversation";
+
 }
