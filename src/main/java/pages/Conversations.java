@@ -106,11 +106,14 @@ public class Conversations {
     public static void ensureNoConversation(PodUser podUser, String subject) {
         Diaspora.ensureSignInAs(podUser);
         Menu.openConversations();
-        SelenideElement conversation = conversation(subject);
-        if (conversation.is(visible)) {
-            conversation.click();
-            assertCurrentSubject(subject);
-            hideOrDeleteCurrentConversation();
+        while (true) {
+            SelenideElement conversation = conversation(subject);
+            if (conversation.is(visible)) {
+                conversation.click();
+                assertCurrentSubject(subject);
+                hideOrDeleteCurrentConversation();
+            } else
+                break;
         }
     }
 

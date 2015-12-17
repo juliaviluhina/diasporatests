@@ -238,7 +238,6 @@ public class Feed {
     }
 
 
-
     @Step
     public static void ensureAspectPost(PodUser author, String diasporaAspect, String text) {
         waitStreamOpening();
@@ -296,10 +295,13 @@ public class Feed {
     @Step
     public static void ensureNoPost(PodUser author, String text) {
         waitStreamOpening();
-        if (post(author, text).is(visible)) {
-            deletePost(author, text);
-            waitStreamOpening();//without this wait next check is unstable
-            assertNoPost(author, text);
+        while (true) {
+            if (post(author, text).is(visible)) {
+                deletePost(author, text);
+                waitStreamOpening();//without this wait next check is unstable
+                assertNoPost(author, text);
+            } else
+                break;
         }
     }
 
@@ -316,10 +318,13 @@ public class Feed {
     @Step
     public static void ensureNoCommentForPost(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
         waitStreamOpening();
-        if (comment(postAuthor, postText, commentAuthor, commentText).is(visible)) {
-            deleteComment(postAuthor, postText, commentAuthor, commentText);
-            assertNoComment(postAuthor, postText, commentAuthor, commentText);
-            return;
+        while (true) {
+            if (comment(postAuthor, postText, commentAuthor, commentText).is(visible)) {
+                deleteComment(postAuthor, postText, commentAuthor, commentText);
+                assertNoComment(postAuthor, postText, commentAuthor, commentText);
+                return;
+            } else
+                break;
         }
     }
 

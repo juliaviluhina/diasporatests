@@ -69,7 +69,7 @@ public class ConversationsTest extends BaseTest {
     public void testHideAndDeleteConversations() {
 
         GIVEN("Setup relations among users of pod1");
-        //Pod1.ensureRelations();
+        Pod1.ensureRelations();
 
         GIVEN("Messages from Ana to Rob are added from scratch");
         Conversations.ensureAddConversationFromScratch(Pod1.ana, Pod1.rob, CONVERSATION1_SUBJECT, CONVERSATION1_TEXT);
@@ -81,7 +81,6 @@ public class ConversationsTest extends BaseTest {
         Conversations.hideCurrentConversation();
 
         THEN("This conversation is not shown for author");
-        Scenarios.waitStreamOpening();
         Conversations.assertNoConversationBySubject(CONVERSATION1_SUBJECT);
 
         EXPECT("Conversation from author shown for user can be hidden by user");
@@ -90,7 +89,6 @@ public class ConversationsTest extends BaseTest {
         Conversations.selectConversationBySubject(CONVERSATION2_SUBJECT);
         Conversations.assertCurrentConversation(Pod1.ana, CONVERSATION2_SUBJECT, CONVERSATION2_TEXT);
         Conversations.hideCurrentConversation();
-        Scenarios.waitStreamOpening();
         Conversations.assertNoConversationBySubject(CONVERSATION2_SUBJECT);
 
         EXPECT("Conversation hidden for author is shown for user");
@@ -99,7 +97,6 @@ public class ConversationsTest extends BaseTest {
 
         EXPECT("Conversation hidden for author can be deleted by user");
         Conversations.deleteCurrentConversation();
-        Scenarios.waitStreamOpening();
         Conversations.assertNoConversationBySubject(CONVERSATION1_SUBJECT);
 
         EXPECT("Conversation of author hidden for user can be deleted by author");
@@ -108,7 +105,6 @@ public class ConversationsTest extends BaseTest {
         Conversations.selectConversationBySubject(CONVERSATION2_SUBJECT);
         Conversations.assertMessageInCurrentConversation(Pod1.ana, CONVERSATION2_TEXT);
         Conversations.deleteCurrentConversation();
-        Scenarios.waitStreamOpening();
         Conversations.assertNoConversationBySubject(CONVERSATION2_SUBJECT);
 
     }
