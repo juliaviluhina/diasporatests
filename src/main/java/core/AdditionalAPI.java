@@ -12,7 +12,7 @@ import com.google.common.base.Function;
 
 
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-
+import static com.codeborne.selenide.Condition.visible;
 
 public class AdditionalAPI {
 
@@ -57,6 +57,7 @@ public class AdditionalAPI {
     public static SelenideElement scrollToAndHover(SelenideElement element) {
         //element.scrollTo(); scrollTo works not always. especially unstable for tags
         //element.getCoordinates().inViewPort(); this variant doesn't help in situations when something is shown under the header
+        element.shouldBe(visible);
         scrollWithOffset(element, 0, -150); //this variant is used to move element from under the header
         return element.hover();
     }

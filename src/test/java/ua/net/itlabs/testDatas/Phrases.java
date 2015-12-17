@@ -2,7 +2,13 @@ package ua.net.itlabs.testDatas;
 
 public class Phrases {
 
+    public static final String TAG = "#ana_bob_rob_sam";
+    public static final String X_Tag = "#x_tag";
+    public static final String Y_Tag = "#y_tag";
+    public static final String Z_Tag = "#z_tag";
+
     public static final String PUBLIC_POST = "Public information";
+    public static final String PUBLIC_POST_WITH_TAG = TAG + " Public tagged information";
     public static final String PRIVATE_POST = "Private information";
     public static final String POST_FOR_FRIENDS = "Information for friends";
     public static final String POST_FOR_FAMILY = "Information for family";
@@ -28,10 +34,5 @@ public class Phrases {
     public static final String CONVERSATION2_TEXT = "Conversation 2 text";
     public static final String CONVERSATION2_SUBJECT = "Subject for conversation 2";
     public static final String CONVERSATION2_REPLY = "Reply for conversation 2";
-
-    public static final String TAG = "#ana_bob_rob_sam";
-    public static final String PUBLIC_POST_WITH_TAG = TAG + " Public information";
-
-
 
 }

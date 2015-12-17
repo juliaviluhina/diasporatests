@@ -93,7 +93,6 @@ public class Feed {
 
     @Step
     private static void deletePost(SelenideElement post) {
-        post.shouldBe(visible); //without this check next code is unstable
         scrollToAndHover(post);
         removePostButton(post).click();
         confirm(null);
@@ -299,11 +298,10 @@ public class Feed {
         while (true) {
             if (post(author, text).is(visible)) {
                 deletePost(author, text);
-                waitStreamOpening();//without this wait next check is unstable
-                assertNoPost(author, text);
             } else
                 break;
         }
+        assertNoPost(author, text);
     }
 
     @Step

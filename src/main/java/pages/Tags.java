@@ -34,24 +34,24 @@ public class Tags {
 
     @Step
     public static void delete(String tagName) {
-        scrollToAndHover(tags.find(exactText(tagName)));
+        scrollToAndHover(tag(tagName));
         $("#unfollow_" + tagName.substring(1)).click();
         confirm(null);
     }
 
     @Step
     public static void filter(String tagName) {
-        tags.find(exactText(tagName)).click();
+        tag(tagName).click();
     }
 
     @Step
     public static void assertNotExist(String tagName) {
-        tags.find(exactText(tagName)).shouldNotBe(present);
+        tag(tagName).shouldNotBe(present);
     }
 
     @Step
     public static void assertExist(String tagName) {
-        tags.find(exactText(tagName)).shouldBe(visible);
+        tag(tagName).shouldBe(visible);
     }
 
     @Step
@@ -62,16 +62,28 @@ public class Tags {
     @Step
     public static void ensureTag(String tagName) {
         NavBar.openTags();
-        if (tags.find(exactText(tagName)).is(visible)) {
+        if (tag(tagName).is(visible)) {
             return;
         }
         add(tagName);
     }
 
     @Step
+    public static void ensureNoTag(String tagName) {
+        NavBar.openTags();
+        if (tag(tagName).is(visible)) {
+            delete(tagName);
+        }
+    }
+
+    @Step
     public static void ensureNoTags() {
         NavBar.openTags();
         deleteAll();
+    }
+
+    private static SelenideElement tag(String tagName) {
+        return tags.find(exactText(tagName));
     }
 
 

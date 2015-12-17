@@ -1,6 +1,7 @@
 package ua.net.itlabs.diaspora;
 
 import org.junit.Before;
+import org.junit.experimental.categories.Category;
 import steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -10,92 +11,104 @@ import pages.Tags;
 import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.the;
+import static ua.net.itlabs.testDatas.Phrases.*;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
+@Category(ua.net.itlabs.categories.Smoke.class)
 public class TagsTest extends BaseTest {
-
-    @BeforeClass
-    public static void givenSetupUsersRelation() {
-
-        post1 = the("Public post with tag " + the("#tag1") + " : ");
-        post2 = the("Public post with tag " + the("#tag2") + " : ");
-        Relation.forUser(Pod1.ana).notToUsers(Pod1.rob).ensure();
-        Relation.forUser(Pod1.rob).notToUsers(Pod1.ana).doNotLogOut().ensure();
-        Menu.openStream();
-        Feed.addPublicPost(post1);
-        Feed.addPublicPost(post2);
-        Feed.assertPost(Pod1.rob, post2); //this check for wait moment when stream will be loaded
-        Menu.ensureLogOut();
-
-    }
-
-    @Before
-    public void addGivenDescriptionToAllure() {
-
-        GIVEN("Setup relation between users, followed tags is added for users, public posts with this tags is added by author");
-        GIVEN("Ana is unlinked with Rob");
-        GIVEN("Rob is unlinked with Ana");
-
-    }
 
     @Test
     public void testAddTag() {
 
-        EXPECT("Public post with not followed tag is not shown in stream of unlinked user");
+        GIVEN("Setup relations among users of pod1");
+        Pod1.ensureRelations();
+
+        GIVEN("Eve does not follow tag");
+        Diaspora.ensureSignInAs(Pod1.eve);
+        Tags.ensureNoTag(TAG);
+
+        GIVEN("Public post from Ana exists");
         Diaspora.ensureSignInAs(Pod1.ana);
-        Feed.assertNoPost(Pod1.rob, post1);
+        Feed.ensurePublicPost(Pod1.ana, PUBLIC_POST_WITH_TAG);
+
+        EXPECT("Public post with not followed tag is not shown in stream of unlinked user");
+        Diaspora.ensureSignInAs(Pod1.eve);
+        Feed.assertNoPost(Pod1.ana, PUBLIC_POST_WITH_TAG);
 
         WHEN("Tag is followed by user");
         NavBar.openTags();
-        Tags.add(the("#tag1"));
+        Tags.add(TAG);
 
         THEN("Public post with followed tag is shown in stream of unlinked user");
         NavBar.openStream();
-        Feed.assertPost(Pod1.rob, post1);
+        Feed.assertPost(Pod1.ana, PUBLIC_POST_WITH_TAG);
 
     }
 
     @Test
     public void testFilterFeedByTag() {
 
-        GIVEN("Some tag is followed by user");
+        GIVEN("Setup relations among users of pod1");
+        Pod1.ensureRelations();
+
+        GIVEN("Public posts from Ana exist - with tag and without tag");
         Diaspora.ensureSignInAs(Pod1.ana);
-        Tags.ensureTag(the("#tag2"));
+        Feed.ensurePublicPost(Pod1.ana, PUBLIC_POST_WITH_TAG);
+        Feed.ensurePublicPost(Pod1.ana, PUBLIC_POST);
+
+        GIVEN("Rob follows tag");
+        Diaspora.ensureSignInAs(Pod1.rob);
+        Tags.ensureTag(TAG);
+
+        EXPECT("Both public posts are in Rob's stream");
+        Menu.openStream();
+        Feed.assertPost(Pod1.ana, PUBLIC_POST_WITH_TAG);
+        Feed.assertPost(Pod1.ana, PUBLIC_POST);
 
         WHEN("This followed tag is selected in NavBar");
         NavBar.openTags();
-        Tags.filter(the("#tag2"));
+        Tags.filter(TAG);
 
         THEN("Only posts with this tag are shown");
-        Feed.assertPost(Pod1.rob, post2);
-        Feed.assertNoPost(Pod1.rob, post1);
+        Feed.assertPost(Pod1.ana, PUBLIC_POST_WITH_TAG);
+        Feed.assertNoPost(Pod1.ana, PUBLIC_POST);
 
     }
 
     @Test
     public void testDeleteTag() {
 
-        GIVEN("Some tag is followed by user");
+        GIVEN("Setup relations among users of pod1");
+        Pod1.ensureRelations();
+
+        GIVEN("Public post with tag from Ana exist");
         Diaspora.ensureSignInAs(Pod1.ana);
-        Tags.ensureTag(the("#tag2"));
+        Feed.ensurePublicPost(Pod1.ana, PUBLIC_POST_WITH_TAG);
+
+        GIVEN("Eve follows tag");
+        Diaspora.ensureSignInAs(Pod1.eve);
+        Tags.ensureTag(TAG);
 
         EXPECT("Public post with followed tag is shown in stream of unlinked user");
         NavBar.openStream();
-        Feed.assertPost(Pod1.rob, post2);
+        Feed.assertPost(Pod1.ana, PUBLIC_POST_WITH_TAG);
 
         WHEN("Followed tag is deleted");
         NavBar.openTags();
-        Tags.delete(the("#tag2"));
+        Tags.delete(TAG);
 
-        THEN("Public post with this tag from unlinked user is not shown in stream of unlinked user");
+        THEN("Public post with this tag is not shown in stream of unlinked user");
         Menu.openStream();
-        Feed.assertNoPost(Pod1.rob, post2);
+        Feed.assertNoPost(Pod1.ana, PUBLIC_POST);
 
     }
 
     @Test
     public void testTagsOrderAndSafety() {
+
+        GIVEN("Setup relations among users of pod1");
+        Pod1.ensureRelations();
 
         GIVEN("User does not follow any tags");
         Diaspora.ensureSignInAs(Pod1.ana);
@@ -103,19 +116,17 @@ public class TagsTest extends BaseTest {
 
         WHEN("Tags are added in not alphabetical order");
         NavBar.openTags();
-        Tags.add(the("#Ytag1"), the("#Ztag"), the("#Ytag2"));
+        Tags.add(Y_Tag, Z_Tag, X_Tag);
 
         THEN("Added tags are shown in alphabetical order");
-        Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
+        Tags.assertTags(X_Tag, Y_Tag, Z_Tag);
 
         EXPECT("Added tags are shown in alphabetical order after next signing in");
-        Diaspora.ensureSignInAs(Pod1.ana);
+        Diaspora.ensureLogOut();
+        Diaspora.signInAs(Pod1.ana);//usage signIn (not ensure) - for opening separate webrdiver in separate mode
         NavBar.openTags();
-        Tags.assertTags(the("#Ytag1"), the("#Ytag2"), the("#Ztag"));
+        Tags.assertTags(X_Tag, Y_Tag, Z_Tag);
 
     }
-
-    private static String post1;
-    private static String post2;
 
 }
