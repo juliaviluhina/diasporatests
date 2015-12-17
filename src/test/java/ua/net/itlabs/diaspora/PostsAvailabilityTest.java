@@ -1,8 +1,7 @@
 package ua.net.itlabs.diaspora;
 
-import org.junit.Before;
+import org.junit.experimental.categories.Category;
 import steps.Relation;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pages.Diaspora;
 import pages.Feed;
@@ -10,51 +9,52 @@ import pages.Menu;
 import ua.net.itlabs.BaseTest;
 
 import static core.helpers.UniqueDataHelper.the;
+import static pages.Aspects.WORK;
 import static ua.net.itlabs.testDatas.Users.*;
 import static pages.Aspects.FRIENDS;
 import static pages.Aspects.ACQUAINTANCES;
 import static core.Gherkin.*;
+import static ua.net.itlabs.testDatas.Phrases.*;
 
 public class PostsAvailabilityTest extends BaseTest {
 
-    @BeforeClass
-    public static void givenSetupUsersRelation() {
-
-        Relation.forUser(Pod1.eve).notToUsers(Pod1.ana, Pod1.rob).ensure();
-        Relation.forUser(Pod1.ana).toUser(Pod1.rob, FRIENDS).notToUsers(Pod1.eve).ensure();
-        Relation.forUser(Pod1.rob).toUser(Pod1.ana, ACQUAINTANCES).notToUsers(Pod1.eve).ensure();
-
-    }
-
-    @Before
-    public void addGivenDescriptionToAllure() {
-
-        GIVEN("Setup relation between users from the same pod");
-        GIVEN("Eve is not linked with Ana and Rob");
-        GIVEN("Ana is linked with Rob in Friends aspect and unlinked with Eve");
-        GIVEN("Rob is linked with Ana in Acquaintances aspect and unlinked with Eve");
-
-    }
-
+    @Category(ua.net.itlabs.categories.Smoke.class)
     @Test
-    public void testAvailabilityPublicPost() {
+    public void testPostAvailabilityForUnlinkedUsers() {
 
-        GIVEN("Public post is added by author");
-        Diaspora.ensureSignInAs(Pod1.ana);
-        Feed.addPublicPost(the("Public Ana"));
-        Feed.assertPost(Pod1.ana, the("Public Ana"));
+        GIVEN("Sam<-X->Bob");
+        Relation.forUser(Pod2.sam).notToUsers(Pod2.bob).ensure();
+        Relation.forUser(Pod2.bob).notToUsers(Pod2.sam).doNotLogOut().ensure();
+
+        GIVEN("Posts is added by author from scratch: public, private, limited");
+        Menu.openStream();
+        Feed.ensureNoPost(Pod2.bob, PUBLIC_POST);
+        Feed.addPublicPost(PUBLIC_POST);
+        Feed.ensureNoPost(Pod2.bob, PRIVATE_POST);
+        Feed.addPrivatePost(PRIVATE_POST);
+        Feed.ensureNoPost(Pod2.bob, POST_FOR_WORK);
+        Feed.addAspectPost(WORK, POST_FOR_WORK);
+        Feed.assertPost(Pod2.bob, POST_FOR_WORK);
 
         EXPECT("Public post without tag is not shown in stream of unlinked user");
-        Diaspora.ensureSignInAs(Pod1.eve);
-        Feed.assertNoPost(Pod1.ana, the("Public Ana"));
+        Diaspora.ensureSignInAs(Pod2.sam);
+        Feed.assertNoPost(Pod2.bob, PUBLIC_POST);
+
+        EXPECT("Private post is not shown in stream of unlinked user");
+        Feed.assertNoPost(Pod2.bob, PRIVATE_POST);
+
+        EXPECT("Limited post is not shown in stream of unlinked user");
+        Feed.assertNoPost(Pod2.bob, POST_FOR_WORK);
 
         EXPECT("Public post without tag is shown in contact stream of unlinked user");
-        Menu.search(Pod1.ana.fullName);
-        Feed.assertPost(Pod1.ana, the("Public Ana"));
+        Menu.search(Pod2.bob.fullName);
+        Feed.assertPost(Pod2.bob, PUBLIC_POST);
 
-        EXPECT("Public post is shown in stream of linked user");
-        Diaspora.ensureSignInAs(Pod1.rob);
-        Feed.assertPost(Pod1.ana, the("Public Ana"));
+        EXPECT("Private post is not shown in contact stream of unlinked user");
+        Feed.assertNoPost(Pod2.bob, PRIVATE_POST);
+
+        EXPECT("Limited post is not shown in contact stream of unlinked user");
+        Feed.assertNoPost(Pod2.bob, POST_FOR_WORK);
 
     }
 

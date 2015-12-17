@@ -3,6 +3,7 @@ package ua.net.itlabs.testDatas;
 public class Phrases {
 
     public static final String PUBLIC_POST = "Public information";
+    public static final String PRIVATE_POST = "Private information";
     public static final String POST_FOR_FRIENDS = "Information for friends";
     public static final String POST_FOR_FAMILY = "Information for family";
     public static final String POST_FOR_FAMILY_AFTER_MANAGING_CONTACTS = "After managing contacts: information for family";
