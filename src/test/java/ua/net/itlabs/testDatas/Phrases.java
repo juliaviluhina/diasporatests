@@ -8,6 +8,8 @@ public class Phrases {
     public static final String POST_FOR_FAMILY = "Information for family";
     public static final String POST_FOR_FAMILY_AFTER_MANAGING_CONTACTS = "After managing contacts: information for family";
     public static final String POST_FOR_WORK = "Information for work";
+    public static final String POST_FOR_ACQUAINTANCES = "Information for acquaintances";
+    public static final String POST_FOR_ALL_ASPECTS = "Information for all aspects";
 
     public static final String MENTION_POST = "Mention information";
 
