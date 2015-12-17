@@ -93,6 +93,7 @@ public class Feed {
 
     @Step
     private static void deletePost(SelenideElement post) {
+        post.shouldBe(visible); //without this check next code is unstable
         scrollToAndHover(post);
         removePostButton(post).click();
         confirm(null);
