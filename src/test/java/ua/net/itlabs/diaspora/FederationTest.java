@@ -9,15 +9,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import pages.Diaspora;
 import pages.Feed;
-import pages.Menu;
 import ua.net.itlabs.BaseTest;
 
-import static core.helpers.UniqueDataHelper.the;
 import static pages.Aspects.*;
 import static ua.net.itlabs.testDatas.Phrases.*;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
+@Category(ua.net.itlabs.categories.Smoke.class)
 public class FederationTest extends BaseTest {
 
     @BeforeClass
@@ -55,7 +54,7 @@ public class FederationTest extends BaseTest {
         Configuration.timeout = timeout;
     }
 
-    @Category(ua.net.itlabs.categories.Smoke.class)
+
     @Test
     public void testAvailabilityPublicPostForUnlinkedUsersOfDifferentPods() {
 
@@ -80,20 +79,21 @@ public class FederationTest extends BaseTest {
     @Test
     public void testAvailabilityLimitedPostForLinkedUsersOfDifferentPods() {
 
-        GIVEN("Limited in right aspect post is added by author from pod 2");
+        GIVEN("Limited in right aspect post is added by author from pod 2 from scratch");
         Diaspora.ensureSignInAs(Pod2.bob);
-        Feed.addAspectPost(WORK, the("Bob for work"));
-        Feed.assertPost(Pod2.bob, the("Bob for work"));
+        Feed.ensureNoPost(Pod2.bob, POST_FOR_WORK);
+        Feed.addAspectPost(WORK, POST_FOR_WORK);
+        Feed.assertPost(Pod2.bob,POST_FOR_WORK);
 
         EXPECT("Post is shown in stream of linked in right aspect user from pod1");
         AND("This post can be commented");
         Diaspora.ensureSignInAs(Pod1.ana);
-        Feed.addComment(Pod2.bob, the("Bob for work"), the("Comment from Ana"));
-        Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
+        Feed.addComment(Pod2.bob, POST_FOR_WORK, COMMENT);
+        Feed.assertComment(Pod2.bob, POST_FOR_WORK, Pod1.ana, COMMENT);
 
         EXPECT("Post with comment from user from another pod is shown in author's stream");
         Diaspora.ensureSignInAs(Pod2.bob);
-        Feed.assertComment(Pod2.bob, the("Bob for work"), Pod1.ana, the("Comment from Ana"));
+        Feed.assertComment(Pod2.bob, POST_FOR_WORK, Pod1.ana, COMMENT);
 
     }
 
