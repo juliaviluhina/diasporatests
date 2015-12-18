@@ -1,9 +1,9 @@
 package core.helpers;
 
-        import java.util.HashMap;
-        import java.util.Map;
+import java.util.HashMap;
+import java.util.Map;
 
-        import static java.lang.System.currentTimeMillis;
+import static java.lang.System.currentTimeMillis;
 
 public class UniqueDataHelper {
 

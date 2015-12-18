@@ -3,7 +3,7 @@ package datastructures;
 public class PodUser {
 
     public String userName;
-    public String password; //password for account Diaspora and for mail
+    public String password; //for account Diaspora and for mail
     public String podLink;
     public String email;
     public String fullName;

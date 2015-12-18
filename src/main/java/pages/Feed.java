@@ -16,7 +16,6 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.AdditionalAPI.*;
 import static core.conditions.CustomCondition.*;
-import static core.helpers.UniqueDataHelper.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static steps.Scenarios.*;
@@ -241,7 +240,7 @@ public class Feed {
     @Step
     public static void ensureAspectPost(PodUser author, String diasporaAspect, String text) {
         waitStreamOpening();
-        if (post(author, text).is(visible)) {
+        if (isVisible(post(author, text))) {
             return;
         }
         addAspectPost(diasporaAspect, text);
@@ -253,7 +252,7 @@ public class Feed {
         //addition post from scratch is the only known way when post will be shown
         waitStreamOpening();
         SelenideElement post = post(author, text);
-        if (post.is(visible)) {
+        if (isVisible(post)) {
             deletePost(post);
         }
         addAspectPost(diasporaAspect, text);
@@ -265,7 +264,7 @@ public class Feed {
         //addition post from scratch is the only known way when post will be shown
         waitStreamOpening();
         SelenideElement post = post(author, text);
-        if (post.is(visible)) {
+        if (isVisible(post)) {
             deletePost(post);
         }
         addPublicPost(text);
@@ -275,7 +274,7 @@ public class Feed {
     @Step
     public static void ensurePublicPost(PodUser author, String text) {
         waitStreamOpening();
-        if (post(author, text).is(visible)) {
+        if (isVisible(post(author, text))) {
             return;
         }
         addPublicPost(text);
@@ -285,7 +284,7 @@ public class Feed {
     @Step
     public static void ensurePublicPostWithMention(PodUser author, PodUser about, String text) {
         waitStreamOpening();
-        if (post(author, text).is(visible)) {
+        if (isVisible(post(author, text))) {
             return;
         }
         addPublicPostWithMentionAbout(about, text);
@@ -296,7 +295,7 @@ public class Feed {
     public static void ensureNoPost(PodUser author, String text) {
         waitStreamOpening();
         while (true) {
-            if (post(author, text).is(visible)) {
+            if (isVisible(post(author, text))) {
                 deletePost(author, text);
             } else
                 break;
@@ -307,7 +306,7 @@ public class Feed {
     @Step
     public static void ensureCommentForPost(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
         waitStreamOpening();
-        if (comment(postAuthor, postText, commentAuthor, commentText).is(visible)) {
+        if (isVisible(comment(postAuthor, postText, commentAuthor, commentText))) {
             return;
         }
         addComment(postAuthor, postText, commentText);
@@ -318,7 +317,7 @@ public class Feed {
     public static void ensureNoCommentForPost(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
         waitStreamOpening();
         while (true) {
-            if (comment(postAuthor, postText, commentAuthor, commentText).is(visible)) {
+            if (isVisible(comment(postAuthor, postText, commentAuthor, commentText))) {
                 deleteComment(postAuthor, postText, commentAuthor, commentText);
                 assertNoComment(postAuthor, postText, commentAuthor, commentText);
                 return;
@@ -331,7 +330,7 @@ public class Feed {
     public static void ensureResharePublicPost(PodUser postAuthor, String postText, PodUser reshareAuthor) {
         Menu.openStream();
         waitStreamOpening();
-        if (post(reshareAuthor, postText).is(visible)) {
+        if (isVisible(post(reshareAuthor, postText))) {
             return;
         }
         Menu.search(postAuthor.fullName);
@@ -356,22 +355,6 @@ public class Feed {
         likeUnlike.shouldBe(exactText("Like"));
     }
 
-//    @Step
-//    public static void deleteAllPosts(PodUser author) {
-//        deleteUniqueData("servicepost");
-//        addPublicPost(the("servicepost"));
-//        assertPost(author, the("servicepost"));
-//        int countDeleted = 0;
-//        ElementsCollection userPosts = $$(".stream_element").filter(textBegin(author.fullName));
-//        for (SelenideElement userPost : userPosts) {
-//            deletePost(userPost);
-//            countDeleted++;
-//        }
-//        if (countDeleted > 1) {
-//            deleteAllPosts(author);
-//        }
-//    }
-
     @Step
     public static void deleteAllPosts(PodUser author, String text) {
 
@@ -390,7 +373,6 @@ public class Feed {
 
     @Step
     private static SelenideElement post(PodUser author, String text) {
-        //return posts.find(textBeginAndContain(author.fullName, text));
         // optimized speed via using ugly but efficient xpath
         // waiting for fix in Selenide, to switch back to "readable" solution
         //return posts.find(textBeginAndContain(author.fullName, text));

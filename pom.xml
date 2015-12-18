@@ -18,27 +18,14 @@
         <signingInMode>separate1</signingInMode>
     </properties>
 
-    <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>selenide</id>-->
-            <!--<url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
-        <!--</repository>-->
-    <!--</repositories>-->
 
     <dependencies>
-
-        <!--<dependency>-->
-            <!--<groupId>com.codeborne</groupId>-->
-            <!--<artifactId>selenide</artifactId>-->
-            <!--<version>2.25-SNAPSHOT</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
             <version>2.25</version>
         </dependency>
-
 
         <dependency>
             <groupId>junit</groupId>

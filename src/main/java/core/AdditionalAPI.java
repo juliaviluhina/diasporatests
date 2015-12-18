@@ -2,6 +2,8 @@ package core;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.ex.ElementShould;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -50,7 +52,7 @@ public class AdditionalAPI {
 
         String code = "window.scroll(" + (element.getLocation().x + x) + "," + (element.getLocation().y + y) + ");";
 
-        ((JavascriptExecutor)getWebDriver()).executeScript(code, element, x, y);
+        ((JavascriptExecutor) getWebDriver()).executeScript(code, element, x, y);
 
     }
 
@@ -60,6 +62,17 @@ public class AdditionalAPI {
         element.shouldBe(visible);
         scrollWithOffset(element, 0, -150); //this variant is used to move element from under the header
         return element.hover();
+    }
+
+    public static boolean isVisible(SelenideElement element) {
+        if (element.is(visible))
+            return true;
+        try {
+            element.shouldBe(visible);
+        } catch (ElementNotFound e) {
+            return false;
+        }
+        return true;
     }
 
     public static long timeout2x() {

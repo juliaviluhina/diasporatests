@@ -10,6 +10,7 @@ import ru.yandex.qatools.allure.annotations.Step;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.confirm;
 import static core.AdditionalAPI.scrollToAndHover;
+import static core.AdditionalAPI.isVisible;
 import static core.conditions.CustomCondition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -108,7 +109,8 @@ public class Conversations {
         Menu.openConversations();
         while (true) {
             SelenideElement conversation = conversation(subject);
-            if (conversation.is(visible)) {
+
+            if (isVisible(conversation)) {
                 conversation.click();
                 assertCurrentSubject(subject);
                 hideOrDeleteCurrentConversation();

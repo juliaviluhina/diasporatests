@@ -9,7 +9,6 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,9 +26,9 @@ public class WebDriversManager {
 
     public enum StateAfterPreparing {IS_CREATED, IS_OPENED}
 
-    public WebDriversManager(int capacity) {
+    public WebDriversManager() {
         currentThread = Thread.currentThread();
-        webDrivers = new ConcurrentHashMap<String, WebDriver>(capacity);
+        webDrivers = new ConcurrentHashMap<String, WebDriver>();
     }
 
     public StateAfterPreparing prepareWebDriverForKey(String key) {
@@ -94,9 +93,9 @@ public class WebDriversManager {
 
     private WebDriver markForAutoClose(String key, WebDriver webDriver) {
         Runtime.getRuntime().addShutdownHook(new WebDriversFinalCleanupThread(key, webDriver));
-        if(!this.cleanupThreadStarted.get()) {
-            synchronized(this) {
-                if(!this.cleanupThreadStarted.get()) {
+        if (!this.cleanupThreadStarted.get()) {
+            synchronized (this) {
+                if (!this.cleanupThreadStarted.get()) {
                     (new UnusedWebDriversCleanupThread()).start();
                     this.cleanupThreadStarted.set(true);
                 }
@@ -113,10 +112,10 @@ public class WebDriversManager {
         }
 
         public void run() {
-            while(true) {
-                if(!currentThread.isAlive()) {
+            while (true) {
+                if (!currentThread.isAlive()) {
                     log.info("Thread " + currentThread.getId() + " is dead. Let\'s close webdrivers.");
-                    for (String key:webDrivers.keySet()) {
+                    for (String key : webDrivers.keySet()) {
                         closeWebDriver(webDrivers.get(key), key);
                     }
                 }
@@ -194,8 +193,8 @@ public class WebDriversManager {
             } catch (WebDriverException cannotCloseBrowser) {
                 log.severe("Cannot close browser normally");
             } finally {
-                killBrowser(webdriver);
                 webDrivers.remove(key);
+                killBrowser(webdriver);
             }
         }
 

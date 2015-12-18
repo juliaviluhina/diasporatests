@@ -28,11 +28,11 @@ public class Phrases {
     public static final String POST_IN_ASPECT1 = "Information about Aspect1";
 
     public static final String CONVERSATION1_TEXT = "Conversation 1 text";
-    public static final String CONVERSATION1_SUBJECT = "Subject for conversation 1";
-    public static final String CONVERSATION1_REPLY = "Reply for conversation 1";
+    public static final String CONVERSATION1_SUBJECT = "Conversation 1 subject";
+    public static final String CONVERSATION1_REPLY = "Conversation 1 reply";
 
     public static final String CONVERSATION2_TEXT = "Conversation 2 text";
-    public static final String CONVERSATION2_SUBJECT = "Subject for conversation 2";
-    public static final String CONVERSATION2_REPLY = "Reply for conversation 2";
+    public static final String CONVERSATION2_SUBJECT = "Conversation 2 subject";
+    public static final String CONVERSATION2_REPLY = "Conversation 2 subject";
 
 }

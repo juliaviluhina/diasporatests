@@ -8,6 +8,7 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static core.AdditionalAPI.isVisible;
 import static core.AdditionalAPI.scrollToAndHover;
 import static core.conditions.CustomCondition.textBegin;
 import static core.helpers.UniqueDataHelper.*;
@@ -62,7 +63,7 @@ public class Tags {
     @Step
     public static void ensureTag(String tagName) {
         NavBar.openTags();
-        if (tag(tagName).is(visible)) {
+        if (isVisible(tag(tagName))) {
             return;
         }
         add(tagName);
@@ -71,7 +72,7 @@ public class Tags {
     @Step
     public static void ensureNoTag(String tagName) {
         NavBar.openTags();
-        if (tag(tagName).is(visible)) {
+        if (isVisible(tag(tagName))) {
             delete(tagName);
         }
     }
@@ -85,30 +86,6 @@ public class Tags {
     private static SelenideElement tag(String tagName) {
         return tags.find(exactText(tagName));
     }
-
-
-//    @Step
-//    public static void deleteAll() {
-//        deleteUniqueData("#stag");
-//        add(the("#stag"));
-//
-//        //when tags are more than one page - without this code does not work
-//        NavBar.openTags();
-//
-//        ElementsCollection userTags = tags.filter(textBegin("#"));
-//        userTags.find(exactText(the("#stag"))).shouldBe(visible); //for wait - tags collection is loaded
-//        int countDeleted = 0;
-//
-//        for (SelenideElement userTag : userTags) {
-//            delete(userTag);
-//            countDeleted++;
-//        }
-//
-//        if (countDeleted > 1) {
-//            deleteAll();
-//        }
-//
-//    }
 
     @Step
     public static void deleteAll() {
