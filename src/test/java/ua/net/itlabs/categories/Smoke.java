@@ -1,4 +1,4 @@
 package ua.net.itlabs.categories;
 
-public interface Smoke {
+public interface Smoke{
 }

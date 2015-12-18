@@ -3,7 +3,6 @@ package ua.net.itlabs.diaspora;
 import com.codeborne.selenide.Configuration;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.experimental.categories.Category;
 import steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import static ua.net.itlabs.testDatas.Phrases.*;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
-@Category(ua.net.itlabs.categories.Smoke.class)
 public class FederationTest extends BaseTest {
 
     @BeforeClass

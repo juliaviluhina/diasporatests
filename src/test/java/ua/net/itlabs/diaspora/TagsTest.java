@@ -1,21 +1,15 @@
 package ua.net.itlabs.diaspora;
 
-import org.junit.Before;
-import org.junit.experimental.categories.Category;
-import steps.Relation;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pages.*;
 import pages.Feed;
 import pages.Tags;
 import ua.net.itlabs.BaseTest;
 
-import static core.helpers.UniqueDataHelper.the;
 import static ua.net.itlabs.testDatas.Phrases.*;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
-@Category(ua.net.itlabs.categories.Smoke.class)
 public class TagsTest extends BaseTest {
 
     @Test

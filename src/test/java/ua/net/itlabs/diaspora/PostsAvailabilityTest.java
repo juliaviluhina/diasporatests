@@ -1,6 +1,5 @@
 package ua.net.itlabs.diaspora;
 
-import org.junit.experimental.categories.Category;
 import steps.Relation;
 import org.junit.Test;
 import pages.Diaspora;
@@ -14,7 +13,6 @@ import static pages.Aspects.ACQUAINTANCES;
 import static core.Gherkin.*;
 import static ua.net.itlabs.testDatas.Phrases.*;
 
-@Category(ua.net.itlabs.categories.Smoke.class)
 public class PostsAvailabilityTest extends BaseTest {
 
     @Test

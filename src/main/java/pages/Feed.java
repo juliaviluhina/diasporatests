@@ -395,12 +395,11 @@ public class Feed {
         // waiting for fix in Selenide, to switch back to "readable" solution
         //return posts.find(textBeginAndContain(author.fullName, text));
         return $(By.xpath(String.format("//*[contains(@class, 'stream_element')][contains(., '%s')][descendant::*[contains(@class, 'author-name')][1][contains(text(), '%s')]]", text, author.fullName)));
-
     }
 
     @Step
     private static SelenideElement comment(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
-        return post(postAuthor, postText).findAll(".comment").find(textBeginAndContain(commentAuthor.fullName, commentText));
+        return post(postAuthor, postText).findAll("[data-template = 'comment']").find(textBeginAndContain(commentAuthor.fullName, commentText));
     }
 
     private static SelenideElement likeUnlike(SelenideElement post) {

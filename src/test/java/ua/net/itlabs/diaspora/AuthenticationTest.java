@@ -1,7 +1,6 @@
 package ua.net.itlabs.diaspora;
 
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import pages.Diaspora;
 import pages.Menu;
 import pages.NavBar;
@@ -10,7 +9,6 @@ import ua.net.itlabs.BaseTest;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
-@Category(ua.net.itlabs.categories.Smoke.class)
 public class AuthenticationTest extends BaseTest {
 
     @Test

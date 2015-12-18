@@ -113,9 +113,28 @@
     <profiles>
 
         <profile>
+            <id>all</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <test.includeCategories></test.includeCategories>
+                <test.excludeCategories>ua.net.itlabs.categories.ClearData</test.excludeCategories>
+            </properties>
+        </profile>
+
+        <profile>
             <id>smoke</id>
             <properties>
                 <test.includeCategories>ua.net.itlabs.categories.Smoke</test.includeCategories>
+                <test.excludeCategories></test.excludeCategories>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>clear</id>
+            <properties>
+                <test.includeCategories>ua.net.itlabs.categories.ClearData</test.includeCategories>
                 <test.excludeCategories></test.excludeCategories>
             </properties>
         </profile>

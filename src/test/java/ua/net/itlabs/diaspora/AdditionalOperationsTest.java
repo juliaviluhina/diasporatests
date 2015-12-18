@@ -1,6 +1,5 @@
 package ua.net.itlabs.diaspora;
 
-import org.junit.experimental.categories.Category;
 import steps.Relation;
 import org.junit.Test;
 import pages.Contact;
@@ -10,12 +9,10 @@ import pages.Menu;
 import ua.net.itlabs.BaseTest;
 
 import static pages.Aspects.FRIENDS;
-import static ua.net.itlabs.testDatas.Phrases.POST_FOR_HIDING;
-import static ua.net.itlabs.testDatas.Phrases.PUBLIC_POST;
+import static ua.net.itlabs.testDatas.Phrases.*;
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
-@Category(ua.net.itlabs.categories.Smoke.class)
 public class AdditionalOperationsTest extends BaseTest {
 
     @Test

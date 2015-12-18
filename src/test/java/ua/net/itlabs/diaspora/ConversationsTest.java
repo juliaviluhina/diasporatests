@@ -1,19 +1,16 @@
 package ua.net.itlabs.diaspora;
 
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import pages.Contact;
 import pages.Conversations;
 import pages.Diaspora;
 import pages.Menu;
-import steps.Scenarios;
 import ua.net.itlabs.BaseTest;
 
 import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 import static ua.net.itlabs.testDatas.Phrases.*;
 
-@Category(ua.net.itlabs.categories.Smoke.class)
 public class ConversationsTest extends BaseTest {
 
     @Test
