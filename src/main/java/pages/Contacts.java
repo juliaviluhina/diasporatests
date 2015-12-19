@@ -6,17 +6,20 @@ import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
+import steps.Scenarios;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
+import static core.AdditionalAPI.isVisible;
 import static core.conditions.CustomCondition.textEnd;
 import static core.helpers.UniqueDataHelper.*;
 import static java.lang.Boolean.*;
 import static pages.Aspects.STANDART_ASPECTS;
 import static pages.Contact.contact;
+import static steps.Scenarios.waitStreamOpening;
 
 public class Contacts {
 
@@ -97,14 +100,14 @@ public class Contacts {
 
     @Step
     public static void ensureAspect(String aspectName) {
-        if (!aspect(aspectName).is(visible)) {
+        if (! isVisible(aspect(aspectName))) {
             addAspect(aspectName);
         }
     }
 
     @Step
     public static void ensureNoAspect(String aspectName) {
-        if (aspect(aspectName).is(visible)) {
+        if (isVisible(aspect(aspectName))) {
             selectAspect(aspectName);
             deleteAspect();
         }
@@ -124,12 +127,34 @@ public class Contacts {
         return FALSE;
     }
 
+//    @Step
+//    public static void deleteAllUserAspects() {
+//        deleteUniqueData("ServAsp");
+//        addAspect(the("ServAsp"));
+//        int countDeleted = 0;
+//        aspects.filter(textEnd("\n" + the("ServAsp"))).shouldBe(size(1));
+//        String[] aspectNames = aspects.filter(text("\n")).getTexts();
+//        for (String aspectName : aspectNames) {
+//            if (aspectName.equals("")) {
+//                continue;
+//            }
+//            aspectName = aspectName.substring(2);
+//            if (isStandartAspect(aspectName)) {
+//                continue;
+//            }
+//            selectAspect(aspectName);
+//            deleteAspect();
+//            countDeleted++;
+//        }
+//        if (countDeleted > 1) {
+//            deleteAllUserAspects();
+//        }
+//    }
+
     @Step
     public static void deleteAllUserAspects() {
-        deleteUniqueData("ServAsp");
-        addAspect(the("ServAsp"));
         int countDeleted = 0;
-        aspects.filter(textEnd("\n" + the("ServAsp"))).shouldBe(size(1));
+        waitStreamOpening();
         String[] aspectNames = aspects.filter(text("\n")).getTexts();
         for (String aspectName : aspectNames) {
             if (aspectName.equals("")) {
@@ -143,7 +168,7 @@ public class Contacts {
             deleteAspect();
             countDeleted++;
         }
-        if (countDeleted > 1) {
+        if (countDeleted > 0) {
             deleteAllUserAspects();
         }
     }

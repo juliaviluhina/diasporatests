@@ -16,6 +16,7 @@ public class Relation {
 
     private final List<LinkWithUser> linkWithUsers;
     private final List<PodUser> unlinkedUsers;
+    private final List<PodUser> ignoredUsers;
     private final List<String> followedTags;
     private Boolean doLogOut;
     private Boolean clearTags;
@@ -48,6 +49,7 @@ public class Relation {
 
         private List<LinkWithUser> linkWithUsers;
         private List<PodUser> unlinkedUsers;
+        private final List<PodUser> ignoredUsers;
         private List<String> followedTags;
         private Boolean doLogOut;
         private Boolean clearTags;
@@ -58,6 +60,7 @@ public class Relation {
 
             linkWithUsers = new ArrayList<LinkWithUser>();
             unlinkedUsers = new ArrayList<PodUser>();
+            ignoredUsers = new ArrayList<PodUser>();
             followedTags = new ArrayList<String>();
             doLogOut = TRUE;
             clearTags = FALSE;
@@ -99,6 +102,13 @@ public class Relation {
             return this;
         }
 
+        public Builder ignoreUsers(PodUser... users) {
+            for (PodUser user : users) {
+                ignoredUsers.add(user);
+            }
+            return this;
+        }
+
         @Step
         public Relation ensure() {
             return new Relation(this).createRelations();
@@ -111,6 +121,7 @@ public class Relation {
 
         this.linkWithUsers = builder.linkWithUsers;
         this.unlinkedUsers = builder.unlinkedUsers;
+        this.ignoredUsers = builder.ignoredUsers;
         this.followedTags = builder.followedTags;
         this.doLogOut = builder.doLogOut;
         this.clearTags = builder.clearTags;
@@ -137,6 +148,10 @@ public class Relation {
         for (PodUser unlinkedUser : unlinkedUsers) {
             Menu.search(unlinkedUser.fullName);
             Contact.ensureNoAspectsForContact();
+        }
+        for (PodUser ignoredUser : ignoredUsers) {
+            Menu.search(ignoredUser.fullName);
+            Contact.ensureIgnoreMode();
         }
         for (String followedTag : followedTags) {
             if (!followedTag.isEmpty()) {

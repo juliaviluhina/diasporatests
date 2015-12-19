@@ -8,6 +8,7 @@ import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static core.AdditionalAPI.isVisible;
 import static core.AdditionalAPI.scrollToAndHover;
 
 public class Aspects {
@@ -63,7 +64,7 @@ public class Aspects {
     @Step
     public static void ensureNoAspect(String aspectName) {
         NavBar.openMyAspects();
-        if (aspect(aspectName).is(visible)) {
+        if (isVisible(aspect(aspectName))) {
             switchToEditMode(aspectName);
             Contacts.deleteAspect();
             Menu.openStream();
