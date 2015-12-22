@@ -171,18 +171,18 @@ public class Contact {
         public void ensureNoAspects() {
             ensureNoIgnoreMode();
 
-            if (manageAspectButton.getText().equals("Add contact")) {
-                return;
-            }
+            if (!manageAspectButton.getText().equals("Add contact")) {
 
-            fixStartState();
-            for (int i = 0; i < aspectTexts.length; i++) {
-                if (beUsed[i]) {
-                    openMenuAspects();
-                    aspects().get(i).click();
-                    aspectsContainer.click();
+                fixStartState();
+                for (int i = 0; i < aspectTexts.length; i++) {
+                    if (beUsed[i]) {
+                        openMenuAspects();
+                        aspects().get(i).click();
+                        aspectsContainer.click();
+                    }
                 }
             }
+
         }
 
         @Step

@@ -60,9 +60,8 @@ public class Diaspora {
     public static void ensureLogOut() {
         if (isSeparateSigningInMode())
             webDriversManager.hideCurrentBrowser();
-         else
-            if (!isLoggedOut())
-                logOut();
+        else if (!isLoggedOut())
+            logOut();
     }
 
     private static WebDriversManager webDriversManager;

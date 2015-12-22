@@ -71,7 +71,7 @@ public class Aspects {
         }
     }
 
-    private static SelenideElement aspect(String aspectName)  {
+    private static SelenideElement aspect(String aspectName) {
         return aspectContainersNavBar.find(exactText(aspectName));
     }
 

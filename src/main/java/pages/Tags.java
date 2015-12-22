@@ -63,10 +63,10 @@ public class Tags {
     @Step
     public static void ensureTag(String tagName) {
         NavBar.openTags();
-        if (isVisible(tag(tagName))) {
-            return;
+        if (!isVisible(tag(tagName))) {
+            add(tagName);
         }
-        add(tagName);
+
     }
 
     @Step

@@ -240,11 +240,10 @@ public class Feed {
     @Step
     public static void ensureAspectPost(PodUser author, String diasporaAspect, String text) {
         waitStreamOpening();
-        if (isVisible(post(author, text))) {
-            return;
+        if (!isVisible(post(author, text))) {
+            addAspectPost(diasporaAspect, text);
+            assertPost(author, text);
         }
-        addAspectPost(diasporaAspect, text);
-        assertPost(author, text);
     }
 
     @Step
@@ -274,27 +273,26 @@ public class Feed {
     @Step
     public static void ensurePublicPost(PodUser author, String text) {
         waitStreamOpening();
-        if (isVisible(post(author, text))) {
-            return;
+        if (!isVisible(post(author, text))) {
+            addPublicPost(text);
+            assertPost(author, text);
         }
-        addPublicPost(text);
-        assertPost(author, text);
+
     }
 
     @Step
     public static void ensurePublicPostWithMention(PodUser author, PodUser about, String text) {
         waitStreamOpening();
-        if (isVisible(post(author, text))) {
-            return;
+        if (!isVisible(post(author, text))) {
+            addPublicPostWithMentionAbout(about, text);
+            assertPost(author, text);
         }
-        addPublicPostWithMentionAbout(about, text);
-        assertPost(author, text);
     }
 
     @Step
     public static void ensureNoPost(PodUser author, String text) {
         waitStreamOpening();
-        while (true) {
+        while (true) { //cycle is used for deletion all entities which have the same property
             if (isVisible(post(author, text))) {
                 deletePost(author, text);
             } else
@@ -306,21 +304,20 @@ public class Feed {
     @Step
     public static void ensureCommentForPost(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
         waitStreamOpening();
-        if (isVisible(comment(postAuthor, postText, commentAuthor, commentText))) {
-            return;
+        if (!isVisible(comment(postAuthor, postText, commentAuthor, commentText))) {
+            addComment(postAuthor, postText, commentText);
+            assertComment(postAuthor, postText, commentAuthor, commentText);
         }
-        addComment(postAuthor, postText, commentText);
-        assertComment(postAuthor, postText, commentAuthor, commentText);
+
     }
 
     @Step
     public static void ensureNoCommentForPost(PodUser postAuthor, String postText, PodUser commentAuthor, String commentText) {
         waitStreamOpening();
-        while (true) {
+        while (true) { //cycle is used for deletion all entities which have the same property
             if (isVisible(comment(postAuthor, postText, commentAuthor, commentText))) {
                 deleteComment(postAuthor, postText, commentAuthor, commentText);
                 assertNoComment(postAuthor, postText, commentAuthor, commentText);
-                return;
             } else
                 break;
         }
@@ -330,13 +327,13 @@ public class Feed {
     public static void ensureResharePublicPost(PodUser postAuthor, String postText, PodUser reshareAuthor) {
         Menu.openStream();
         waitStreamOpening();
-        if (isVisible(post(reshareAuthor, postText))) {
-            return;
+        if (!isVisible(post(reshareAuthor, postText))) {
+            Menu.search(postAuthor.fullName);
+            resharePost(postAuthor, postText);
+            Menu.openStream();
+            assertPost(reshareAuthor, postText);
         }
-        Menu.search(postAuthor.fullName);
-        resharePost(postAuthor, postText);
-        Menu.openStream();
-        assertPost(reshareAuthor, postText);
+
     }
 
     @Step
@@ -418,36 +415,34 @@ public class Feed {
 
     @Step
     private static void ensurePublicPostingMode() {
-        if (aspect.getText().contains("Public")) {
-            return;
+        if (!aspect.getText().contains("Public")) {
+            setAspect.click();
+            aspect.find(".public").click();
+            setAspect.shouldHave(Condition.text("Public"));
         }
-        setAspect.click();
-        aspect.find(".public").click();
-        setAspect.shouldHave(Condition.text("Public"));
+
     }
 
     @Step
     private static void ensurePrivatePostingMode() {
-        if (aspect.getText().contains("Select aspects")) {
-            return;
-        }
-        setAspect.click();
-        aspect.find(".all_aspects").click();
-        setAspect.click();
-        aspects().get(0).click();
-        String[] selectedAspectstext = aspects().filter(cssClass("selected")).getTexts();
-        for (String selectedAspectTest : selectedAspectstext) {
-            aspects().find(exactText(selectedAspectTest)).click();
+        if (!aspect.getText().contains("Select aspects")) {
+            setAspect.click();
+            aspect.find(".all_aspects").click();
+            setAspect.click();
+            aspects().get(0).click();
+            String[] selectedAspectstext = aspects().filter(cssClass("selected")).getTexts();
+            for (String selectedAspectTest : selectedAspectstext) {
+                aspects().find(exactText(selectedAspectTest)).click();
+            }
         }
     }
 
     @Step
     private static void ensureAllAspectsPostingMode() {
-        if (aspect.getText().contains("All aspects")) {
-            return;
+        if (!aspect.getText().contains("All aspects")) {
+            setAspect.click();
+            aspect.find(".all_aspects").click();
         }
-        setAspect.click();
-        aspect.find(".all_aspects").click();
     }
 
     @Step

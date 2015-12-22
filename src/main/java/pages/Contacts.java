@@ -100,7 +100,7 @@ public class Contacts {
 
     @Step
     public static void ensureAspect(String aspectName) {
-        if (! isVisible(aspect(aspectName))) {
+        if (!isVisible(aspect(aspectName))) {
             addAspect(aspectName);
         }
     }
@@ -126,30 +126,6 @@ public class Contacts {
         }
         return FALSE;
     }
-
-//    @Step
-//    public static void deleteAllUserAspects() {
-//        deleteUniqueData("ServAsp");
-//        addAspect(the("ServAsp"));
-//        int countDeleted = 0;
-//        aspects.filter(textEnd("\n" + the("ServAsp"))).shouldBe(size(1));
-//        String[] aspectNames = aspects.filter(text("\n")).getTexts();
-//        for (String aspectName : aspectNames) {
-//            if (aspectName.equals("")) {
-//                continue;
-//            }
-//            aspectName = aspectName.substring(2);
-//            if (isStandartAspect(aspectName)) {
-//                continue;
-//            }
-//            selectAspect(aspectName);
-//            deleteAspect();
-//            countDeleted++;
-//        }
-//        if (countDeleted > 1) {
-//            deleteAllUserAspects();
-//        }
-//    }
 
     @Step
     public static void deleteAllUserAspects() {

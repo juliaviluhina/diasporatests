@@ -107,7 +107,7 @@ public class Conversations {
     public static void ensureNoConversation(PodUser podUser, String subject) {
         Diaspora.ensureSignInAs(podUser);
         Menu.openConversations();
-        while (true) {
+        while (true) { //cycle is used for deletion all entities which have the same property
             SelenideElement conversation = conversation(subject);
 
             if (isVisible(conversation)) {
@@ -137,7 +137,7 @@ public class Conversations {
         int count = 0;
 
         try {
-            while (true) {
+            while (true) { //cycle is used for deletion all entities
                 SelenideElement conversation = conversations.first();
                 if (!conversation.is(present))
                     break;
@@ -147,13 +147,13 @@ public class Conversations {
                     count++;
                 }
             }
-        }catch (StaleElementReferenceException e) {
+        } catch (StaleElementReferenceException e) {
             //in this case is valid exception because of dynamic refresh list of conversation
         } catch (IndexOutOfBoundsException e) {
             //in this case is valid exception because of dynamic refresh list of conversation
         }
 
-        if (count>0)
+        if (count > 0)
             clearAll();
 
     }
@@ -162,8 +162,7 @@ public class Conversations {
         if (hideButton.is(visible)) {
             clickButton(hideButton);
             return true;
-        }
-        else if (deleteButton.is(visible)) {
+        } else if (deleteButton.is(visible)) {
             clickButton(deleteButton);
             return true;
         }

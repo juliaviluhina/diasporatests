@@ -81,7 +81,7 @@ public class FederationTest extends BaseTest {
         Diaspora.ensureSignInAs(Pod2.bob);
         Feed.ensureNoPost(Pod2.bob, POST_FOR_WORK);
         Feed.addAspectPost(WORK, POST_FOR_WORK);
-        Feed.assertPost(Pod2.bob,POST_FOR_WORK);
+        Feed.assertPost(Pod2.bob, POST_FOR_WORK);
 
         EXPECT("Post is shown in stream of linked in right aspect user from pod1");
         AND("This post can be commented");

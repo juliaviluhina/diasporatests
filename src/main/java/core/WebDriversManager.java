@@ -1,14 +1,14 @@
 package core;
 
-import com.codeborne.selenide.impl.WebDriverThreadLocalContainer;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.webdriver.WebDriverFactory;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.internal.Killable;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
-import static com.codeborne.selenide.WebDriverRunner.webdriverContainer;
 import static core.helpers.UniqueDataHelper.deleteUniqueData;
 import static core.helpers.UniqueDataHelper.the;
 import static com.codeborne.selenide.Configuration.*;
@@ -41,7 +40,7 @@ public class WebDriversManager {
             if (webDrivers.size() == 0) {
                 currentWebDriver = getWebDriver();
             } else {
-                currentWebDriver = createWebDriver();
+                currentWebDriver = createWebDriver(key);
             }
             webDrivers.put(key, currentWebDriver);
             markForAutoClose(currentKey, currentWebDriver);
@@ -75,20 +74,13 @@ public class WebDriversManager {
     Thread currentThread = null;
     protected final AtomicBoolean cleanupThreadStarted = new AtomicBoolean(false);
 
-    private static WebDriver createWebDriver() {
-        try {
-            Method method = WebDriverThreadLocalContainer.class.getDeclaredMethod("createDriver");
-            method.setAccessible(true);
-            WebDriver webDriver = (WebDriver) method.invoke(webdriverContainer);
-            return webDriver;
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();
-        } catch (NoSuchMethodException e1) {
-            e1.printStackTrace();
-        }
-        return null;
+    protected WebDriverFactory factory = new WebDriverFactory();
+    protected Proxy proxy;
+
+    private WebDriver createWebDriver(String key) {
+        WebDriver webdriver = factory.createWebDriver(proxy);
+        log.info("WebDriverManager: Create WebDriver for key " + key + "in current thread " + Thread.currentThread().getId() + ": " + Configuration.browser + " -> " + webdriver);
+        return webdriver;
     }
 
     private WebDriver markForAutoClose(String key, WebDriver webDriver) {

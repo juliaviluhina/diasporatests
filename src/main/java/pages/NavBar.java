@@ -42,4 +42,4 @@ public class NavBar {
         $("#home_user_badge").shouldHave(Condition.exactText(user.userName));
     }
 
- }
+}
