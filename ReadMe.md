@@ -1,4 +1,4 @@
-This version is added as a result of using following approach for test:
+This version is added as a result of using following approach for test which is used in branch weak-checks-and-ensure-mix:
 
 - usage unique data for tests and weak checks for it
     - as a result - using clearing data periodically
@@ -15,6 +15,8 @@ This version is added as a result of using following approach for test:
             - each account is opened in separate window and tests are switched among this windows (test time is saved 
             at the cost of single signing in, but this mode needs more resources)
 
-Direction for future development is usage smart with ensure methods with no cleaning and no unique test data management 
+This version was developed in smart-ensure branch and merged with master branch.
+ 
+In version is used smart ensure methods with no cleaning and no unique test data management 
 because of its expected better time results 
      
