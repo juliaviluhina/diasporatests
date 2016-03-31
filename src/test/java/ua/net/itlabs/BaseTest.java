@@ -5,6 +5,7 @@ import com.codeborne.selenide.Screenshots;
 import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import pages.*;
 import ru.yandex.qatools.allure.annotations.Attachment;
 
@@ -21,9 +22,14 @@ public abstract class BaseTest {
         clearUniqueData();
     }
 
+    @Before
+    public void clearScreenshotList(){
+        Screenshots.screenshots.getScreenshots().clear();
+    }
+
     @After
     public void tearDown() throws IOException {
-        File lastSelenideScreenshot = Screenshots.takeScreenShotAsFile();
+        File lastSelenideScreenshot = Screenshots.getLastScreenshot();
         if (lastSelenideScreenshot != null) {
             screenshot(Files.toByteArray(lastSelenideScreenshot));
         }
