@@ -17,7 +17,7 @@ public class AuthenticationTest extends BaseTest {
         Diaspora.signInAs(Pod1.ana);
 
         THEN("User's account is opened");
-        NavBar.assertLoggedUser(Pod1.ana);
+        Menu.assertLoggedUser(Pod1.ana);
 
         WHEN("User is logged out");
         Diaspora.logOut();

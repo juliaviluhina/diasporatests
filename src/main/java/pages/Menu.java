@@ -2,6 +2,7 @@ package pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import datastructures.PodUser;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -17,13 +18,13 @@ import static steps.Scenarios.*;
 
 public class Menu {
 
-    public static SelenideElement userMenuHeader = $(".user-menu-trigger");
-    public static ElementsCollection userMenuItems = $$(".user-menu-item a");
+    public static SelenideElement userMenu = $("#user_menu");
+    public static ElementsCollection userMenuItems = $$(".dropdown-menu a");
     public static SelenideElement search = $("#q");
 
     @Step
     public static void openStream() {
-        $(".header-nav [href='/stream']").click();
+        $(".navbar-left [href='/stream']").click();
     }
 
     @Step
@@ -41,7 +42,7 @@ public class Menu {
     public static void search(String searchText) {
         waitStreamOpening();//if menu is opened then search is possible too
         search.setValue(searchText);
-        $$(".ac_results").find(text(searchText)).shouldBe(visible);
+        $$("#header-search-form .tt-menu .name").find(text(searchText)).shouldBe(visible);
         search.pressEnter();
         Contact.ensureSearchedContact(searchText);
     }
@@ -65,7 +66,7 @@ public class Menu {
         return elementExceptionsCatcher(new ExpectedCondition<Boolean>() {
 
             public Boolean apply(WebDriver webDriver) {
-                userMenuHeader.click();
+                userMenu.click();
 
                 if (!userMenuItems.find(exactText("Log out")).is(visible)) {
                     return FALSE;
@@ -81,4 +82,7 @@ public class Menu {
         });
     }
 
+    public static void assertLoggedUser(PodUser user) {
+        userMenu.$(".user-name").shouldHave(exactText(user.fullName));
+    }
 }

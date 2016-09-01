@@ -132,7 +132,7 @@ public class Relation {
     public Relation createRelations() {
 
         Diaspora.ensureSignInAs(podUser);
-        NavBar.assertLoggedUser(podUser);
+        Menu.assertLoggedUser(podUser);
 
         if (clearTags) {
             Tags.deleteAll();

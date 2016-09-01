@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class NavBar {
 
-    private static SelenideElement container = $("#leftNavBar");
+    private static SelenideElement container = $(".left-navbar");
 
     @Step
     public static void openStream() {
@@ -36,10 +36,11 @@ public class NavBar {
         container.find("[href='/mentions']").click();
     }
 
-    //bacause of slow loading stream this check is better
-    @Step
-    public static void assertLoggedUser(PodUser user) {
-        $("#home_user_badge").shouldHave(Condition.exactText(user.userName));
-    }
+//     After diaspora update - element is not exist (look at Menu)
+//    //because of slow loading stream this check is better
+//    @Step
+//    public static void assertLoggedUser(PodUser user) {
+//        $("#home_user_badge").shouldHave(Condition.exactText(user.userName));
+//    }
 
 }

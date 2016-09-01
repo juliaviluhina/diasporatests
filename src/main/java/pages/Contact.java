@@ -53,9 +53,10 @@ public class Contact {
     public static void ensureSearchedContact(String fullName) {
         //even id search result site is shown - clicking in avatar load Contact site
         //purpose fot this ensure - after search 2 variants site can be loaded, for test contact site is needed
-        SelenideElement avatar = $("[alt='" + fullName + "']");
-        avatar.waitUntil(visible, timeout3x());
-        avatar.click();
+
+//        SelenideElement avatar = $("[alt='" + fullName + "']");
+//        avatar.waitUntil(visible, timeout3x());
+//        avatar.click();
     }
 
     @Step
