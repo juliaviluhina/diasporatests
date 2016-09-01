@@ -24,6 +24,7 @@ import static ua.net.itlabs.testDatas.Users.*;
 
 
 public class SearchUserTest extends BaseTest {
+
     static {
         Configuration.browser = "chrome";
     }
@@ -38,8 +39,8 @@ public class SearchUserTest extends BaseTest {
 
         THEN("Search page is opened");
         $("#people_search .term").shouldHave(exactText(Pod1.eve.fullName));
-        assertThat(url(), startsWith(Pod1.podLink + "/people?q="+Pod1.eve.userName));
-        
+        assertThat(url(), startsWith(Pod1.podLink + "/people?q=" + Pod1.eve.userName));
+
         //https://diaspora.koehn.com/people?q=eve_tjvi%40diaspora.koehn.com
     }
 
