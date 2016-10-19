@@ -1,19 +1,17 @@
-package ua.net.itlabs.diaspora;
+package com.automician.diaspora;
 
+import com.automician.BaseTest;
 import steps.Relation;
 import org.junit.Test;
 import pages.*;
 import pages.Contacts;
 import pages.Feed;
-import ua.net.itlabs.BaseTest;
 
-import static ua.net.itlabs.testDatas.Users.*;
 import static pages.Aspects.FRIENDS;
 import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
 import static core.Gherkin.*;
-import static ua.net.itlabs.testDatas.Phrases.*;
 
 public class ContactsTest extends BaseTest {
 

@@ -1,16 +1,14 @@
-package ua.net.itlabs.diaspora;
+package com.automician.diaspora;
 
+import com.automician.BaseTest;
 import steps.Relation;
 import org.junit.Test;
 import pages.Contact;
 import pages.Diaspora;
 import pages.Feed;
 import pages.Menu;
-import ua.net.itlabs.BaseTest;
 
 import static pages.Aspects.FRIENDS;
-import static ua.net.itlabs.testDatas.Phrases.*;
-import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
 public class AdditionalOperationsTest extends BaseTest {

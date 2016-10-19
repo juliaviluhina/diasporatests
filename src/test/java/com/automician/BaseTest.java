@@ -1,4 +1,4 @@
-package ua.net.itlabs;
+package com.automician;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Screenshots;

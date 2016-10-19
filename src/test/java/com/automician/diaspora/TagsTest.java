@@ -1,13 +1,11 @@
-package ua.net.itlabs.diaspora;
+package com.automician.diaspora;
 
+import com.automician.BaseTest;
 import org.junit.Test;
 import pages.*;
 import pages.Feed;
 import pages.Tags;
-import ua.net.itlabs.BaseTest;
 
-import static ua.net.itlabs.testDatas.Phrases.*;
-import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
 public class TagsTest extends BaseTest {

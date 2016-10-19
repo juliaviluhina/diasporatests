@@ -1,4 +1,4 @@
-package ua.net.itlabs.testDatas;
+package com.automician.testDatas;
 
 import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;

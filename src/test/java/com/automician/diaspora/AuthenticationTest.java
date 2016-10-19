@@ -1,12 +1,11 @@
-package ua.net.itlabs.diaspora;
+package com.automician.diaspora;
 
+import com.automician.BaseTest;
+import com.automician.testDatas.Users;
 import org.junit.Test;
 import pages.Diaspora;
 import pages.Menu;
-import pages.NavBar;
-import ua.net.itlabs.BaseTest;
 
-import static ua.net.itlabs.testDatas.Users.*;
 import static core.Gherkin.*;
 
 public class AuthenticationTest extends BaseTest {
@@ -14,10 +13,10 @@ public class AuthenticationTest extends BaseTest {
     @Test
     public void testSignInAndLogOut() {
         WHEN("User is signed in");
-        Diaspora.signInAs(Pod1.ana);
+        Diaspora.signInAs(Users.Pod1.ana);
 
         THEN("User's account is opened");
-        Menu.assertLoggedUser(Pod1.ana);
+        Menu.assertLoggedUser(Users.Pod1.ana);
 
         WHEN("User is logged out");
         Diaspora.logOut();

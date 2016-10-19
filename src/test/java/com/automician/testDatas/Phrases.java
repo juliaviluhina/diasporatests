@@ -1,4 +1,4 @@
-package ua.net.itlabs.testDatas;
+package com.automician.testDatas;
 
 public class Phrases {
 
