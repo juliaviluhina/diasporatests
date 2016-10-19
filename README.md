@@ -1,5 +1,5 @@
-#Aim
-Our aim was to establish an independent QA for [social network Diaspora](https://wiki.diasporafoundation.org/Main_Page) 
+#Target
+Our target was to establish an independent QA for [social network Diaspora](https://wiki.diasporafoundation.org/Main_Page) 
 implementing basic functional test automation in the style of a complete black box testing 
 (test automation on production version)
 
@@ -13,7 +13,7 @@ implementing basic functional test automation in the style of a complete black b
 ![functional map (general view)](https://cloud.githubusercontent.com/assets/13263036/19514238/83f2047a-95fb-11e6-8ab4-d9bcdebbd014.jpg)
     * [functional map (interactive)](https://drive.google.com/file/d/0B2UFaKOpHq_MRDNxVENfTlZHSFU/view?usp=sharing)
     
-* [implemented auto-tests more than 50% functional](https://docs.google.com/spreadsheets/d/1y8PItP93mGN1DZvUgOK7hSzYoGXnfNOxcuvsUtJlmj8/edit?usp=sharing)
+* [implemented auto-tests for more than 50% functional](https://docs.google.com/spreadsheets/d/1y8PItP93mGN1DZvUgOK7hSzYoGXnfNOxcuvsUtJlmj8/edit?usp=sharing)
     * 87 out of 108 features are covered by tests
     * given their complexity can be said that more than 50% covered by the functional
 
