@@ -1,7 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.SelenideElement;
-import core.WebDriversManager;
+import com.automician.core.WebDriversManager;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,13 +9,13 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
 
 
-import core.WebDriversManager.StateAfterPreparing;
+import com.automician.core.WebDriversManager.StateAfterPreparing;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static core.AdditionalAPI.*;
+import static com.automician.core.AdditionalAPI.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 

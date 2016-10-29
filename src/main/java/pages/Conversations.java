@@ -2,16 +2,15 @@ package pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
 import datastructures.PodUser;
 import org.openqa.selenium.StaleElementReferenceException;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.confirm;
-import static core.AdditionalAPI.scrollToAndHover;
-import static core.AdditionalAPI.isVisible;
-import static core.conditions.CustomCondition.*;
+import static com.automician.core.AdditionalAPI.scrollToAndHover;
+import static com.automician.core.AdditionalAPI.isVisible;
+import static com.automician.core.conditions.CustomCondition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static steps.Scenarios.*;

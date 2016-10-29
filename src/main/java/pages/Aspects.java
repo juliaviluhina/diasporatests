@@ -4,12 +4,11 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static core.AdditionalAPI.isVisible;
-import static core.AdditionalAPI.scrollToAndHover;
+import static com.automician.core.AdditionalAPI.isVisible;
+import static com.automician.core.AdditionalAPI.scrollToAndHover;
 
 public class Aspects {
 

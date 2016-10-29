@@ -6,16 +6,13 @@ import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.allure.annotations.Step;
-import steps.Scenarios;
 
-import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.confirm;
-import static core.AdditionalAPI.isVisible;
-import static core.conditions.CustomCondition.textEnd;
-import static core.helpers.UniqueDataHelper.*;
+import static com.automician.core.AdditionalAPI.isVisible;
+import static com.automician.core.conditions.CustomCondition.textEnd;
 import static java.lang.Boolean.*;
 import static pages.Aspects.STANDART_ASPECTS;
 import static pages.Contact.contact;

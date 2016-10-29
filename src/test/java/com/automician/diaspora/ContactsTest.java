@@ -11,7 +11,9 @@ import static pages.Aspects.FRIENDS;
 import static pages.Aspects.FAMILY;
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
+import static com.automician.testDatas.Users.*;
+import static com.automician.testDatas.Phrases.*;
 
 public class ContactsTest extends BaseTest {
 

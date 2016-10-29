@@ -4,7 +4,7 @@ import datastructures.PodUser;
 import ru.yandex.qatools.allure.annotations.Step;
 import steps.Relation;
 
-import static core.Gherkin.GIVEN;
+import static com.automician.core.Gherkin.GIVEN;
 import static pages.Aspects.FRIENDS;
 import static java.lang.Boolean.*;
 

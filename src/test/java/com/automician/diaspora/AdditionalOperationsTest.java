@@ -9,7 +9,10 @@ import pages.Feed;
 import pages.Menu;
 
 import static pages.Aspects.FRIENDS;
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
+import static com.automician.testDatas.Users.*;
+import static com.automician.testDatas.Phrases.*;
+
 
 public class AdditionalOperationsTest extends BaseTest {
 

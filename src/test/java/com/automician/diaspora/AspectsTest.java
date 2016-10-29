@@ -13,7 +13,7 @@ import pages.Feed;
 import static pages.Aspects.*;
 import static pages.Aspects.WORK;
 import static steps.Scenarios.waitStreamOpening;
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
 
 public class AspectsTest extends BaseTest {
 

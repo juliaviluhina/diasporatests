@@ -6,7 +6,9 @@ import pages.*;
 import pages.Feed;
 import pages.Tags;
 
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
+import static com.automician.testDatas.Users.*;
+import static com.automician.testDatas.Phrases.*;
 
 public class TagsTest extends BaseTest {
 

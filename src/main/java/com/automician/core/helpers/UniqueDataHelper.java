@@ -1,4 +1,4 @@
-package core.helpers;
+package com.automician.core.helpers;
 
 import java.util.HashMap;
 import java.util.Map;

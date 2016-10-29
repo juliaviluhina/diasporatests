@@ -8,10 +8,9 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static core.AdditionalAPI.isVisible;
-import static core.AdditionalAPI.scrollToAndHover;
-import static core.conditions.CustomCondition.textBegin;
-import static core.helpers.UniqueDataHelper.*;
+import static com.automician.core.AdditionalAPI.isVisible;
+import static com.automician.core.AdditionalAPI.scrollToAndHover;
+import static com.automician.core.conditions.CustomCondition.textBegin;
 import static steps.Scenarios.*;
 
 public class Tags {

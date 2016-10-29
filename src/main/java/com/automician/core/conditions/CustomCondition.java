@@ -1,7 +1,6 @@
-package core.conditions;
+package com.automician.core.conditions;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.conditions.Text;
 import org.openqa.selenium.WebElement;
 
 public class CustomCondition {

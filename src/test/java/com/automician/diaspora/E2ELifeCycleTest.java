@@ -9,7 +9,7 @@ import org.junit.experimental.categories.Category;
 import pages.*;
 
 import static pages.Aspects.FRIENDS;
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
 
 @Category(Smoke.class)
 public class E2ELifeCycleTest extends BaseTest {

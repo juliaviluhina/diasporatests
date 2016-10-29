@@ -13,7 +13,7 @@ import pages.Diaspora;
 import pages.Feed;
 
 import static pages.Aspects.*;
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
 
 public class FederationTest extends BaseTest {
 

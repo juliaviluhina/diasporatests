@@ -1,4 +1,4 @@
-package core;
+package com.automician.core;
 
 import ru.yandex.qatools.allure.annotations.Step;
 

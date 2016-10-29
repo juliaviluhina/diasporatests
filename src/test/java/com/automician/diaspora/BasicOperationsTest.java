@@ -7,7 +7,7 @@ import org.junit.Test;
 import pages.*;
 
 import static pages.Aspects.*;
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
 
 public class BasicOperationsTest extends BaseTest {
 

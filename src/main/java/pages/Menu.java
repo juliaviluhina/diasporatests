@@ -3,7 +3,6 @@ package pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import datastructures.PodUser;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
@@ -13,7 +12,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static core.AdditionalAPI.*;
+import static com.automician.core.AdditionalAPI.*;
 import static steps.Scenarios.*;
 
 public class Menu {

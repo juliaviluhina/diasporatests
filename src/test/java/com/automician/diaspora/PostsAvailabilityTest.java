@@ -11,7 +11,7 @@ import pages.Menu;
 
 import static pages.Aspects.WORK;
 import static pages.Aspects.ACQUAINTANCES;
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
 
 public class PostsAvailabilityTest extends BaseTest {
 

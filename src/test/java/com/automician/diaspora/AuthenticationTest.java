@@ -6,7 +6,7 @@ import org.junit.Test;
 import pages.Diaspora;
 import pages.Menu;
 
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
 
 public class AuthenticationTest extends BaseTest {
 

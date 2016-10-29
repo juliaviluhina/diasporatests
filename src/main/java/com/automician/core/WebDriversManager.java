@@ -1,4 +1,4 @@
-package core;
+package com.automician.core;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.webdriver.WebDriverFactory;
@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
-import static core.helpers.UniqueDataHelper.deleteUniqueData;
-import static core.helpers.UniqueDataHelper.the;
+import static com.automician.core.helpers.UniqueDataHelper.deleteUniqueData;
+import static com.automician.core.helpers.UniqueDataHelper.the;
 import static com.codeborne.selenide.Configuration.*;
 import static java.util.logging.Level.*;
 

@@ -9,7 +9,7 @@ import pages.Conversations;
 import pages.Diaspora;
 import pages.Menu;
 
-import static core.Gherkin.*;
+import static com.automician.core.Gherkin.*;
 
 public class ConversationsTest extends BaseTest {
 
