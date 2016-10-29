@@ -1,4 +1,4 @@
-package datastructures;
+package com.automician.datastructures;
 
 public class PodUser {
 

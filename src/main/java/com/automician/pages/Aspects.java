@@ -1,4 +1,4 @@
-package pages;
+package com.automician.pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;

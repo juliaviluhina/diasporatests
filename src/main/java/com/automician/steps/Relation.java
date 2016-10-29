@@ -1,7 +1,7 @@
-package steps;
+package com.automician.steps;
 
-import datastructures.PodUser;
-import pages.*;
+import com.automician.datastructures.PodUser;
+import com.automician.pages.*;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import java.util.ArrayList;

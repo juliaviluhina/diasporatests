@@ -5,7 +5,7 @@ import com.automician.testDatas.Users;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import org.junit.Test;
-import pages.Diaspora;
+import com.automician.pages.Diaspora;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;

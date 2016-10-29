@@ -1,8 +1,8 @@
-package pages;
+package com.automician.pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import datastructures.PodUser;
+import com.automician.datastructures.PodUser;
 import org.openqa.selenium.StaleElementReferenceException;
 import ru.yandex.qatools.allure.annotations.Step;
 
@@ -13,7 +13,7 @@ import static com.automician.core.AdditionalAPI.isVisible;
 import static com.automician.core.conditions.CustomCondition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static steps.Scenarios.*;
+import static com.automician.steps.Scenarios.*;
 
 public class Conversations {
 

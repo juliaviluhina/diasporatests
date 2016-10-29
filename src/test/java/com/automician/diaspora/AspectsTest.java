@@ -3,16 +3,16 @@ package com.automician.diaspora;
 import com.automician.BaseTest;
 import com.automician.testDatas.Phrases;
 import com.automician.testDatas.Users;
-import steps.Relation;
+import com.automician.steps.Relation;
 import org.junit.Test;
-import pages.*;
-import pages.Aspects;
-import pages.Contacts;
-import pages.Feed;
+import com.automician.pages.*;
+import com.automician.pages.Aspects;
+import com.automician.pages.Contacts;
+import com.automician.pages.Feed;
 
-import static pages.Aspects.*;
-import static pages.Aspects.WORK;
-import static steps.Scenarios.waitStreamOpening;
+import static com.automician.pages.Aspects.*;
+import static com.automician.pages.Aspects.WORK;
+import static com.automician.steps.Scenarios.waitStreamOpening;
 import static com.automician.core.Gherkin.*;
 
 public class AspectsTest extends BaseTest {

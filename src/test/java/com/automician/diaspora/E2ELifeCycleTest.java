@@ -6,9 +6,9 @@ import com.automician.testDatas.Phrases;
 import com.automician.testDatas.Users;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import pages.*;
+import com.automician.pages.*;
 
-import static pages.Aspects.FRIENDS;
+import static com.automician.pages.Aspects.FRIENDS;
 import static com.automician.core.Gherkin.*;
 
 @Category(Smoke.class)

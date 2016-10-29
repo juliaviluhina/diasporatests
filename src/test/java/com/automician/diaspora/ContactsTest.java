@@ -1,16 +1,16 @@
 package com.automician.diaspora;
 
 import com.automician.BaseTest;
-import steps.Relation;
+import com.automician.steps.Relation;
 import org.junit.Test;
-import pages.*;
-import pages.Contacts;
-import pages.Feed;
+import com.automician.pages.*;
+import com.automician.pages.Contacts;
+import com.automician.pages.Feed;
 
-import static pages.Aspects.FRIENDS;
-import static pages.Aspects.FAMILY;
-import static pages.Aspects.WORK;
-import static pages.Aspects.ACQUAINTANCES;
+import static com.automician.pages.Aspects.FRIENDS;
+import static com.automician.pages.Aspects.FAMILY;
+import static com.automician.pages.Aspects.WORK;
+import static com.automician.pages.Aspects.ACQUAINTANCES;
 import static com.automician.core.Gherkin.*;
 import static com.automician.testDatas.Users.*;
 import static com.automician.testDatas.Phrases.*;

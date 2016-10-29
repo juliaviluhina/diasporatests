@@ -1,8 +1,8 @@
-package pages;
+package com.automician.pages;
 
 import com.codeborne.selenide.SelenideElement;
 import com.automician.core.WebDriversManager;
-import datastructures.PodUser;
+import com.automician.datastructures.PodUser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;

@@ -1,9 +1,9 @@
-package pages;
+package com.automician.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import datastructures.PodUser;
+import com.automician.datastructures.PodUser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -18,7 +18,7 @@ import static com.automician.core.AdditionalAPI.*;
 import static com.automician.core.conditions.CustomCondition.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static steps.Scenarios.*;
+import static com.automician.steps.Scenarios.*;
 
 public class Feed {
 

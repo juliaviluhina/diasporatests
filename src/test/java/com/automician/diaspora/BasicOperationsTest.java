@@ -4,9 +4,9 @@ import com.automician.BaseTest;
 import com.automician.testDatas.Phrases;
 import com.automician.testDatas.Users;
 import org.junit.Test;
-import pages.*;
+import com.automician.pages.*;
 
-import static pages.Aspects.*;
+import static com.automician.pages.Aspects.*;
 import static com.automician.core.Gherkin.*;
 
 public class BasicOperationsTest extends BaseTest {

@@ -3,14 +3,14 @@ package com.automician.diaspora;
 import com.automician.BaseTest;
 import com.automician.testDatas.Phrases;
 import com.automician.testDatas.Users;
-import steps.Relation;
+import com.automician.steps.Relation;
 import org.junit.Test;
-import pages.Diaspora;
-import pages.Feed;
-import pages.Menu;
+import com.automician.pages.Diaspora;
+import com.automician.pages.Feed;
+import com.automician.pages.Menu;
 
-import static pages.Aspects.WORK;
-import static pages.Aspects.ACQUAINTANCES;
+import static com.automician.pages.Aspects.WORK;
+import static com.automician.pages.Aspects.ACQUAINTANCES;
 import static com.automician.core.Gherkin.*;
 
 public class PostsAvailabilityTest extends BaseTest {

@@ -1,4 +1,4 @@
-package pages;
+package com.automician.pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.automician.core.AdditionalAPI.isVisible;
 import static com.automician.core.AdditionalAPI.scrollToAndHover;
 import static com.automician.core.conditions.CustomCondition.textBegin;
-import static steps.Scenarios.*;
+import static com.automician.steps.Scenarios.*;
 
 public class Tags {
 

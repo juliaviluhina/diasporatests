@@ -5,9 +5,9 @@ import com.automician.categories.ClearData;
 import com.automician.testDatas.Users;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import steps.Relation;
+import com.automician.steps.Relation;
 
-import static steps.Scenarios.clearUserData;
+import static com.automician.steps.Scenarios.clearUserData;
 
 @Category(ClearData.class)
 public class ClearDataTest extends BaseTest {

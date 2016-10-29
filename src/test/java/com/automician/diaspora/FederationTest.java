@@ -6,13 +6,13 @@ import com.automician.testDatas.Users;
 import com.codeborne.selenide.Configuration;
 import org.junit.AfterClass;
 import org.junit.Before;
-import steps.Relation;
+import com.automician.steps.Relation;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import pages.Diaspora;
-import pages.Feed;
+import com.automician.pages.Diaspora;
+import com.automician.pages.Feed;
 
-import static pages.Aspects.*;
+import static com.automician.pages.Aspects.*;
 import static com.automician.core.Gherkin.*;
 
 public class FederationTest extends BaseTest {

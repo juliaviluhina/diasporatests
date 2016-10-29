@@ -1,9 +1,9 @@
-package pages;
+package com.automician.pages;
 
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import datastructures.PodUser;
+import com.automician.datastructures.PodUser;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import ru.yandex.qatools.allure.annotations.Step;
@@ -15,8 +15,8 @@ import static com.codeborne.selenide.Selenide.confirm;
 import static com.automician.core.AdditionalAPI.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static pages.Aspects.FRIENDS;
-import static pages.Aspects.STANDART_ASPECTS;
+import static com.automician.pages.Aspects.FRIENDS;
+import static com.automician.pages.Aspects.STANDART_ASPECTS;
 
 public class Contact {
 

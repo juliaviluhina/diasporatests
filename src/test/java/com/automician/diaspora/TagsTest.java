@@ -2,9 +2,9 @@ package com.automician.diaspora;
 
 import com.automician.BaseTest;
 import org.junit.Test;
-import pages.*;
-import pages.Feed;
-import pages.Tags;
+import com.automician.pages.*;
+import com.automician.pages.Feed;
+import com.automician.pages.Tags;
 
 import static com.automician.core.Gherkin.*;
 import static com.automician.testDatas.Users.*;

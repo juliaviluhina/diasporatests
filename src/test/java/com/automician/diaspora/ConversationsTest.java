@@ -4,10 +4,10 @@ import com.automician.BaseTest;
 import com.automician.testDatas.Phrases;
 import com.automician.testDatas.Users;
 import org.junit.Test;
-import pages.Contact;
-import pages.Conversations;
-import pages.Diaspora;
-import pages.Menu;
+import com.automician.pages.Contact;
+import com.automician.pages.Conversations;
+import com.automician.pages.Diaspora;
+import com.automician.pages.Menu;
 
 import static com.automician.core.Gherkin.*;
 
